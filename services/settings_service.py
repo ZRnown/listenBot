@@ -1,9 +1,6 @@
-import os
 from typing import List, Optional, Tuple
 from storage import dao_settings
 from storage import dao_listen_sources
-
-ADMIN_WHITELIST = set([int(x) for x in os.getenv('ADMIN_WHITELIST','').split(',') if x.strip().isdigit()])
 
 TARGET_CHAT_KEY = 'target_chat'  # global scope
 TARGET_BOT_KEY = 'target_bot'    # global scope: @username without '@'
