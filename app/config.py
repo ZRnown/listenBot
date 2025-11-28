@@ -25,9 +25,9 @@ pool = PooledDB(
     maxconnections=50,
     blocking=True,
     port=3306,
-    user='root',
+    user=os.getenv("MYSQL_USER"),
     password=os.getenv("MYSQL_ROOT_PASSWORD"),
-    database='tg_message'
+    database=os.getenv("MYSQL_DB")
 )
 
 logging.basicConfig(format='%(levelname)s: %(asctime)s: %(message)s', filename='log.log', filemode='a', encoding='utf-8', level=logging.INFO)
