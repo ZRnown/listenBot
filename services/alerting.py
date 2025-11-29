@@ -20,7 +20,6 @@ async def send_alert(account_client, account, event, matched_keyword: str):
     if not target or not target.strip():
         delivered = 'error'
         error = 'Target chat not configured'
-        print(f"[DEBUG] 账号 {account['id']} 转发失败：未设置转发目标")
     else:
         try:
             # 处理转发目标格式
@@ -103,7 +102,6 @@ async def send_alert(account_client, account, event, matched_keyword: str):
                 buttons.append([Button.inline('🚫 屏蔽该用户', data=f'block_user:{sender_id}')])
             
             # 使用监听账号的客户端发送消息（而不是机器人客户端）
-            print(f"[DEBUG] 尝试使用监听账号发送消息到 {target_clean}")
             # 使用Markdown解析模式
             await account_client.send_message(
                 target_clean, 
@@ -111,13 +109,11 @@ async def send_alert(account_client, account, event, matched_keyword: str):
                 parse_mode='markdown',
                 buttons=buttons if buttons else None
             )
-            print(f"[DEBUG] 消息发送成功到 {target_clean}")
             delivered = 'success'
             error = None
         except Exception as e:
             delivered = 'error'
             error = f"Failed to send to {target}: {str(e)}"
-            print(f"[DEBUG] 发送失败：{error}")
 
     dao_alerts.insert_alert(
         account_id=account['id'],

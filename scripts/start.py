@@ -21,10 +21,10 @@ async def main():
         await manager.start_control_bot()
         await setup_handlers(manager)
         await manager.load_active_accounts()
-        print('Control bot and account listeners started')
         await asyncio.Event().wait()
     except KeyboardInterrupt:
-        print('\n正在关闭...')
+        # graceful shutdown on Ctrl+C
+        pass
     finally:
         if manager:
             try:

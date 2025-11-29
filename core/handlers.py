@@ -101,12 +101,10 @@ async def on_new_message(event, account: dict, bot_client):
                 # 检查转发目标（只使用账号专属的，不使用全局的）
                 target = settings_service.get_account_target_chat(account['id'])
                 if not target or not target.strip():
-                    print(f"[DEBUG] 账号 {account['id']} 匹配到关键词 '{matched}'，但未设置转发目标")
                     return
                 
                 # 使用监听账号的客户端发送（而不是机器人客户端）
                 account_client = event.client
-                print(f"[DEBUG] 账号 {account['id']} 匹配到关键词 '{matched}'，准备使用监听账号发送到 {target}")
                 await send_alert(account_client, account, event, matched)
                 # optional: start sending template message
                 if settings_service.get_start_sending(account['id']):
