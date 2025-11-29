@@ -750,7 +750,7 @@ async def setup_handlers(manager: ClientManager):
                 account_id = st['pending']['account_id']
                 t = (text or '').strip()
                 if t in ('取消', '退出', 'cancel'):
-                set_state(chat_id)
+                    set_state(chat_id)
                     await event.respond('✅ 已取消', buttons=main_keyboard())
                     return
                 if t in ('清空', 'clear'):
