@@ -162,26 +162,37 @@ async def on_new_message(event, account: dict, bot_client):
         if not keywords:
             return
         # 遍历按钮，查找命中
+        print(f"[点击功能] 账号 #{account['id']}: 检查按钮，关键词列表: {keywords}")
         for i, row in enumerate(buttons):
             for j, btn in enumerate(row):
                 btn_text = getattr(btn, 'text', None) or ''
+                btn_type = type(btn).__name__
+                print(f"[点击功能] 账号 #{account['id']}: 检查按钮 [{i},{j}] '{btn_text}' (类型: {btn_type})")
                 if any(k for k in keywords if k and k in btn_text):
+                    print(f"[点击功能] ✅ 账号 #{account['id']}: 匹配到关键词，准备点击按钮 '{btn_text}'")
                     # 点击延迟
                     delay = settings_service.get_click_delay(account['id'])
                     jitter = settings_service.get_click_jitter()
                     if delay and delay > 0:
-                        await asyncio.sleep(max(0.0, delay + random.uniform(-jitter, jitter)))
+                        sleep_time = max(0.0, delay + random.uniform(-jitter, jitter))
+                        print(f"[点击功能] 账号 #{account['id']}: 等待 {sleep_time:.2f} 秒后点击")
+                        await asyncio.sleep(sleep_time)
                     # 判定 Inline vs Reply 按钮
                     try:
                         # 优先尝试 inline 点击（有 callback 的）
+                        print(f"[点击功能] 账号 #{account['id']}: 尝试点击按钮 [{i},{j}]")
                         await event.click(i, j)
-                    except Exception:
+                        print(f"[点击功能] ✅ 账号 #{account['id']}: 点击成功（按钮：{btn_text}）")
+                    except Exception as e:
+                        print(f"[点击功能] ⚠️ 账号 #{account['id']}: inline点击失败 ({str(e)})，尝试发送按钮文本")
                         # 退化为发送按钮文本（reply keyboard）
                         try:
                             await event.client.send_message(event.chat_id, btn_text)
-                        except Exception:
-                            pass
+                            print(f"[点击功能] ✅ 账号 #{account['id']}: 发送按钮文本成功（按钮：{btn_text}）")
+                        except Exception as e2:
+                            print(f"[点击功能] ❌ 账号 #{account['id']}: 发送按钮文本也失败: {str(e2)}")
                     return
+        print(f"[点击功能] 账号 #{account['id']}: 未找到匹配关键词的按钮")
     except (GeneratorExit, RuntimeError) as e:
         # 忽略 Telethon 内部连接关闭时的错误
         if 'GeneratorExit' in str(type(e).__name__) or 'coroutine ignored' in str(e):
