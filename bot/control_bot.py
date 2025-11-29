@@ -854,15 +854,16 @@ async def setup_handlers(manager: ClientManager):
                 # 保存
                 try:
                     settings_service.set_target_bot(clean)
-                set_state(chat_id)
-                await event.respond(
-                        f'✅ 目标机器人已设置：@{clean}\n\n'
-                        '点击"▶️ 开始发送"按钮来批量发送消息。',
-                    buttons=main_keyboard()
-                )
                 except Exception as e:
                     set_state(chat_id)
                     await event.respond(f'⚠️ 设置失败：{e}', buttons=main_keyboard())
+                else:
+                    set_state(chat_id)
+                    await event.respond(
+                        f'✅ 目标机器人已设置：@{clean}\n\n'
+                        '点击"▶️ 开始发送"按钮来批量发送消息。',
+                        buttons=main_keyboard()
+                    )
                 return
             if mode == 'set_global_template':
                 t = (text or '').strip()
