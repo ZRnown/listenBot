@@ -21,6 +21,7 @@ async def main():
         migrate()
         print(f"[启动日志] 数据库迁移完成")
         manager = ClientManager()
+        print(f"[启动日志] 客户端管理器初始化完成")
         print(f"[启动日志] 正在启动控制机器人...")
         await manager.start_control_bot()
         print(f"[启动日志] ✅ 控制机器人启动成功")
@@ -30,24 +31,38 @@ async def main():
         print(f"[启动日志] 正在加载活跃账号...")
         await manager.load_active_accounts()
         print(f"[启动日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ✅ 系统启动完成，开始监听消息...")
-        await asyncio.Event().wait()
+        
+        # 主循环：保持程序运行
+        print(f"[启动日志] 程序正在运行，按 Ctrl+C 退出...")
+        try:
+            await asyncio.Event().wait()
+        except KeyboardInterrupt:
+            print(f"\n[启动日志] 收到退出信号，正在关闭...")
     except KeyboardInterrupt:
         # graceful shutdown on Ctrl+C
-        pass
+        print(f"\n[启动日志] 收到退出信号，正在关闭...")
     except (GeneratorExit, RuntimeError) as e:
         # 忽略 Telethon 内部连接关闭时的错误
         if 'GeneratorExit' in str(type(e).__name__) or 'coroutine ignored' in str(e):
             return
-        raise
+        print(f"[启动日志] ❌ 运行时错误: {e}")
+        import traceback
+        traceback.print_exc()
+    except Exception as e:
+        print(f"[启动日志] ❌ 系统启动失败: {e}")
+        import traceback
+        traceback.print_exc()
     finally:
         if manager:
             try:
+                print(f"[启动日志] 正在关闭所有连接...")
                 await manager.stop()
+                print(f"[启动日志] ✅ 所有连接已关闭")
             except (GeneratorExit, RuntimeError):
                 # 忽略连接关闭时的错误
                 pass
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"[启动日志] ⚠️ 关闭连接时出错: {e}")
 
 if __name__ == '__main__':
     try:

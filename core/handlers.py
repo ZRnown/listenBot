@@ -21,10 +21,19 @@ def _get_semaphore(account_id: int) -> asyncio.Semaphore:
 async def on_new_message(event, account: dict, bot_client):
     try:
         # bot_client 用于发送监听提醒消息到目标群组
-        # 只处理群组消息
-        print(f"[监听日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 📨 账号 #{account['id']} 收到新消息 (私聊: {event.is_private})")
+        # 只处理群组消息（使用 event.is_group 判断，包括普通群和超级群）
+        print(f"[监听日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 📨 账号 #{account['id']} 收到新消息")
+        print(f"[监听日志]   私聊: {event.is_private}, 群组: {event.is_group}, 频道: {event.is_channel}")
+        
+        # 跳过私聊消息
         if event.is_private:
             print(f"[监听日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 账号 #{account['id']} 收到私聊消息，跳过处理")
+            return
+        
+        # 只处理群组消息（使用 event.is_group，包括普通群和超级群）
+        # 如果需要监听频道，可以改为 if event.is_group or event.is_channel
+        if not event.is_group:
+            print(f"[监听日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 账号 #{account['id']} 收到非群组消息（可能是频道），跳过处理")
             return
         
         # 获取消息文本（包括纯文本和媒体消息的标题/说明）

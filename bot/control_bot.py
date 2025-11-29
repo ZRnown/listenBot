@@ -498,28 +498,50 @@ async def setup_handlers(manager: ClientManager):
         """开始点击任务：获取消息、匹配关键词并依次点击"""
         bot = manager.bot
         try:
-            # 获取消息（使用bot客户端先获取）
-            try:
-                target_msg = await bot.get_messages(target_chat_id, ids=target_msg_id)
-                if not target_msg:
-                    await bot.send_message(report_chat_id, f'❌ 无法获取消息（ID: {target_msg_id}）')
-                    return
-            except Exception as e:
-                await bot.send_message(report_chat_id, f'❌ 获取消息失败：{e}')
+            # 使用第一个可用的账号客户端获取消息（bot可能无法访问私有群组）
+            target_msg = None
+            buttons = None
+            button_positions = []
+            
+            # 尝试使用账号客户端获取消息
+            for acc in accounts:
+                acc_id = acc['id']
+                client = manager.account_clients.get(acc_id)
+                if not client:
+                    continue
+                
+                try:
+                    print(f"[点击任务] 尝试使用账号 #{acc_id} 获取消息 (chat_id: {target_chat_id}, msg_id: {target_msg_id})")
+                    target_msg = await client.get_messages(target_chat_id, ids=target_msg_id)
+                    if target_msg:
+                        print(f"[点击任务] ✅ 账号 #{acc_id} 成功获取消息")
+                        # 检查消息是否有按钮
+                        buttons = getattr(target_msg, 'buttons', None)
+                        if buttons:
+                            # 收集所有按钮文本和位置
+                            for i, row in enumerate(buttons):
+                                for j, btn in enumerate(row):
+                                    btn_text = getattr(btn, 'text', None) or ''
+                                    button_positions.append((i, j, btn_text))
+                            print(f"[点击任务] 找到 {len(button_positions)} 个按钮")
+                        break
+                except Exception as e:
+                    print(f"[点击任务] 账号 #{acc_id} 获取消息失败: {e}")
+                    continue
+            
+            # 如果所有账号都无法获取消息，报错
+            if not target_msg:
+                error_msg = f'❌ 无法获取消息（Chat ID: {target_chat_id}, Message ID: {target_msg_id}）\n\n'
+                error_msg += '可能的原因：\n'
+                error_msg += '1. 账号未加入该群组/频道\n'
+                error_msg += '2. 消息链接无效或消息已被删除\n'
+                error_msg += '3. 账号没有访问该消息的权限'
+                await bot.send_message(report_chat_id, error_msg)
                 return
             
-            # 检查消息是否有按钮
-            buttons = getattr(target_msg, 'buttons', None)
-            if not buttons:
+            if not buttons or not button_positions:
                 await bot.send_message(report_chat_id, '⚠️ 该消息没有按钮')
                 return
-            
-            # 收集所有按钮文本和位置
-            button_positions = []  # [(row, col, text), ...]
-            for i, row in enumerate(buttons):
-                for j, btn in enumerate(row):
-                    btn_text = getattr(btn, 'text', None) or ''
-                    button_positions.append((i, j, btn_text))
             
             # 检查哪些账号有关键词匹配
             matched_accounts = []
@@ -576,12 +598,18 @@ async def setup_handlers(manager: ClientManager):
                     
                     # 获取消息（使用账号客户端）
                     try:
+                        print(f"[点击任务] 账号 {acc_name} 尝试获取消息 (chat_id: {target_chat_id}, msg_id: {target_msg_id})")
                         acc_msg = await client.get_messages(target_chat_id, ids=target_msg_id)
                         if not acc_msg:
-                            raise Exception('无法获取消息')
+                            error_detail = f'消息不存在或账号 {acc_name} 无法访问该消息 (Chat ID: {target_chat_id}, Message ID: {target_msg_id})'
+                            print(f"[点击任务] ❌ {error_detail}")
+                            raise Exception(error_detail)
+                        print(f"[点击任务] ✅ 账号 {acc_name} 成功获取消息")
                     except Exception as e:
                         fail_count += 1
-                        await bot.send_message(report_chat_id, f'❌ 账号 {acc_name} 无法获取消息：{e}')
+                        error_msg = f'❌ 账号 {acc_name} 无法获取消息：{str(e)}'
+                        print(f"[点击任务] {error_msg}")
+                        await bot.send_message(report_chat_id, error_msg)
                         continue
                     
                     # 点击按钮
@@ -1235,10 +1263,72 @@ async def setup_handlers(manager: ClientManager):
             await event.respond(
                 '🚀 **开始点击**\n\n'
                 '请发送要点击的消息链接（支持 https://t.me/c/xxx/123 或 https://t.me/username/123 格式）。\n\n'
-                '发送“取消”可退出。',
+                '发送"取消"可退出。',
                 parse_mode='markdown',
                 buttons=None
             )
+            return
+        
+        # 诊断功能：列出账号加入的所有群组
+        if text.startswith('诊断群组') or text.startswith('诊断 #'):
+            import re
+            match = re.search(r'#(\d+)', text)
+            if match:
+                account_id = int(match.group(1))
+                client = manager.account_clients.get(account_id)
+                if not client:
+                    await event.respond(f'❌ 账号 #{account_id} 未在线')
+                    return
+                
+                await event.respond('🔍 正在获取群组列表，请稍候...')
+                try:
+                    groups = []
+                    async for dialog in client.iter_dialogs():
+                        if not dialog.is_user:  # 只获取群组和频道
+                            chat = dialog.entity
+                            chat_id = chat.id
+                            chat_title = getattr(chat, 'title', '') or getattr(chat, 'username', '') or f"Chat#{chat_id}"
+                            chat_username = getattr(chat, 'username', None)
+                            is_megagroup = getattr(chat, 'megagroup', False)
+                            is_broadcast = getattr(chat, 'broadcast', False)
+                            chat_type = "超级群组" if is_megagroup else ("频道" if is_broadcast else "群组")
+                            groups.append({
+                                'title': chat_title,
+                                'id': chat_id,
+                                'username': chat_username,
+                                'type': chat_type
+                            })
+                    
+                    if not groups:
+                        await event.respond(f'⚠️ 账号 #{account_id} 未加入任何群组或频道')
+                        return
+                    
+                    # 按类型分组显示
+                    groups_by_type = {}
+                    for g in groups:
+                        gtype = g['type']
+                        if gtype not in groups_by_type:
+                            groups_by_type[gtype] = []
+                        groups_by_type[gtype].append(g)
+                    
+                    result = f"📊 账号 #{account_id} 的群组列表（共 {len(groups)} 个）\n\n"
+                    for gtype in ['超级群组', '频道', '群组']:
+                        if gtype in groups_by_type:
+                            result += f"**{gtype}** ({len(groups_by_type[gtype])} 个):\n"
+                            for g in groups_by_type[gtype][:20]:  # 每种类型最多显示20个
+                                username_str = f" @{g['username']}" if g['username'] else ""
+                                result += f"• {g['title']}{username_str} (ID: {g['id']})\n"
+                            if len(groups_by_type[gtype]) > 20:
+                                result += f"  ... 还有 {len(groups_by_type[gtype]) - 20} 个\n"
+                            result += "\n"
+                    
+                    await event.respond(result, parse_mode='markdown')
+                except Exception as e:
+                    await event.respond(f'❌ 获取群组列表失败: {str(e)}')
+                    import traceback
+                    traceback.print_exc()
+            else:
+                await event.respond('⚠️ 请使用格式：诊断群组 #账号ID\n例如：诊断群组 #5')
             return
 
         if is_cmd(text, '移除所有账号'):

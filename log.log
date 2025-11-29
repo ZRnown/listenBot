@@ -774,3 +774,633 @@ INFO: 2025-11-29 17:38:34,263: Disconnecting from 91.108.56.152:443/TcpFull...
 INFO: 2025-11-29 17:38:34,264: Disconnection from 91.108.56.152:443/TcpFull complete!
 INFO: 2025-11-29 17:38:34,267: Disconnecting from 91.108.56.139:443/TcpFull...
 INFO: 2025-11-29 17:38:34,267: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 21:33:22,752: libssl detected, it will be used for encryption
+INFO: 2025-11-29 21:33:22,885: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 21:33:26,020: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 21:33:28,955: Phone migrated to 5
+INFO: 2025-11-29 21:33:28,955: Reconnecting to new data center 5
+INFO: 2025-11-29 21:33:29,339: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 21:33:29,339: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 21:33:29,339: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 21:33:33,414: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 21:33:37,449: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 21:33:37,450: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 21:34:04,656: Got difference for channel 2317694562 updates
+INFO: 2025-11-29 21:34:55,943: Got difference for account updates
+INFO: 2025-11-29 21:34:56,736: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 21:34:56,737: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 21:34:56,737: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 21:34:56,737: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 21:59:11,718: libssl detected, it will be used for encryption
+INFO: 2025-11-29 21:59:18,152: libssl detected, it will be used for encryption
+INFO: 2025-11-29 21:59:18,271: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 21:59:21,684: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 21:59:23,799: Phone migrated to 5
+INFO: 2025-11-29 21:59:23,799: Reconnecting to new data center 5
+INFO: 2025-11-29 21:59:24,158: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 21:59:24,159: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 21:59:24,159: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 21:59:27,613: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 21:59:30,737: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 21:59:30,738: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 21:59:38,194: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 21:59:38,195: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 21:59:38,196: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 21:59:38,196: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 21:59:54,960: libssl detected, it will be used for encryption
+INFO: 2025-11-29 21:59:55,060: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 21:59:58,789: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 22:00:01,187: Phone migrated to 5
+INFO: 2025-11-29 22:00:01,188: Reconnecting to new data center 5
+INFO: 2025-11-29 22:00:01,586: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 22:00:01,593: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 22:00:01,594: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 22:00:05,102: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 22:00:07,679: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 22:00:07,680: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 22:00:14,073: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 22:00:14,073: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 22:00:14,074: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 22:00:14,075: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 22:04:27,092: libssl detected, it will be used for encryption
+INFO: 2025-11-29 22:04:27,216: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 22:04:31,393: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 22:04:33,685: Phone migrated to 5
+INFO: 2025-11-29 22:04:33,685: Reconnecting to new data center 5
+INFO: 2025-11-29 22:04:34,053: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 22:04:34,059: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 22:04:34,059: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 22:04:37,402: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 22:04:40,180: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 22:04:40,182: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 22:07:18,708: Got difference for channel 2317694562 updates
+INFO: 2025-11-29 22:07:33,239: Got difference for channel 2317694562 updates
+INFO: 2025-11-29 22:07:43,297: Got difference for channel 1555693413 updates
+INFO: 2025-11-29 22:08:49,671: Starting direct file download in chunks of 131072 at 0, stride 131072
+INFO: 2025-11-29 22:08:50,948: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 22:08:50,949: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 22:09:48,379: Got difference for account updates
+INFO: 2025-11-29 22:09:49,440: Got difference for channel 1091256481 updates
+INFO: 2025-11-29 22:09:50,018: Got difference for channel 2197033259 updates
+INFO: 2025-11-29 22:09:50,562: Got difference for channel 2961823510 updates
+INFO: 2025-11-29 22:09:51,651: Got difference for channel 2700655879 updates
+INFO: 2025-11-29 22:10:29,042: Got difference for channel 2961823510 updates
+INFO: 2025-11-29 22:10:30,665: Got difference for account updates
+INFO: 2025-11-29 22:10:31,934: Got difference for channel 1091256481 updates
+INFO: 2025-11-29 22:11:31,718: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 22:11:31,720: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 22:11:31,721: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 22:11:31,722: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 22:11:31,723: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 22:11:31,723: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 22:33:40,257: libssl detected, it will be used for encryption
+INFO: 2025-11-29 22:33:40,383: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 22:33:45,050: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 22:33:47,490: Phone migrated to 5
+INFO: 2025-11-29 22:33:47,492: Reconnecting to new data center 5
+INFO: 2025-11-29 22:33:47,897: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 22:33:47,915: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 22:33:47,916: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 22:33:51,285: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 22:33:54,064: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 22:33:54,065: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 22:34:17,455: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:34:17,458: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:34:17,459: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:34:17,459: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:34:17,460: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:34:17,460: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:34:17,460: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:34:17,465: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:34:17,467: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:34:17,467: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:34:40,034: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 22:34:40,036: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 22:35:03,491: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 22:35:07,670: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 22:35:10,286: Got difference for account updates
+INFO: 2025-11-29 22:35:10,819: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 22:35:15,279: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 22:35:23,855: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 22:36:23,015: Got difference for channel 1369944285 updates
+INFO: 2025-11-29 22:36:34,091: Got difference for channel 1369944285 updates
+INFO: 2025-11-29 22:36:40,718: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 22:36:40,719: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 22:36:40,728: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 22:36:40,729: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 22:36:40,730: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 22:36:40,730: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 22:40:36,249: libssl detected, it will be used for encryption
+INFO: 2025-11-29 22:40:36,367: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 22:40:39,526: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 22:40:42,418: Phone migrated to 5
+INFO: 2025-11-29 22:40:42,419: Reconnecting to new data center 5
+INFO: 2025-11-29 22:40:42,870: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 22:40:42,881: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 22:40:42,882: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 22:40:46,597: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 22:40:49,653: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 22:40:49,654: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 22:41:11,147: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:41:11,157: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:41:11,160: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:41:11,160: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:41:11,162: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:41:11,166: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:41:11,166: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:41:11,178: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:41:11,405: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:41:11,410: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 22:41:33,198: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 22:41:33,200: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 22:42:36,851: Got difference for channel 1369944285 updates
+INFO: 2025-11-29 22:53:33,726: Got difference for channel 2712703794 updates
+INFO: 2025-11-29 22:55:54,606: Got difference for channel 2495873537 updates
+INFO: 2025-11-29 22:55:55,493: Got difference for channel 1364379425 updates
+INFO: 2025-11-29 22:55:56,117: Got difference for channel 1091256481 updates
+INFO: 2025-11-29 22:55:56,732: Got difference for channel 2490396135 updates
+INFO: 2025-11-29 22:55:58,566: Got difference for channel 2780387851 updates
+INFO: 2025-11-29 22:56:00,490: Got difference for channel 2515994861 updates
+INFO: 2025-11-29 22:56:01,034: Got difference for channel 2443579822 updates
+INFO: 2025-11-29 22:56:01,610: Got difference for channel 2270468818 updates
+INFO: 2025-11-29 22:56:03,454: Got difference for channel 2192964664 updates
+INFO: 2025-11-29 22:56:04,037: Got difference for channel 2532530266 updates
+INFO: 2025-11-29 22:56:05,125: Got difference for channel 2521493634 updates
+INFO: 2025-11-29 22:56:38,083: Got difference for channel 1369944285 updates
+INFO: 2025-11-29 22:56:50,011: Got difference for channel 1555693413 updates
+INFO: 2025-11-29 22:56:53,302: Got difference for channel 2114987005 updates
+INFO: 2025-11-29 22:56:58,944: Got difference for channel 2713501654 updates
+INFO: 2025-11-29 23:04:40,019: Got difference for channel 2509862916 updates
+INFO: 2025-11-29 23:08:13,799: Got difference for account updates
+INFO: 2025-11-29 23:10:56,380: Got difference for channel 1364379425 updates
+INFO: 2025-11-29 23:10:57,042: Got difference for channel 2453288898 updates
+INFO: 2025-11-29 23:11:01,173: Got difference for channel 2192964664 updates
+INFO: 2025-11-29 23:11:01,738: Got difference for channel 2495873537 updates
+INFO: 2025-11-29 23:11:03,032: Got difference for channel 2780387851 updates
+INFO: 2025-11-29 23:11:04,166: Got difference for channel 2443579822 updates
+INFO: 2025-11-29 23:11:38,647: Got difference for channel 1369944285 updates
+INFO: 2025-11-29 23:11:40,786: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 23:11:41,307: Got difference for channel 1161631495 updates
+INFO: 2025-11-29 23:11:48,985: Got difference for channel 2317694562 updates
+INFO: 2025-11-29 23:11:51,246: Got difference for channel 1555693413 updates
+INFO: 2025-11-29 23:11:51,708: Got difference for channel 2460257267 updates
+INFO: 2025-11-29 23:11:54,132: Got difference for channel 2114987005 updates
+INFO: 2025-11-29 23:12:01,065: Got difference for channel 2713501654 updates
+INFO: 2025-11-29 23:12:16,498: Got difference for channel 1555693413 updates
+INFO: 2025-11-29 23:12:43,533: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:12:43,533: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:12:43,540: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:12:43,540: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:12:43,541: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 23:12:43,542: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 23:12:53,798: libssl detected, it will be used for encryption
+INFO: 2025-11-29 23:12:53,929: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 23:12:57,657: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 23:12:59,862: Phone migrated to 5
+INFO: 2025-11-29 23:12:59,862: Reconnecting to new data center 5
+INFO: 2025-11-29 23:13:00,232: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 23:13:00,245: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 23:13:00,246: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 23:13:05,108: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 23:13:07,851: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:13:07,853: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:13:26,443: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:13:26,450: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:13:26,450: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:13:26,455: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:13:26,456: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:13:26,459: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:13:26,459: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:13:26,766: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:13:26,775: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:13:26,785: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:13:50,798: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:13:50,801: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:13:51,857: Got difference for channel 2495873537 updates
+INFO: 2025-11-29 23:13:52,368: Got difference for channel 1364379425 updates
+INFO: 2025-11-29 23:13:52,981: Got difference for channel 1091256481 updates
+INFO: 2025-11-29 23:13:53,564: Got difference for channel 2700655879 updates
+INFO: 2025-11-29 23:13:54,109: Got difference for channel 2961823510 updates
+INFO: 2025-11-29 23:13:54,654: Got difference for channel 2192964664 updates
+INFO: 2025-11-29 23:14:06,533: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 23:25:38,212: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:25:38,213: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:25:38,221: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:25:38,221: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:25:38,222: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 23:25:38,222: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 23:25:39,159: libssl detected, it will be used for encryption
+INFO: 2025-11-29 23:25:39,254: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 23:25:42,806: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 23:25:45,236: Phone migrated to 5
+INFO: 2025-11-29 23:25:45,236: Reconnecting to new data center 5
+INFO: 2025-11-29 23:25:45,676: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 23:25:45,677: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 23:25:45,677: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 23:25:52,464: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 23:25:55,279: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:25:55,280: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:26:17,543: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:26:17,545: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:26:17,545: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:26:17,547: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:26:17,549: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:26:17,549: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:26:17,555: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:26:17,555: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:26:17,557: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:26:17,559: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:26:41,168: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:26:41,170: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:26:41,778: Got difference for account updates
+INFO: 2025-11-29 23:26:42,685: Got difference for channel 1091256481 updates
+INFO: 2025-11-29 23:26:43,263: Got difference for channel 2700655879 updates
+INFO: 2025-11-29 23:26:43,841: Got difference for channel 2961823510 updates
+INFO: 2025-11-29 23:26:44,438: Got difference for channel 2192964664 updates
+INFO: 2025-11-29 23:26:55,104: Got difference for account updates
+INFO: 2025-11-29 23:27:01,925: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:28:09,950: Got difference for channel 1555693413 updates
+INFO: 2025-11-29 23:28:10,586: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 23:28:15,044: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 23:28:26,528: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 23:30:24,578: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 23:30:30,796: Got difference for channel 2317694562 updates
+INFO: 2025-11-29 23:30:41,594: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:30:41,672: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:30:41,700: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:30:41,701: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:31:13,903: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:31:13,905: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:32:16,249: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:32:16,251: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:32:16,252: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 23:32:16,252: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 23:32:17,266: libssl detected, it will be used for encryption
+INFO: 2025-11-29 23:32:17,374: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 23:32:20,495: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 23:32:23,802: Phone migrated to 5
+INFO: 2025-11-29 23:32:23,803: Reconnecting to new data center 5
+INFO: 2025-11-29 23:32:24,320: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 23:32:24,320: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 23:32:24,320: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 23:32:27,970: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 23:32:30,612: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:32:30,615: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:32:49,995: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:33:54,980: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:33:54,982: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:33:54,984: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:33:54,988: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:33:54,988: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:33:54,990: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:33:54,991: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:33:55,007: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:33:55,007: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:33:55,010: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,239: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,240: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,241: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,241: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,242: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,242: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,245: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,245: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,246: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,246: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,246: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,247: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,248: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,248: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,250: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,253: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,253: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,256: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,256: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:28,266: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:58,569: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:58,569: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:58,570: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:58,570: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:58,574: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:58,575: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:58,575: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:58,575: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:58,576: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:34:58,580: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:35:31,052: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:35:31,053: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:35:31,054: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:35:31,054: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:35:31,055: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:35:31,055: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:35:31,056: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:35:31,057: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:35:31,057: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:35:31,057: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,185: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,186: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,187: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,194: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,198: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,202: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,202: Sleeping for 6s (0:00:06) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,203: Sleeping for 6s (0:00:06) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,203: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,204: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,204: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,205: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,205: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,206: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,206: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,207: Sleeping for 6s (0:00:06) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,207: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,207: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,210: Sleeping for 7s (0:00:07) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:12,211: Sleeping for 6s (0:00:06) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:32,721: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:32,724: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:32,725: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:32,726: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:32,726: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:32,726: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:32,727: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:32,730: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:32,731: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:36:32,735: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,826: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,827: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,827: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,827: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,827: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,827: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,828: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,830: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,830: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,832: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,832: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,833: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,833: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,834: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,834: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,834: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,834: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,834: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,836: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:04,836: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:36,149: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:36,150: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:36,150: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:36,152: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:36,152: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:36,155: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:36,155: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:36,155: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:36,156: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:36,160: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:37:44,340: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:37:44,340: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:37:44,342: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 23:37:44,343: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 23:46:19,140: libssl detected, it will be used for encryption
+INFO: 2025-11-29 23:46:19,248: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 23:46:22,193: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 23:46:25,141: Phone migrated to 5
+INFO: 2025-11-29 23:46:25,142: Reconnecting to new data center 5
+INFO: 2025-11-29 23:46:25,538: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 23:46:25,539: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 23:46:25,539: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 23:46:29,143: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 23:46:32,471: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:46:32,473: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:47:04,781: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 23:47:04,782: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 23:48:53,805: libssl detected, it will be used for encryption
+INFO: 2025-11-29 23:48:53,888: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 23:48:57,007: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 23:49:00,505: Phone migrated to 5
+INFO: 2025-11-29 23:49:00,506: Reconnecting to new data center 5
+INFO: 2025-11-29 23:49:01,025: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 23:49:01,026: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 23:49:01,026: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 23:49:04,829: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 23:49:08,322: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:49:08,324: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:49:48,311: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 23:50:24,634: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 23:51:33,836: Got difference for account updates
+INFO: 2025-11-29 23:51:34,393: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 23:51:39,771: Sleeping for 16s (0:00:16) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:52:49,727: Sleeping for 14s (0:00:14) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:52:49,738: Sleeping for 14s (0:00:14) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:52:49,750: Sleeping for 14s (0:00:14) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:52:50,445: Sleeping for 14s (0:00:14) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:52:50,445: Sleeping for 14s (0:00:14) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:52:51,555: Sleeping for 14s (0:00:14) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:52:51,556: Sleeping for 14s (0:00:14) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:52:51,556: Sleeping for 14s (0:00:14) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:52:51,557: Sleeping for 14s (0:00:14) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:52:51,557: Sleeping for 14s (0:00:14) on GetHistoryRequest flood wait
+INFO: 2025-11-29 23:52:59,498: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 23:52:59,498: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 23:52:59,500: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 23:52:59,500: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 00:03:34,503: libssl detected, it will be used for encryption
+INFO: 2025-11-30 00:03:34,618: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 00:03:39,216: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 00:03:42,604: Phone migrated to 5
+INFO: 2025-11-30 00:03:42,605: Reconnecting to new data center 5
+INFO: 2025-11-30 00:03:43,021: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 00:03:43,022: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 00:03:43,022: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 00:03:46,341: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 00:03:50,159: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 00:03:50,162: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-30 00:04:09,166: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:05,574: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:05,575: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:05,576: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:05,576: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:05,580: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:05,581: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:05,582: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:05,583: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:05,587: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:05,590: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,038: Got difference for channel 2185062351 updates
+INFO: 2025-11-30 00:05:38,686: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,687: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,687: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,688: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,688: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,690: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,695: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,695: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,696: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,696: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,696: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,696: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,697: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,697: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,697: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,698: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,698: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,698: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,707: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:38,710: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:05:50,847: Got difference for channel 2185062351 updates
+INFO: 2025-11-30 00:06:04,809: Got difference for channel 2185062351 updates
+INFO: 2025-11-30 00:06:11,317: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:11,317: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:11,317: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:11,318: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:11,318: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:11,318: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:11,319: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:11,319: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:11,319: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:11,319: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:29,926: Got difference for channel 2185062351 updates
+INFO: 2025-11-30 00:06:36,298: Got difference for account updates
+INFO: 2025-11-30 00:06:41,722: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:41,723: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:41,725: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:41,725: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:41,726: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:41,726: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:41,727: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:41,728: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:41,729: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:41,730: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:06:52,361: Got difference for channel 2185062351 updates
+INFO: 2025-11-30 00:07:01,105: Got difference for channel 2185062351 updates
+INFO: 2025-11-30 00:07:21,273: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,274: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,275: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,275: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,276: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,276: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,277: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,277: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,278: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,280: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,280: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,281: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,281: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,281: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,282: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,282: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,283: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,283: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,283: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:21,285: Sleeping for 12s (0:00:12) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:43,322: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:43,323: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:43,323: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:43,324: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:43,325: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:43,326: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:43,327: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:43,327: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:43,328: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:07:43,336: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,119: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,120: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,121: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,122: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,122: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,123: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,124: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,124: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,124: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,124: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,130: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,130: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,131: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,131: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,131: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,132: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,133: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,135: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,139: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:16,141: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:46,427: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:46,432: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:46,432: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:46,435: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:46,438: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:46,438: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:46,438: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:46,438: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:46,440: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:08:46,440: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:09:19,033: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:09:19,034: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:09:19,034: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:09:19,034: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:09:19,035: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:09:19,035: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:09:19,036: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:09:19,036: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:09:19,039: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:09:19,040: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:09:50,274: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 00:09:50,275: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-30 00:09:50,278: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 00:09:50,278: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 00:16:57,937: libssl detected, it will be used for encryption
+INFO: 2025-11-30 00:16:58,066: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 00:17:01,406: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 00:17:03,785: Phone migrated to 5
+INFO: 2025-11-30 00:17:03,786: Reconnecting to new data center 5
+INFO: 2025-11-30 00:17:04,197: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 00:17:04,198: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 00:17:04,199: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 00:17:07,682: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 00:17:11,364: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 00:17:11,366: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-30 00:17:27,562: Got difference for channel 2185062351 updates
+INFO: 2025-11-30 00:17:33,046: Sleeping for 17s (0:00:17) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:25,908: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:25,910: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:25,918: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:25,923: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:25,928: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:25,929: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:25,937: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,038: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,038: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,044: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,046: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,047: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,047: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,048: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,049: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,059: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,063: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,066: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,067: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,068: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,068: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,069: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,069: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,073: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:26,074: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,082: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,133: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,133: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,829: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,835: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,835: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,836: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,836: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,836: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,836: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,837: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,837: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,837: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,837: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:18:59,838: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:19:15,153: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 00:19:15,154: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-30 00:19:15,155: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 00:19:15,155: Disconnection from 91.108.56.139:443/TcpFull complete!
