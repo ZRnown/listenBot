@@ -612,7 +612,7 @@ async def setup_handlers(manager: ClientManager):
             )
         except Exception as e:
             await bot.send_message(report_chat_id, f'❌ 点击任务出错：{e}')
-
+    
     @bot.on(events.NewMessage)
     async def _(event):
         chat_id = event.chat_id
@@ -854,16 +854,15 @@ async def setup_handlers(manager: ClientManager):
                 # 保存
                 try:
                     settings_service.set_target_bot(clean)
-                except Exception as e:
-                    set_state(chat_id)
-                    await event.respond(f'⚠️ 设置失败：{e}', buttons=main_keyboard())
-                else:
                     set_state(chat_id)
                     await event.respond(
                         f'✅ 目标机器人已设置：@{clean}\n\n'
                         '点击"▶️ 开始发送"按钮来批量发送消息。',
                         buttons=main_keyboard()
                     )
+                except Exception as e:
+                    set_state(chat_id)
+                    await event.respond(f'⚠️ 设置失败：{e}', buttons=main_keyboard())
                 return
             if mode == 'set_global_template':
                 t = (text or '').strip()
@@ -967,7 +966,7 @@ async def setup_handlers(manager: ClientManager):
                     set_state(chat_id, 'keywords_import_wait_file', account_id=account_id, kind=kind)
                     await event.respond('📄 请发送包含关键字的文本文件（每行一个，支持逗号/换行分隔），作为文档上传。')
                     return
-                        before = set(settings_service.get_account_keywords(account_id, kind=kind) or [])
+                before = set(settings_service.get_account_keywords(account_id, kind=kind) or [])
                 message = None
                 payload = t[1:] if t[:1] in ('+', '＋', '-', '－', 'q', 'Q') else t
                 if t.startswith(('+', '＋')):
@@ -1107,13 +1106,13 @@ async def setup_handlers(manager: ClientManager):
                 await event.respond(msg, buttons=main_keyboard())
                 return
 
-            # 监听群组配置相关模式已废弃，不再处理
+            # 监听群组相关模式已移除（现在监听账号默认监听所有群组）
 
         if is_cmd(text, '设置转发目标'):
             rows = list_accounts('listen')
             if not rows:
                 await event.respond('⚠️ 尚无监听账号，请先添加。')
-                        return
+                return
             
             # 显示所有监听账号的转发目标（只显示账号专属的）
             lines = []
@@ -1140,7 +1139,7 @@ async def setup_handlers(manager: ClientManager):
                 acc_id = target_row['id']
                 cur = settings_service.get_account_target_chat(acc_id) or '（未设置）'
                 set_state(chat_id, 'set_forward_target', account_id=acc_id)
-                    await event.respond(
+                await event.respond(
                     f'📤 设置转发目标\n\n'
                     f'当前所有转发目标：\n{summary}\n\n'
                     f'────────────\n'
@@ -1152,7 +1151,7 @@ async def setup_handlers(manager: ClientManager):
                     '• 输入"清空"清除设置\n'
                     '• 输入"取消"退出'
                 )
-                else:
+            else:
                 set_state(chat_id, 'set_forward_target_choose_account')
                 await event.respond(
                     f'📤 设置转发目标\n\n'
@@ -1209,10 +1208,6 @@ async def setup_handlers(manager: ClientManager):
             return
 
         if is_cmd(text, '▶️ 开始点击'):
-            click_rows = list_accounts('click')
-            if not click_rows:
-                await event.respond('⚠️ 尚无点击账号，请先添加。')
-                return
             # 提示用户发送目标消息链接
             set_state(chat_id, 'start_click_wait_link')
             await event.respond(
