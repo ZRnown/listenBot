@@ -1185,57 +1185,18 @@ async def setup_handlers(manager: ClientManager):
             if not rows:
                 await event.respond('⚠️ 尚无监听账号，请先添加。')
                 return
-            
-            # 显示所有监听账号及其监听的群组
-            lines = []
+
+            # 直接将所有监听账号改为「监听全部群组」：
+            # 实现方式：清空每个账号的自定义监听群组列表，
+            # 代码中约定：未设置监听群组 = 监听全部群组
             for r in rows:
                 acc_id = r['id']
-                ident = r['username'] or r['phone'] or f"#{acc_id}"
-                sources = settings_service.get_listen_sources(acc_id) or []
-                if sources:
-                    sources_preview = ', '.join(sources[:3])
-                    if len(sources) > 3:
-                        sources_preview += f' ... (共 {len(sources)} 个)'
-                    lines.append(f"• {ident} (#{acc_id}): {sources_preview}")
-                else:
-                    lines.append(f"• {ident} (#{acc_id}): （未设置，将监听所有群组）")
-            
-            summary = '\n'.join(lines) if lines else '（无监听账号）'
-            
-            acc_hint = extract_account_id(text)
-            target_row = None
-            if acc_hint:
-                target_row = dao_accounts.get(acc_hint)
-                if target_row and not role_allows_listen(get_account_role(acc_hint)):
-                    target_row = None
-            if not target_row and len(rows) == 1:
-                target_row = rows[0]
-            if target_row:
-                acc_id = target_row['id']
-                set_state(chat_id, 'listen_sources_manage', account_id=acc_id)
-                cur = settings_service.get_listen_sources(acc_id) or []
-                preview = '\n'.join(['• ' + x for x in cur[:20]]) or '（空）'
-                await event.respond(
-                    f"📡 监听群组配置\n\n"
-                    f"所有监听账号的群组列表：\n{summary}\n\n"
-                    f"────────────\n"
-                    f"当前编辑账号 #{acc_id} 的监听群组（共 {len(cur)} 条，预览前20条）：\n{preview}\n\n"
-                    '操作说明：\n'
-                    '新增：直接发送 @group / 123456789 / https://t.me/xxx（支持多行）\n'
-                    '删除：发送 q值（例：q@group / q123456）\n'
-                    '导入：发送"导入"，上传文本文件（每行一个）\n'
-                    '导出：发送"导出"\n'
-                    '清空：发送"清空"\n'
-                    '返回：发送"完成"'
-                )
-            else:
-                set_state(chat_id, 'set_listen_sources_choose_account')
-                await event.respond(
-                    f'📡 监听群组配置\n\n'
-                    f'所有监听账号的群组列表：\n{summary}\n\n'
-                    f'────────────\n'
-                    f'🔢 请输入要设置监听群组的账号ID：'
-                )
+                settings_service.clear_listen_sources(acc_id)
+
+            await event.respond(
+                f'📡 已将所有监听账号的监听范围设置为：**全部群组**。\n'
+                f'共处理监听账号：{len(rows)} 个。'
+            )
             return
 
         if is_cmd(text, '设置转发目标'):
@@ -1338,6 +1299,10 @@ async def setup_handlers(manager: ClientManager):
             return
 
         if is_cmd(text, '▶️ 开始点击'):
+            click_rows = list_accounts('click')
+            if not click_rows:
+                await event.respond('⚠️ 尚无点击账号，请先添加。')
+                return
             # 提示用户发送目标消息链接
             set_state(chat_id, 'start_click_wait_link')
             await event.respond(
