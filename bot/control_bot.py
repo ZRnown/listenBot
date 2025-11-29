@@ -612,7 +612,7 @@ async def setup_handlers(manager: ClientManager):
             )
         except Exception as e:
             await bot.send_message(report_chat_id, f'❌ 点击任务出错：{e}')
-    
+
     @bot.on(events.NewMessage)
     async def _(event):
         chat_id = event.chat_id
@@ -690,21 +690,45 @@ async def setup_handlers(manager: ClientManager):
                 if t in ('监听账号', '监听', 'listen'):
                     settings_service.set_account_role(account_id, 'listen')
                     set_state(chat_id, 'set_account_target', account_id=account_id)
-                    await event.respond('🎯 该账号为“监听账号”。请输入此账号的提醒目标（chat_id 或 @username）。\n提示：留空或发送“全局”将使用全局目标。')
+                    await event.respond('🎯 该账号为"监听账号"。请输入此账号的提醒目标（chat_id 或 @username）。\n提示：留空或发送"全局"将使用全局目标。')
                     return
                 if t in ('点击账号', '点击', 'click'):
                     settings_service.set_account_role(account_id, 'click')
                     set_state(chat_id)
-                    await event.respond('✅ 已设置为“点击账号”', buttons=main_keyboard())
+                    await event.respond('✅ 已设置为"点击账号"', buttons=main_keyboard())
                     return
                 if t in ('同时监听与点击', 'both'):
                     settings_service.set_account_role(account_id, 'both')
                     set_state(chat_id, 'set_account_target', account_id=account_id)
-                    await event.respond('🎯 该账号为“同时”。请输入此账号的提醒目标（chat_id 或 @username）。\n提示：留空或发送“全局”将使用全局目标。')
+                    await event.respond('🎯 该账号为"同时"。请输入此账号的提醒目标（chat_id 或 @username）。\n提示：留空或发送"全局"将使用全局目标。')
                     return
                 if t in ('跳过', 'skip'):
                     set_state(chat_id)
                     await event.respond('已跳过角色设置（默认按全局策略处理）', buttons=main_keyboard())
+                    return
+                await event.respond('请选择账号角色：', buttons=roles_keyboard())
+                return
+            if mode == 'change_account_role':
+                account_id = st['pending']['account_id']
+                t = text.strip()
+                if t in ('监听账号', '监听', 'listen'):
+                    settings_service.set_account_role(account_id, 'listen')
+                    set_state(chat_id)
+                    await event.respond(f'✅ 账号 #{account_id} 已设置为"监听账号"', buttons=main_keyboard())
+                    return
+                if t in ('点击账号', '点击', 'click'):
+                    settings_service.set_account_role(account_id, 'click')
+                    set_state(chat_id)
+                    await event.respond(f'✅ 账号 #{account_id} 已设置为"点击账号"', buttons=main_keyboard())
+                    return
+                if t in ('同时监听与点击', 'both'):
+                    settings_service.set_account_role(account_id, 'both')
+                    set_state(chat_id)
+                    await event.respond(f'✅ 账号 #{account_id} 已设置为"同时监听与点击"', buttons=main_keyboard())
+                    return
+                if t in ('取消', '退出', 'cancel'):
+                    set_state(chat_id)
+                    await event.respond('✅ 已取消', buttons=main_keyboard())
                     return
                 await event.respond('请选择账号角色：', buttons=roles_keyboard())
                 return
@@ -720,53 +744,33 @@ async def setup_handlers(manager: ClientManager):
                 set_state(chat_id)
                 await event.respond('✅ 已设置账号专属提醒目标', buttons=main_keyboard())
                 return
-            if mode == 'set_forward_target_choose_account':
-                try:
-                    acc_id = int(text)
-                    row = dao_accounts.get(acc_id)
-                    if not row:
-                        await event.respond('⚠️ 账号不存在，请重新输入账号ID')
-                        return
-                    if not role_allows_listen(get_account_role(acc_id)):
-                        await event.respond('⚠️ 该账号不是监听账号，请重新输入监听账号ID')
-                        return
-                    cur = settings_service.get_account_target_chat(acc_id) or settings_service.get_target_chat() or '（未设置）'
-                    set_state(chat_id, 'set_forward_target', account_id=acc_id)
-                    await event.respond(
-                        f'📤 设置转发目标（账号 #{acc_id}）\n'
-                        f'当前转发目标：{cur}\n\n'
-                        '请输入转发目标：\n'
-                        '• 用户名：@username\n'
-                        '• 群组/频道：@groupname 或 chat_id\n'
-                        '• 链接：https://t.me/username\n'
-                        '• 输入"全局"使用全局设置\n'
-                        '• 输入"清空"清除账号专属设置\n'
-                        '• 输入"取消"退出'
-                    )
-                except Exception:
-                    await event.respond('⚠️ 请输入有效的账号ID（数字）')
-                return
-            if mode == 'set_forward_target':
-                account_id = st['pending']['account_id']
+            if mode == 'set_forward_target_global':
                 t = (text or '').strip()
                 if t in ('取消', '退出', 'cancel'):
                     set_state(chat_id)
                     await event.respond('✅ 已取消', buttons=main_keyboard())
                     return
                 if t in ('清空', 'clear'):
-                    settings_service.set_account_target_chat(account_id, None)
+                    settings_service.set_target_chat('')
                     set_state(chat_id)
                     await event.respond('✅ 已清空转发目标', buttons=main_keyboard())
                     return
                 # 处理输入：支持 @username, chat_id, https://t.me/username
                 clean_target = t.strip()
                 if clean_target.startswith('http://') or clean_target.startswith('https://'):
-                    clean_target = clean_target.rsplit('/', 1)[-1]
+                    # 提取用户名或处理邀请链接
+                    if '/joinchat/' in clean_target or '/+' in clean_target:
+                        # 邀请链接，保持原样
+                        pass
+                    else:
+                        clean_target = clean_target.rsplit('/', 1)[-1]
                 if clean_target.startswith('@'):
                     clean_target = clean_target[1:]
-                settings_service.set_account_target_chat(account_id, clean_target if clean_target else t)
+                # 设置全局转发目标
+                final_target = clean_target if clean_target else t
+                settings_service.set_target_chat(final_target)
                 set_state(chat_id)
-                await event.respond(f'✅ 转发目标已设置：{clean_target if clean_target else t}', buttons=main_keyboard())
+                await event.respond(f'✅ 转发目标已设置：{final_target}', buttons=main_keyboard())
                 return
             if mode == 'set_target_chat':
                 settings_service.set_target_chat(text)
@@ -915,10 +919,25 @@ async def setup_handlers(manager: ClientManager):
                     return
                 try:
                     info = await manager.add_account_from_string_session(session_str)
-                    settings_service.set_account_role(info['id'], 'listen')
+                    account_id = info['id']
+                    # 如果账号已存在，合并角色；否则设置为 listen
+                    current_role = settings_service.get_account_role(account_id) or 'both'
+                    if info.get('existing'):
+                        # 账号已存在，合并角色
+                        if current_role == 'click':
+                            settings_service.set_account_role(account_id, 'both')
+                            role_msg = "（角色已合并为：监听+点击）"
+                        elif current_role == 'listen':
+                            role_msg = "（角色保持为：监听）"
+                        else:
+                            role_msg = f"（角色：{format_role_label(current_role)}）"
+                    else:
+                        # 新账号，设置为 listen
+                        settings_service.set_account_role(account_id, 'listen')
+                        role_msg = "（角色：监听）"
                     # 保持在连续添加模式
                     await event.respond(
-                        f"✅ 监听账号添加成功！\n用户昵称：{info.get('nickname') or ''}\n用户名：{info.get('username') or '无'}\n账号：{info.get('phone') or ''}\n\n继续添加：发送 StringSession 文本或 .session 文件\n结束：发送“完成”\n（提醒目标可稍后在菜单中为该账号设置）"
+                        f"✅ 监听账号添加成功！\n用户昵称：{info.get('nickname') or ''}\n用户名：{info.get('username') or '无'}\n账号：{info.get('phone') or ''}\n{role_msg}\n\n继续添加：发送 StringSession 文本或 .session 文件\n结束：发送「完成」\n（提醒目标可稍后在菜单中为该账号设置）"
                     )
                 except Exception as e:
                     await event.respond(f"⚠️ 解析为 StringSession 失败：{e}\n也可以直接发送 .session 文件（作为文档）来添加。")
@@ -935,10 +954,25 @@ async def setup_handlers(manager: ClientManager):
                     return
                 try:
                     info = await manager.add_account_from_string_session(t)
-                    settings_service.set_account_role(info['id'], 'click')
+                    account_id = info['id']
+                    # 如果账号已存在，合并角色；否则设置为 click
+                    current_role = settings_service.get_account_role(account_id) or 'both'
+                    if info.get('existing'):
+                        # 账号已存在，合并角色
+                        if current_role == 'listen':
+                            settings_service.set_account_role(account_id, 'both')
+                            role_msg = "（角色已合并为：监听+点击）"
+                        elif current_role == 'click':
+                            role_msg = "（角色保持为：点击）"
+                        else:
+                            role_msg = f"（角色：{format_role_label(current_role)}）"
+                    else:
+                        # 新账号，设置为 click
+                        settings_service.set_account_role(account_id, 'click')
+                        role_msg = "（角色：点击）"
                     # 保持在连续添加模式
                     await event.respond(
-                        f"✅ 点击账号添加成功！\n用户昵称：{info.get('nickname') or ''}\n用户名：{info.get('username') or '无'}\n账号：{info.get('phone') or ''}\n\n继续添加：发送 StringSession 文本或 .session 文件\n结束：发送“完成”"
+                        f"✅ 点击账号添加成功！\n用户昵称：{info.get('nickname') or ''}\n用户名：{info.get('username') or '无'}\n账号：{info.get('phone') or ''}\n{role_msg}\n\n继续添加：发送 StringSession 文本或 .session 文件\n结束：发送「完成」"
                     )
                 except Exception as e:
                     await event.respond(f"⚠️ 解析为 StringSession 失败：{e}\n也可以发送 .session 文件（作为文档）来添加点击账号。")
@@ -966,6 +1000,7 @@ async def setup_handlers(manager: ClientManager):
                     set_state(chat_id, 'keywords_import_wait_file', account_id=account_id, kind=kind)
                     await event.respond('📄 请发送包含关键字的文本文件（每行一个，支持逗号/换行分隔），作为文档上传。')
                     return
+                
                 before = set(settings_service.get_account_keywords(account_id, kind=kind) or [])
                 message = None
                 payload = t[1:] if t[:1] in ('+', '＋', '-', '－', 'q', 'Q') else t
@@ -1109,56 +1144,20 @@ async def setup_handlers(manager: ClientManager):
             # 监听群组相关模式已移除（现在监听账号默认监听所有群组）
 
         if is_cmd(text, '设置转发目标'):
-            rows = list_accounts('listen')
-            if not rows:
-                await event.respond('⚠️ 尚无监听账号，请先添加。')
-                return
-            
-            # 显示所有监听账号的转发目标（只显示账号专属的）
-            lines = []
-            for r in rows:
-                acc_id = r['id']
-                ident = r['username'] or r['phone'] or f"#{acc_id}"
-                account_target = settings_service.get_account_target_chat(acc_id)
-                if account_target:
-                    lines.append(f"• {ident} (#{acc_id}): {account_target}")
-                else:
-                    lines.append(f"• {ident} (#{acc_id}): （未设置）")
-            
-            summary = '\n'.join(lines)
-            
-            acc_hint = extract_account_id(text)
-            target_row = None
-            if acc_hint:
-                target_row = dao_accounts.get(acc_hint)
-                if target_row and not role_allows_listen(get_account_role(acc_hint)):
-                    target_row = None
-            if not target_row and len(rows) == 1:
-                target_row = rows[0]
-            if target_row:
-                acc_id = target_row['id']
-                cur = settings_service.get_account_target_chat(acc_id) or '（未设置）'
-                set_state(chat_id, 'set_forward_target', account_id=acc_id)
-                await event.respond(
-                    f'📤 设置转发目标\n\n'
-                    f'当前所有转发目标：\n{summary}\n\n'
-                    f'────────────\n'
-                    f'当前编辑账号 #{acc_id} 的转发目标：{cur}\n\n'
-                    '请输入转发目标：\n'
-                    '• 用户名：@username\n'
-                    '• 群组/频道：@groupname 或 chat_id\n'
-                    '• 链接：https://t.me/username\n'
-                    '• 输入"清空"清除设置\n'
-                    '• 输入"取消"退出'
-                )
-            else:
-                set_state(chat_id, 'set_forward_target_choose_account')
-                await event.respond(
-                    f'📤 设置转发目标\n\n'
-                    f'当前所有转发目标：\n{summary}\n\n'
-                    f'────────────\n'
-                    f'🔢 请输入要设置转发目标的账号ID：'
-                )
+            # 显示当前全局转发目标
+            cur_target = settings_service.get_target_chat() or '（未设置）'
+            set_state(chat_id, 'set_forward_target_global')
+            await event.respond(
+                f'📤 设置转发目标\n\n'
+                f'当前转发目标：{cur_target}\n\n'
+                f'────────────\n'
+                f'请输入转发目标（所有监听账号将发送到此目标）：\n'
+                f'• 用户名：@username\n'
+                f'• 群组/频道：@groupname 或 chat_id\n'
+                f'• 链接：https://t.me/username\n'
+                f'• 输入"清空"清除设置\n'
+                f'• 输入"取消"退出'
+            )
             return
 
         # 主菜单命令处理
@@ -1193,17 +1192,40 @@ async def setup_handlers(manager: ClientManager):
             if not rows:
                 await event.respond('📭 暂无账号')
                 return
+            
+            # 检查是否包含账号ID（用于修改角色）
+            acc_hint = extract_account_id(text)
+            if acc_hint:
+                target_row = dao_accounts.get(acc_hint)
+                if target_row:
+                    set_state(chat_id, 'change_account_role', account_id=acc_hint)
+                    current_role = get_account_role(acc_hint)
+                    await event.respond(
+                        f'🔄 修改账号 #{acc_hint} 的角色\n'
+                        f'当前角色：{format_role_label(current_role)}\n\n'
+                        '请选择新角色：',
+                        buttons=roles_keyboard()
+                    )
+                    return
+            
             listen_rows = list_accounts('listen')
             click_rows = list_accounts('click')
             def format_rows(items):
                 if not items:
                     return '（无）'
-                return '\n'.join([f"• #{r['id']} {r['username'] or r['phone'] or ''} ({r['status']})" for r in items])
+                result = []
+                for r in items:
+                    role = get_account_role(r['id'])
+                    role_label = format_role_label(role)
+                    ident = r['username'] or r['phone'] or f"#{r['id']}"
+                    result.append(f"• #{r['id']} {ident} ({role_label}, {r['status']})")
+                return '\n'.join(result)
             summary = (
                 f"📒 账号列表（共 {len(rows)} 个）\n\n"
                 f"监听账号（{len(listen_rows)}）：\n{format_rows(listen_rows)}\n\n"
-                f"点击账号（{len(click_rows)}）：\n{format_rows(click_rows)}"
-            )
+                f"点击账号（{len(click_rows)}）：\n{format_rows(click_rows)}\n\n"
+                f"💡 提示：发送「账号列表 #账号ID」可修改账号角色"
+                )
             await event.respond(summary)
             return
 
@@ -1404,18 +1426,47 @@ async def setup_handlers(manager: ClientManager):
                 await event.download_media(file=tmp_path)
                 final_path = sess_service.save_session_file(tmp_path, name)
                 info = await manager.add_account_from_session_file(final_path)
+                account_id = info['id']
                 # auto-assign role based on entry
                 if st['mode'] == 'add_click_account_wait_file':
-                    settings_service.set_account_role(info['id'], 'click')
+                    # 如果账号已存在，合并角色；否则设置为 click
+                    current_role = settings_service.get_account_role(account_id) or 'both'
+                    if info.get('existing', False):
+                        # 账号已存在，合并角色
+                        if current_role == 'listen':
+                            settings_service.set_account_role(account_id, 'both')
+                            role_msg = "（角色已合并为：监听+点击）"
+                        elif current_role == 'click':
+                            role_msg = "（角色保持为：点击）"
+                        else:
+                            role_msg = f"（角色：{format_role_label(current_role)}）"
+                    else:
+                        # 新账号，设置为 click
+                        settings_service.set_account_role(account_id, 'click')
+                        role_msg = "（角色：点击）"
                     # stay in continuous add mode
                     await event.respond(
-                        f"✅ 点击账号添加成功！\n用户昵称：{info.get('nickname') or ''}\n用户名：{info.get('username') or '无'}\n账号：{info.get('phone') or ''}\n\n继续添加：再发送文件或 StringSession 文本\n结束：发送“完成”"
+                        f"✅ 点击账号添加成功！\n用户昵称：{info.get('nickname') or ''}\n用户名：{info.get('username') or '无'}\n账号：{info.get('phone') or ''}\n{role_msg}\n\n继续添加：再发送文件或 StringSession 文本\n结束：发送「完成」"
                     )
                 elif st['mode'] == 'add_listen_account_wait_string':
-                    settings_service.set_account_role(info['id'], 'listen')
+                    # 如果账号已存在，合并角色；否则设置为 listen
+                    current_role = settings_service.get_account_role(account_id) or 'both'
+                    if info.get('existing', False):
+                        # 账号已存在，合并角色
+                        if current_role == 'click':
+                            settings_service.set_account_role(account_id, 'both')
+                            role_msg = "（角色已合并为：监听+点击）"
+                        elif current_role == 'listen':
+                            role_msg = "（角色保持为：监听）"
+                        else:
+                            role_msg = f"（角色：{format_role_label(current_role)}）"
+                    else:
+                        # 新账号，设置为 listen
+                        settings_service.set_account_role(account_id, 'listen')
+                        role_msg = "（角色：监听）"
                     # stay in continuous add mode
                     await event.respond(
-                        f"✅ 监听账号添加成功！\n用户昵称：{info.get('nickname') or ''}\n用户名：{info.get('username') or '无'}\n账号：{info.get('phone') or ''}\n\n继续添加：再发送文件或 StringSession 文本\n结束：发送“完成”\n（提醒目标可稍后在菜单中为该账号设置）"
+                        f"✅ 监听账号添加成功！\n用户昵称：{info.get('nickname') or ''}\n用户名：{info.get('username') or '无'}\n账号：{info.get('phone') or ''}\n{role_msg}\n\n继续添加：再发送文件或 StringSession 文本\n结束：发送「完成」\n（提醒目标可稍后在菜单中为该账号设置）"
                     )
                 else:
                     # legacy path: fallback to choose role

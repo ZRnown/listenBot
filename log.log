@@ -1,0 +1,776 @@
+INFO: 2025-11-29 14:52:37,762: libssl detected, it will be used for encryption
+INFO: 2025-11-29 14:52:37,902: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 14:52:37,903: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 14:52:42,431: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 14:52:42,433: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 14:52:49,592: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 14:52:49,592: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 14:52:54,819: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 14:52:54,821: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 14:53:00,069: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 14:53:00,072: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 14:53:29,070: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 14:53:57,255: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 14:53:57,256: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 14:53:57,257: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 14:53:57,257: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 14:53:57,258: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 14:53:57,258: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 14:53:57,259: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 14:53:57,259: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 14:53:58,009: libssl detected, it will be used for encryption
+INFO: 2025-11-29 14:53:58,125: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 14:53:58,126: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 14:54:02,130: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 14:54:02,131: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 14:54:06,300: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 14:54:06,301: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 14:54:09,668: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 14:54:09,669: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 14:54:14,939: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 14:54:14,944: Connection to 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-29 14:55:01,595: Task was destroyed but it is pending!
+task: <Task pending name='Task-35' coro=<Connection._send_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:310> wait_for=<Future cancelled>>
+ERROR: 2025-11-29 14:55:01,598: Task was destroyed but it is pending!
+task: <Task pending name='Task-36' coro=<Connection._recv_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:355> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x105033ac0>()]>>
+ERROR: 2025-11-29 14:55:01,598: Task was destroyed but it is pending!
+task: <Task pending name='Task-37' coro=<MTProtoSender._send_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:446> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x105033af0>()]>>
+ERROR: 2025-11-29 14:55:01,598: Task was destroyed but it is pending!
+task: <Task pending name='Task-38' coro=<MTProtoSender._recv_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:497> wait_for=<Future cancelled>>
+INFO: 2025-11-29 15:02:47,174: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:02:47,175: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:02:47,176: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:02:47,176: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:02:47,177: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:02:47,177: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:02:47,178: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 15:02:47,178: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 15:02:47,644: libssl detected, it will be used for encryption
+INFO: 2025-11-29 15:02:47,756: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 15:02:50,268: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 15:02:52,298: Phone migrated to 5
+INFO: 2025-11-29 15:02:52,299: Reconnecting to new data center 5
+INFO: 2025-11-29 15:02:52,666: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 15:02:52,683: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 15:02:52,684: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 15:02:56,202: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 15:02:58,989: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:02:58,990: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:03:02,664: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:03:02,666: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:03:07,062: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:03:07,064: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:03:12,350: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:03:12,351: Connection to 91.108.56.152:443/TcpFull complete!
+WARNING: 2025-11-29 15:04:38,545: Server closed the connection: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 15:04:38,547: Connection closed while receiving data: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 15:04:38,547: Closing current connection to begin reconnect...
+INFO: 2025-11-29 15:04:38,547: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:04:38,548: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:10:43,916: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:10:43,917: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:10:43,928: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:10:43,929: Disconnection from 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-29 15:10:43,930: Unhandled exception from keepalive_handle after cancelling <class '_asyncio.Task'> (<Task finished name='Task-33' coro=<UpdateMethods._keepalive_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py:481> exception=OperationalError('database is locked')>)
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 629, in run_until_complete
+    self.run_forever()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 596, in run_forever
+    self._run_once()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 1854, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/selectors.py", line 562, in select
+    kev_list = self._selector.control(None, max_ev, timeout)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/helpers.py", line 176, in _cancel
+    await task
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 517, in _keepalive_loop
+    self._save_states_and_entities()
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/telegrambaseclient.py", line 689, in _save_states_and_entities
+    self.session.process_entities(types.contacts.ResolvedPeer(None, [e._as_input_peer() for e in entities], []))
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/sessions/sqlite.py", line 301, in process_entities
+    c.executemany(
+sqlite3.OperationalError: database is locked
+INFO: 2025-11-29 15:10:58,745: libssl detected, it will be used for encryption
+INFO: 2025-11-29 15:11:54,689: libssl detected, it will be used for encryption
+INFO: 2025-11-29 15:15:26,153: libssl detected, it will be used for encryption
+INFO: 2025-11-29 15:15:39,710: libssl detected, it will be used for encryption
+INFO: 2025-11-29 15:15:47,523: libssl detected, it will be used for encryption
+INFO: 2025-11-29 15:16:10,555: libssl detected, it will be used for encryption
+INFO: 2025-11-29 15:16:10,672: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 15:16:14,326: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 15:16:16,813: Phone migrated to 5
+INFO: 2025-11-29 15:16:16,813: Reconnecting to new data center 5
+INFO: 2025-11-29 15:16:17,211: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 15:16:17,212: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 15:16:17,212: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 15:16:21,126: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 15:16:24,237: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:16:24,239: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:16:27,800: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:16:27,802: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:16:31,550: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:16:31,552: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:16:36,815: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:16:36,821: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:17:06,871: Got difference for account updates
+WARNING: 2025-11-29 15:18:02,900: Server closed the connection: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 15:18:02,902: Connection closed while receiving data: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 15:18:02,902: Closing current connection to begin reconnect...
+INFO: 2025-11-29 15:18:02,903: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:18:02,904: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:18:21,074: Got difference for channel 2185062351 updates
+ERROR: 2025-11-29 15:18:40,031: Task was destroyed but it is pending!
+task: <Task pending name='Task-137' coro=<Connection._send_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:310> wait_for=<Future cancelled>>
+ERROR: 2025-11-29 15:18:40,033: Task was destroyed but it is pending!
+task: <Task pending name='Task-138' coro=<Connection._recv_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:355> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x102a34550>()]>>
+ERROR: 2025-11-29 15:18:40,033: Task was destroyed but it is pending!
+task: <Task pending name='Task-139' coro=<MTProtoSender._send_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:446> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x102b30f40>()]>>
+ERROR: 2025-11-29 15:18:40,033: Task was destroyed but it is pending!
+task: <Task pending name='Task-140' coro=<MTProtoSender._recv_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:497> wait_for=<Future cancelled>>
+INFO: 2025-11-29 15:19:17,597: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 15:19:19,618: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 15:19:25,914: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 15:19:40,930: Got difference for channel 2185062351 updates
+WARNING: 2025-11-29 15:26:28,984: Server closed the connection: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 15:26:28,989: Connection closed while receiving data: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 15:26:28,990: Closing current connection to begin reconnect...
+INFO: 2025-11-29 15:26:28,992: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:26:28,995: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:28:47,662: Got difference for channel 1839245983 updates
+INFO: 2025-11-29 15:31:27,862: Got difference for account updates
+INFO: 2025-11-29 15:31:31,589: Got difference for account updates
+INFO: 2025-11-29 15:32:10,961: Got difference for channel 1161631495 updates
+INFO: 2025-11-29 15:32:14,885: Got difference for channel 1369944285 updates
+INFO: 2025-11-29 15:32:15,988: Got difference for channel 2317694562 updates
+INFO: 2025-11-29 15:32:17,082: Got difference for channel 1555693413 updates
+INFO: 2025-11-29 15:32:21,576: Got difference for channel 2114987005 updates
+INFO: 2025-11-29 15:32:23,173: Got difference for channel 1161631495 updates
+INFO: 2025-11-29 15:34:42,121: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 15:34:46,742: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:34:46,743: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:34:46,746: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:34:46,746: Disconnection from 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-29 15:34:46,746: Unhandled exception from keepalive_handle after cancelling <class '_asyncio.Task'> (<Task finished name='Task-38' coro=<UpdateMethods._keepalive_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py:481> exception=OperationalError('database is locked')>)
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 629, in run_until_complete
+    self.run_forever()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 596, in run_forever
+    self._run_once()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 1854, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/selectors.py", line 562, in select
+    kev_list = self._selector.control(None, max_ev, timeout)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/helpers.py", line 176, in _cancel
+    await task
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 517, in _keepalive_loop
+    self._save_states_and_entities()
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/telegrambaseclient.py", line 689, in _save_states_and_entities
+    self.session.process_entities(types.contacts.ResolvedPeer(None, [e._as_input_peer() for e in entities], []))
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/sessions/sqlite.py", line 301, in process_entities
+    c.executemany(
+sqlite3.OperationalError: database is locked
+INFO: 2025-11-29 15:34:46,768: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:34:46,768: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:34:46,769: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 15:34:46,769: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 15:34:48,274: libssl detected, it will be used for encryption
+INFO: 2025-11-29 15:34:48,394: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 15:34:51,252: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 15:34:53,559: Phone migrated to 5
+INFO: 2025-11-29 15:34:53,559: Reconnecting to new data center 5
+INFO: 2025-11-29 15:34:53,942: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 15:34:53,943: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 15:34:53,944: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 15:34:57,679: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 15:35:00,237: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:35:00,238: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:35:03,876: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:35:03,877: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:35:07,769: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:35:07,770: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:35:13,040: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:35:13,043: Connection to 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-29 15:35:15,003: Task was destroyed but it is pending!
+task: <Task pending name='Task-36' coro=<Connection._send_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:310> wait_for=<Future cancelled>>
+ERROR: 2025-11-29 15:35:15,004: Task was destroyed but it is pending!
+task: <Task pending name='Task-37' coro=<Connection._recv_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:355> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x1048d9b20>()]>>
+ERROR: 2025-11-29 15:35:15,004: Task was destroyed but it is pending!
+task: <Task pending name='Task-38' coro=<MTProtoSender._send_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:446> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x1048d9af0>()]>>
+ERROR: 2025-11-29 15:35:15,004: Task was destroyed but it is pending!
+task: <Task pending name='Task-39' coro=<MTProtoSender._recv_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:497> wait_for=<Future cancelled>>
+INFO: 2025-11-29 15:38:33,542: Got difference for account updates
+INFO: 2025-11-29 15:41:16,763: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:41:16,765: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:41:16,765: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:41:16,765: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:41:16,766: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:41:16,767: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:41:16,767: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 15:41:16,767: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 15:41:17,477: libssl detected, it will be used for encryption
+INFO: 2025-11-29 15:41:17,577: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 15:41:21,006: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 15:41:23,179: Phone migrated to 5
+INFO: 2025-11-29 15:41:23,180: Reconnecting to new data center 5
+INFO: 2025-11-29 15:41:23,534: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 15:41:23,550: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 15:41:23,550: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 15:41:27,034: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 15:41:29,720: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:41:29,722: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:41:33,075: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:41:33,076: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:41:36,417: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:41:36,418: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:41:41,683: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:41:41,690: Connection to 91.108.56.152:443/TcpFull complete!
+WARNING: 2025-11-29 15:43:07,991: Server closed the connection: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 15:43:07,992: Connection closed while receiving data: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 15:43:07,993: Closing current connection to begin reconnect...
+INFO: 2025-11-29 15:43:07,993: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:43:07,995: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:44:11,958: Got difference for account updates
+INFO: 2025-11-29 15:46:02,094: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:46:02,095: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:46:02,097: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:46:02,097: Disconnection from 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-29 15:46:02,097: Unhandled exception from keepalive_handle after cancelling <class '_asyncio.Task'> (<Task finished name='Task-37' coro=<UpdateMethods._keepalive_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py:481> exception=OperationalError('database is locked')>)
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 629, in run_until_complete
+    self.run_forever()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 596, in run_forever
+    self._run_once()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 1854, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/selectors.py", line 562, in select
+    kev_list = self._selector.control(None, max_ev, timeout)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/helpers.py", line 176, in _cancel
+    await task
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 517, in _keepalive_loop
+    self._save_states_and_entities()
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/telegrambaseclient.py", line 689, in _save_states_and_entities
+    self.session.process_entities(types.contacts.ResolvedPeer(None, [e._as_input_peer() for e in entities], []))
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/sessions/sqlite.py", line 301, in process_entities
+    c.executemany(
+sqlite3.OperationalError: database is locked
+INFO: 2025-11-29 15:46:08,667: libssl detected, it will be used for encryption
+INFO: 2025-11-29 15:47:06,892: libssl detected, it will be used for encryption
+INFO: 2025-11-29 15:47:06,999: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 15:47:10,621: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 15:47:12,895: Phone migrated to 5
+INFO: 2025-11-29 15:47:12,896: Reconnecting to new data center 5
+INFO: 2025-11-29 15:47:13,311: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 15:47:13,311: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 15:47:13,312: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 15:47:16,813: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 15:47:19,636: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:47:19,640: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:47:23,452: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:47:23,454: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:47:26,919: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:47:26,921: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:47:32,196: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:47:32,199: Connection to 91.108.56.152:443/TcpFull complete!
+WARNING: 2025-11-29 15:48:58,503: Server closed the connection: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 15:48:58,505: Connection closed while receiving data: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 15:48:58,506: Closing current connection to begin reconnect...
+INFO: 2025-11-29 15:48:58,507: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:48:58,508: Connection to 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-29 15:49:06,728: Task was destroyed but it is pending!
+task: <Task pending name='Task-67' coro=<Connection._send_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:316> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x106677100>()]>>
+ERROR: 2025-11-29 15:49:06,729: Task was destroyed but it is pending!
+task: <Task pending name='Task-68' coro=<Connection._recv_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:335> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x1066686a0>()]>>
+ERROR: 2025-11-29 15:49:06,729: Task was destroyed but it is pending!
+task: <Task pending name='Task-69' coro=<MTProtoSender._send_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:464> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x1066685e0>()]>>
+ERROR: 2025-11-29 15:49:06,729: Task was destroyed but it is pending!
+task: <Task pending name='Task-70' coro=<MTProtoSender._recv_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:507> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x1066777f0>()]>>
+INFO: 2025-11-29 15:49:39,515: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:49:39,516: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:49:39,518: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:49:39,518: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:49:39,521: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:49:39,521: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:49:39,522: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 15:49:39,523: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 15:50:30,900: libssl detected, it will be used for encryption
+INFO: 2025-11-29 15:50:31,021: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 15:50:34,283: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 15:50:36,719: Phone migrated to 5
+INFO: 2025-11-29 15:50:36,720: Reconnecting to new data center 5
+INFO: 2025-11-29 15:50:37,094: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 15:50:37,095: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 15:50:37,095: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 15:50:40,560: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 15:50:43,191: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:50:43,192: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:50:46,618: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:50:46,619: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:50:50,125: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:50:50,126: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:50:55,396: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:50:55,399: Connection to 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-29 15:51:54,435: Task was destroyed but it is pending!
+task: <Task pending name='Task-38' coro=<Connection._send_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:316> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x104987880>()]>>
+ERROR: 2025-11-29 15:51:54,436: Task was destroyed but it is pending!
+task: <Task pending name='Task-39' coro=<Connection._recv_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:335> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x104987fd0>()]>>
+ERROR: 2025-11-29 15:51:54,436: Task was destroyed but it is pending!
+task: <Task pending name='Task-40' coro=<MTProtoSender._send_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:464> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x10498e040>()]>>
+ERROR: 2025-11-29 15:51:54,436: Task was destroyed but it is pending!
+task: <Task pending name='Task-41' coro=<MTProtoSender._recv_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:507> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x10498e070>()]>>
+INFO: 2025-11-29 15:53:29,802: Got difference for channel 2509862916 updates
+INFO: 2025-11-29 15:56:32,979: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:56:32,979: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:56:32,981: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:56:32,981: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:56:32,985: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 15:56:32,986: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 15:56:32,987: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 15:56:32,987: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 16:07:55,684: libssl detected, it will be used for encryption
+INFO: 2025-11-29 16:07:55,816: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:07:59,237: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:08:01,529: Phone migrated to 5
+INFO: 2025-11-29 16:08:01,529: Reconnecting to new data center 5
+INFO: 2025-11-29 16:08:01,909: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:08:01,911: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:08:01,911: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 16:08:05,507: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 16:08:08,045: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:08:08,047: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:08:11,559: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:08:11,560: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:08:14,921: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:08:14,922: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:08:20,216: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:08:20,219: Connection to 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-29 16:08:57,093: Task was destroyed but it is pending!
+task: <Task pending name='Task-36' coro=<Connection._send_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:310> wait_for=<Future cancelled>>
+ERROR: 2025-11-29 16:08:57,097: Task was destroyed but it is pending!
+task: <Task pending name='Task-37' coro=<Connection._recv_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:355> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x102569a60>()]>>
+ERROR: 2025-11-29 16:08:57,097: Task was destroyed but it is pending!
+task: <Task pending name='Task-38' coro=<MTProtoSender._send_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:446> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x102569a30>()]>>
+ERROR: 2025-11-29 16:08:57,098: Task was destroyed but it is pending!
+task: <Task pending name='Task-39' coro=<MTProtoSender._recv_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:497> wait_for=<Future cancelled>>
+INFO: 2025-11-29 16:09:53,250: Got difference for channel 2509862916 updates
+INFO: 2025-11-29 16:13:17,811: Got difference for account updates
+INFO: 2025-11-29 16:15:23,166: Got difference for channel 1779636602 updates
+INFO: 2025-11-29 16:17:41,403: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:17:41,405: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:17:41,423: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:17:41,423: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:17:41,437: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:17:41,437: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:17:41,442: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 16:17:41,443: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 16:20:20,479: libssl detected, it will be used for encryption
+INFO: 2025-11-29 16:20:20,619: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:20:23,570: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:20:25,720: Phone migrated to 5
+INFO: 2025-11-29 16:20:25,720: Reconnecting to new data center 5
+INFO: 2025-11-29 16:20:26,070: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:20:26,070: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:20:26,070: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 16:20:29,984: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 16:20:32,768: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:20:32,769: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:20:36,109: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:20:36,110: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:20:39,364: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:20:39,365: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:20:44,653: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:20:44,657: Connection to 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-29 16:20:47,608: Task was destroyed but it is pending!
+task: <Task pending name='Task-38' coro=<Connection._send_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:310> wait_for=<Future cancelled>>
+ERROR: 2025-11-29 16:20:47,610: Task was destroyed but it is pending!
+task: <Task pending name='Task-39' coro=<Connection._recv_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:355> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x103de18e0>()]>>
+ERROR: 2025-11-29 16:20:47,610: Task was destroyed but it is pending!
+task: <Task pending name='Task-40' coro=<MTProtoSender._send_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:446> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x103de1910>()]>>
+ERROR: 2025-11-29 16:20:47,610: Task was destroyed but it is pending!
+task: <Task pending name='Task-41' coro=<MTProtoSender._recv_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:497> wait_for=<Future cancelled>>
+INFO: 2025-11-29 16:22:12,641: Got difference for account updates
+INFO: 2025-11-29 16:25:10,555: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:25:10,555: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:25:10,557: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:25:10,557: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:25:10,561: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:25:10,561: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:25:10,562: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 16:25:10,563: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 16:25:12,961: libssl detected, it will be used for encryption
+INFO: 2025-11-29 16:25:13,079: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:25:16,068: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:25:18,593: Phone migrated to 5
+INFO: 2025-11-29 16:25:18,594: Reconnecting to new data center 5
+INFO: 2025-11-29 16:25:19,090: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:25:19,112: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:25:19,112: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 16:25:23,700: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 16:25:26,417: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:25:26,418: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:25:30,604: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:25:30,605: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:25:36,757: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:25:36,758: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:25:42,039: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:25:42,050: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:27:05,274: Got difference for account updates
+WARNING: 2025-11-29 16:27:08,533: Server closed the connection: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 16:27:08,533: Connection closed while receiving data: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 16:27:08,534: Closing current connection to begin reconnect...
+INFO: 2025-11-29 16:27:08,534: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:27:08,535: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:27:23,010: Sleeping for 3s (0:00:03) on SendMessageRequest flood wait
+INFO: 2025-11-29 16:27:23,646: Sleeping for 3s (0:00:03) on SendMessageRequest flood wait
+INFO: 2025-11-29 16:27:28,403: Sleeping for 3s (0:00:03) on SendMessageRequest flood wait
+INFO: 2025-11-29 16:27:28,786: Sleeping for 3s (0:00:03) on SendMessageRequest flood wait
+INFO: 2025-11-29 16:27:33,647: Sleeping for 3s (0:00:03) on SendMessageRequest flood wait
+INFO: 2025-11-29 16:27:34,459: Sleeping for 3s (0:00:03) on SendMessageRequest flood wait
+INFO: 2025-11-29 16:27:43,708: Sleeping for 37s (0:00:37) on SendMessageRequest flood wait
+INFO: 2025-11-29 16:27:43,734: Sleeping early for 37s (0:00:37) on SendMessageRequest flood wait
+INFO: 2025-11-29 16:27:44,926: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:27:44,926: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:27:44,927: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:27:44,927: Disconnection from 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-29 16:27:44,927: Unhandled exception from keepalive_handle after cancelling <class '_asyncio.Task'> (<Task finished name='Task-33' coro=<UpdateMethods._keepalive_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py:481> exception=OperationalError('database is locked')>)
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 629, in run_until_complete
+    self.run_forever()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 596, in run_forever
+    self._run_once()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 1854, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/selectors.py", line 562, in select
+    kev_list = self._selector.control(None, max_ev, timeout)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/helpers.py", line 176, in _cancel
+    await task
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 517, in _keepalive_loop
+    self._save_states_and_entities()
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/telegrambaseclient.py", line 689, in _save_states_and_entities
+    self.session.process_entities(types.contacts.ResolvedPeer(None, [e._as_input_peer() for e in entities], []))
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/sessions/sqlite.py", line 301, in process_entities
+    c.executemany(
+sqlite3.OperationalError: database is locked
+ERROR: 2025-11-29 16:27:50,021: Task exception was never retrieved
+future: <Task finished name='Task-210' coro=<TelegramBaseClient._disconnect_coro() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/telegrambaseclient.py:702> exception=KeyboardInterrupt()>
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 629, in run_until_complete
+    self.run_forever()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 596, in run_forever
+    self._run_once()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 1854, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/selectors.py", line 562, in select
+    kev_list = self._selector.control(None, max_ev, timeout)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/sessions/sqlite.py", line 301, in process_entities
+    c.executemany(
+sqlite3.OperationalError: database is locked
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/scripts/start.py", line 45, in <module>
+    asyncio.run(main())
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/runners.py", line 47, in run
+    _cancel_all_tasks(loop)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/runners.py", line 63, in _cancel_all_tasks
+    loop.run_until_complete(
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 629, in run_until_complete
+    self.run_forever()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 596, in run_forever
+    self._run_once()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 1890, in _run_once
+    handle._run()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/events.py", line 80, in _run
+    self._context.run(self._callback, *self._args)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/telegrambaseclient.py", line 732, in _disconnect_coro
+    self._save_states_and_entities()
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/telegrambaseclient.py", line 689, in _save_states_and_entities
+    self.session.process_entities(types.contacts.ResolvedPeer(None, [e._as_input_peer() for e in entities], []))
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/sessions/sqlite.py", line 301, in process_entities
+    c.executemany(
+KeyboardInterrupt
+INFO: 2025-11-29 16:31:44,292: libssl detected, it will be used for encryption
+INFO: 2025-11-29 16:31:44,406: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:31:47,309: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:31:50,317: Phone migrated to 5
+INFO: 2025-11-29 16:31:50,318: Reconnecting to new data center 5
+INFO: 2025-11-29 16:31:50,714: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:31:50,714: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:31:50,715: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 16:31:55,146: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 16:31:58,510: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:31:58,512: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:32:01,868: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:32:01,869: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:32:07,489: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:32:07,490: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:32:12,753: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:32:12,760: Connection to 91.108.56.152:443/TcpFull complete!
+WARNING: 2025-11-29 16:33:39,009: Server closed the connection: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 16:33:39,011: Connection closed while receiving data: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 16:33:39,011: Closing current connection to begin reconnect...
+INFO: 2025-11-29 16:33:39,012: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:33:39,013: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:33:41,195: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 16:34:01,636: Got difference for channel 2185062351 updates
+ERROR: 2025-11-29 16:34:36,290: Task was destroyed but it is pending!
+task: <Task pending name='Task-103' coro=<Connection._send_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:316> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x106f10a30>()]>>
+ERROR: 2025-11-29 16:34:36,291: Task was destroyed but it is pending!
+task: <Task pending name='Task-104' coro=<Connection._recv_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:335> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x106f05670>()]>>
+ERROR: 2025-11-29 16:34:36,291: Task was destroyed but it is pending!
+task: <Task pending name='Task-105' coro=<MTProtoSender._send_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:464> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x106e54490>()]>>
+ERROR: 2025-11-29 16:34:36,291: Task was destroyed but it is pending!
+task: <Task pending name='Task-106' coro=<MTProtoSender._recv_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:507> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x106f1a490>()]>>
+INFO: 2025-11-29 16:36:09,713: Got difference for account updates
+INFO: 2025-11-29 16:36:10,770: Got difference for channel 1369944285 updates
+INFO: 2025-11-29 16:36:15,697: Got difference for account updates
+INFO: 2025-11-29 16:36:34,634: Got difference for account updates
+INFO: 2025-11-29 16:36:35,218: Got difference for channel 2114987005 updates
+WARNING: 2025-11-29 16:42:03,503: Server closed the connection: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 16:42:03,505: Connection closed while receiving data: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 16:42:03,505: Closing current connection to begin reconnect...
+INFO: 2025-11-29 16:42:03,506: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:42:03,508: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:46:57,542: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:46:57,543: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:46:57,544: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:46:57,544: Disconnection from 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-29 16:46:57,544: Unhandled exception from keepalive_handle after cancelling <class '_asyncio.Task'> (<Task finished name='Task-33' coro=<UpdateMethods._keepalive_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py:481> exception=OperationalError('database is locked')>)
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 629, in run_until_complete
+    self.run_forever()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 596, in run_forever
+    self._run_once()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 1854, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/selectors.py", line 562, in select
+    kev_list = self._selector.control(None, max_ev, timeout)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/helpers.py", line 176, in _cancel
+    await task
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 517, in _keepalive_loop
+    self._save_states_and_entities()
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/telegrambaseclient.py", line 689, in _save_states_and_entities
+    self.session.process_entities(types.contacts.ResolvedPeer(None, [e._as_input_peer() for e in entities], []))
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/sessions/sqlite.py", line 301, in process_entities
+    c.executemany(
+sqlite3.OperationalError: database is locked
+INFO: 2025-11-29 16:46:57,562: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:46:57,562: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:46:57,563: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 16:46:57,563: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 16:46:58,827: libssl detected, it will be used for encryption
+INFO: 2025-11-29 16:46:58,951: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:47:03,622: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:47:06,797: Phone migrated to 5
+INFO: 2025-11-29 16:47:06,797: Reconnecting to new data center 5
+INFO: 2025-11-29 16:47:07,193: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:47:07,194: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:47:07,194: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 16:47:10,672: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 16:47:13,279: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:47:13,281: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:47:16,879: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:47:16,881: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:47:22,680: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:47:22,682: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:47:27,947: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:47:27,950: Connection to 91.108.56.152:443/TcpFull complete!
+WARNING: 2025-11-29 16:48:54,247: Server closed the connection: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 16:48:54,250: Connection closed while receiving data: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 16:48:54,250: Closing current connection to begin reconnect...
+INFO: 2025-11-29 16:48:54,251: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:48:54,253: Connection to 91.108.56.152:443/TcpFull complete!
+WARNING: 2025-11-29 16:48:56,094: Error executing high-level request after reconnect: <class 'telethon.errors.common.TypeNotFoundError'>: Could not find a matching Constructor ID for the TLObject that was supposed to be read with ID 020b1422. See the FAQ for more details. Remaining bytes: b'"\x14\x0b\x02\x7f\x0c\x00\x02\x10\x00\x00\x00\x87=r:\x00\x00\x00\x00\r\x1f\xd0\x8a\xb8iC\x81\x02ZR\x00\x04nown\x00\x00\x00\x06ZRnown\x00\r8615225311576\x00\x00\x06\xf7\xd1\x82\x02\x00\x00\x00\xac\xa71\x1b\x87=r:\x10\x01\x08\x08\xb4&\x8b \x06^N3E\x14P[\x81\x00\x00\x00\x05\x00\x00\x00?p\x8c\x00\x8b\x9e*i;\xb0\x00\x86\xcc\xd9\xa9-\xeb\xb1\xbea'
+INFO: 2025-11-29 16:48:56,402: Got difference for channel 1779636602 updates
+INFO: 2025-11-29 16:49:40,742: Type 9815cec8 not found, remaining data b'\xc8\xce\x15\x98\x00\x01\x80\x02\x00\x00\x00\x00\xc4\x13\x08\x00"\x17QY\xdbP\x0b\xab\x01\x00\x00\x00\x1e7\xa5\xa2\x0bZ\xb9\xa5\x00\x00\x00\x00\x91\xb3*i\x06\xe4\xb8\x9d\xe8\xa2\x9c\x00\xc2\x0f\xd6\x83\x00\x00\x00\x00\x00\x00\x00\x00\xc8\xcd\x15\x00\x80Q\x01\x00\xc8\xcd\x15\x00\x01\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00"\x14\x0b\x02G\x00\x10\x00\x10\x00\x00\x00\xdbP\x0b\xab\x01\x00\x00\x00dY\xe6FzJO\xae\x03\xe6\x9e\x97\x03\xe6\x99\x93\xc8}\x19{\x00\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00USh\xfe@1\x04\x00\x0c\x00\x00\x00\x0bZ\xb9\xa5\x00\x00\x00\x00\xb55~ \x80\xb5V #\xe8\x89\xb2\xe8\x89\xb2/\xe8\xb5\x84\xe6\xba\x90\xe5\xba\x93/\xe5\x95\xa5\xe9\x83\xbd\xe8\x83\xbd\xe6\x90\x9c\xe7\xb4\xa2\xe7\xbe\xa4\x07qlm9990\x1c\x01\xc17-\xbeoh\x18\x04\x12\x9f\x8c\x85\xfa\x01\xff\xff\xff\x7f\x91\xb3*i\x00\x00\x00\x00.\x99K* \xe9\x1c\x01\xef\xdfR\x12\x00\xb3>\xd0U#x]'
+INFO: 2025-11-29 16:49:40,746: Type 9815cec8 not found, remaining data b'\xc8\xce\x15\x98\x00\x01\x80\x00\x00\x00\x00\x00;\xa2x\x00"\x17QY\xe0\xaf\x17o\x01\x00\x00\x00\x1e7\xa5\xa2\xa1@\x0bA\x00\x00\x00\x00\x7f\xb3*i!\xe7\x8e\xb0\xe5\x9c\xa8\xe5\x8f\xaa\xe4\xb8\x8d\xe8\xbf\x87\xe6\x8d\xa2\xe6\x88\x90\xe5\x9b\xbd\xe6\xb0\x91\xe5\x85\x9a\xe4\xba\x86\x00\x00\xc2\x0f\xd6\x83\x00\x00\x00\x00\x00\x00\x00\x00\xc9\x9b\xbd\x00\xc9\x9b\xbd\x00\x01\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00"\x14\x0b\x02c\x00\x10\x00\x10\x00\x00\x00\xe0\xaf\x17o\x01\x00\x00\x00K\x05\xbd7\x89\xe8\x9c\xdd\x06zzzzzz\x00\x06\xf7\xd1\x82\x02\x00\x00\x00\x19\xb51\x1b\xd7\x02aV\x12\x01\x08\x08\x9d\x1d\xcf1\xa8\xd8\xe39\'\xbd\x14QM0h\x00\x05\x00\x00\x00\xc8}\x19{\x00\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00USh\xfe\x001\x140\r\x00\x00\x00\xa1@\x0bA\x00\x00\x00\x00\r\x9ch\xa1a)\xc3\xf0\x17\xe7\xa7\x91\xe6\x8a\x80\xe5\x9c\x88\xf0\x9f\x8e\x97\xe3\x81\xae \xe8\x8c\xb6\xe9\xa6\x86\x11\x1cn\x1c\x02\x00\x00\x00\x19\x0bk\x1b\xd0%\xe9F\x14\x01\x08\x08\xb0\xdep\xd5B\xee\x90\xc6~l\x02q\xe9E\x14P\x07\x00\x00\x00\x01\x00\x00\x00\xad\xed\xb4X\x18\x04\x12\x9f\x00\x04\x06\x00\xff\xff\xff\x7f\x15\xc4\xb5\x1c\x01\x00\x00\x00G6\x07\xb4\x02\x00\x00\x00\nzaihuachat\x00\x7f\xb3*i\x00\x00\x00\x00\x15\x1c\xf9z\xa4\xb3*i\x0f\x00\x00\x00l\x01\x00\x00@B\xaet\x15\xc4\xb5\x1c\x01\x00\x00\x00\xd9\x04\xbab\xc8\xce\x15\x98\x00\x01\x80\x00\x00\x00\x00\x00<\xa2x\x00"\x17QY\xe0\xaf\x17o\x01\x00\x00\x00\x1e7\xa5\xa2\xa1@\x0bA\x00\x00\x00\x00\x8f\xb3*i\x1c\xe9\x9d\xa2\xe5\xaf\xb9\xe7\x8e\xb0\xe5\xae\x9e\xe5\x90\xa7 \xe5\x8f\xaa\xe5\x89\xa9\xe4\xb8\x8b\xe5\x98\xb4\x00\x00\x00\xc2\x0f\xd6\x83\x00\x00\x00\x00\x00\x00\x00\x00\xcb\x9b\xbd\x00\xcb\x9b\xbd\x00\x01\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00"\x14\x0b\x02c\x00\x10\x00\x10\x00\x00\x00\xe0\xaf\x17o\x01\x00\x00\x00K\x05\xbd7\x89\xe8\x9c\xdd\x06zzzzzz\x00\x06\xf7\xd1\x82\x02\x00\x00\x00\x19\xb51\x1b\xd7\x02aV\x12\x01\x08\x08\x9d\x1d\xcf1\xa8\xd8\xe39\'\xbd\x14QM0h\x00\x05\x00\x00\x00\xc8}\x19{\x00\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00USh\xfe\x001\x140\r\x00\x00\x00\xa1@\x0bA\x00\x00\x00\x00\r\x9ch\xa1a)\xc3\xf0\x17\xe7\xa7\x91\xe6\x8a\x80\xe5\x9c\x88\xf0\x9f\x8e\x97\xe3\x81\xae \xe8\x8c\xb6\xe9\xa6\x86\x11\x1cn\x1c\x02\x00\x00\x00\x19\x0bk\x1b\xd0%\xe9F\x14\x01\x08\x08\xb0\xdep\xd5B\xee\x90\xc6~l\x02q\xe9E\x14P\x07\x00\x00\x00\x01\x00\x00\x00\xad\xed\xb4X\x18\x04\x12\x9f\x00\x04\x06\x00\xff\xff\xff\x7f\x15\xc4\xb5\x1c\x01\x00\x00\x00G6\x07\xb4\x02\x00\x00\x00\nzaihuachat\x00\x8f\xb3*i\x00\x00\x00\x00\x14 \xd2F:\xe9\xe9\xda\xcf\xe5\xc3%'
+INFO: 2025-11-29 16:49:40,746: Type 9815cec8 not found, remaining data b'\xc8\xce\x15\x98\x08\x01\x00\x00\x00\x00\x00\x00=\xa2x\x00"\x17QY5A\xdak\x00\x00\x00\x00\x1e7\xa5\xa2\xa1@\x0bA\x00\x00\x00\x00\x0bV\x17i\x10\x00\x00\x00\xfa\x9fx\x00\x90\xb3*i[\xe6\xaf\x94\xe7\x89\xb9\xe5\xb8\x81\xe5\x92\x8c\xe7\xa8\xb3\xe5\xae\x9a\xe5\xb8\x81\xe5\xbe\x88\xe6\x9c\x89\xe4\xbb\xb7\xe5\x80\xbc\xef\xbc\x8c\xe5\x85\xb6\xe4\xbb\x96\xe7\x9a\x84\xe5\xaf\xb9\xe6\x99\xae\xe9\x80\x9a\xe4\xba\xba\xe6\x9d\xa5\xe8\xaf\xb4\xe9\x99\xa4\xe4\xba\x86\xe8\xaf\x88\xe9\xaa\x97\xe5\xb0\xb1\xe6\x98\xaf\xe6\xb2\xa1\xe7\x94\xa8\xf0\x9f\x98\x85\xcc\x9b\xbd\x00\x01\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00"\x14\x0b\x02C\x00\x10\x00\x10\x00\x00\x005A\xdak\x00\x00\x00\x00n^-p\x16E6}\rmrbitcoinonly\x00\x00\xc8}\x19{\x00\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00USh\xfe\x001\x140\r\x00\x00\x00\xa1@\x0bA\x00\x00\x00\x00\r\x9ch\xa1a)\xc3\xf0\x17\xe7\xa7\x91\xe6\x8a\x80\xe5\x9c\x88\xf0\x9f\x8e\x97\xe3\x81\xae \xe8\x8c\xb6\xe9\xa6\x86\x11\x1cn\x1c\x02\x00\x00\x00\x19\x0bk\x1b\xd0%\xe9F\x14\x01\x08\x08\xb0\xdep\xd5B\xee\x90\xc6~l\x02q\xe9E\x14P\x07\x00\x00\x00\x01\x00\x00\x00\xad\xed\xb4X\x18\x04\x12\x9f\x00\x04\x06\x00\xff\xff\xff\x7f\x15\xc4\xb5\x1c\x01\x00\x00\x00G6\x07\xb4\x02\x00\x00\x00\nzaihuachat\x00\x90\xb3*i\x00\x00\x00\x00\x1d\x1c\xf9z\xa4\xb3*i\x13\x00\x00\x00\x90\x01\x00\x00@B\xaet\x15\xc4\xb5\x1c\x01\x00\x00\x00\xd9\x04\xbab\xc8\xce\x15\x98\x08\x01\x00\x00\x00\x00\x00\x00>\xa2x\x00"\x17QYRP\x1dN\x01\x00\x00\x00\x1e7\xa5\xa2\xa1@\x0bA\x00\x00\x00\x00\x0bV\x17i\x12\x00\x00\x00\xc7\xa1x\x00\x81\xa1x\x00\x9a\xb3*i?\xe4\xbd\x86\xe5\x90\x8c\xe6\x97\xb6\xe6\x88\x91\xe4\xb9\x9f\xe5\x8f\xaa\xe7\x9f\xa5\xe9\x81\x93\xe8\xbf\x99\xe4\xb9\x88\xe4\xb8\x80\xe7\xa7\x8d\xe6\x83\x85\xe5\x86\xb5\xef\xbc\x8c\xe4\xb8\x8d\xe5\xae\x8c\xe5\x85\xa8\xe6\x98\xaf\xe7\x9c\x9f\xe7\x9b\xb8\xce\x9b\xbd\x00\x01\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00"\x14\x0b\x02c\x00\x10\x00\x10\x00\x00\x00RP\x1dN\x01\x00\x00\x00 h\xf3s\x7f\xd2\x0c\x17\x06Muaaaa\x00\x06\xf7\xd1\x82\x02\x00\x00\x00\x88\x0bk\x1b\x1e9YW\x15\x01\x08\x08\xbd\x1d\xe4M#\xe0\x8e\x06A\xf5\x14QEi\xca\x88\xe6g\x00\x00\x05\x00\x00\x00\xc8}\x19{\x00\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00USh\xfe\x001\x140\r\x00\x00\x00\xa1@\x0bA\x00\x00\x00\x00\r\x9ch\xa1a)\xc3\xf0\x17\xe7\xa7\x91\xe6\x8a\x80\xe5\x9c\x88\xf0\x9f\x8e\x97\xe3\x81\xae \xe8\x8c\xb6\xe9\xa6\x86\x11\x1cn\x1c\x02\x00\x00\x00\x19\x0bk\x1b\xd0%\xe9F\x14\x01\x08\x08\xb0\xdep\xd5B\xee\x90\xc6~l\x02q\xe9E\x14P\x07\x00\x00\x00\x01\x00\x00\x00\xad\xed\xb4X\x18\x04\x12\x9f\x00\x04\x06\x00\xff\xff\xff\x7f\x15\xc4\xb5\x1c\x01\x00\x00\x00G6\x07\xb4\x02\x00\x00\x00\nzaihuachat\x00\x9a\xb3*i\x00\x00\x00\x00\xf8\xcf\x81\x8d\x18\x06[\xe7\xf7*\xea\xc9\xe3\xf3\xd2\xaf=\x0bw\xb9'
+INFO: 2025-11-29 16:49:40,748: Type 9815cec8 not found, remaining data b'\xc8\xce\x15\x98\xc0\xc4@\x00\x00\x00\x00\x00+k\x00\x00\x1e7\xa5\xa2\xea\x97\xe3\x97\x00\x00\x00\x003f*iM\xe3\x85\xa4\n\xe2\x97\x88 \xe8\x87\xbb\xe9\x80\x89\xe9\xab\x98\xe9\xa2\x9c\xe4\xb8\xa8\xe9\x9c\xb2\xe8\x84\xb8\xe4\xb8\x9d\xe8\xa2\x9c\xe9\xab\x98\xe8\xb7\x9f\n\xe2\x97\x88 \xe6\x89\xbe\xe5\x88\xb0\xe5\xae\x8c\xe6\x95\xb4\xe7\x89\x88\xe8\xbf\x9b\xe5\x86\x85\xe9\x83\xa8\xe7\xbe\xa4\n\xe3\x85\xa4\x00\x00T\x02\xa3H\x15\xc4\xb5\x1c\x01\x00\x00\x00\x83\x8b`w\x15\xc4\xb5\x1c\x02\x00\x00\x00\x05\xff\x8a%\x0c\xe5\x8a\xa0\xe5\x85\xa5\xe4\xba\x92\xe6\x8e\xa8\x00\x00\x00\x1ahttps://t.me/youwuhutuibot\x00\x05\xff\x8a%\x18\xe7\x88\xb1\xe7\x88\xb1\xe2\x9d\xa4\xef\xb8\x8f\xe8\xa3\xb8\xe8\x81\x8a\xe9\x80\x89\xe5\xa6\x83\x00\x00\x00\x19https://t.me/aiaikefu1bot\x00\x00\x15\xc4\xb5\x1c\x04\x00\x00\x00\'\xd3\xa6v\x04\x00\x00\x00\x0b\x00\x00\x00\x1ehttps://t.me/+1lWJuiEFpasyMTRl\x00\xc9\x0ba\xbd\x04\x00\x00\x00\x0b\x00\x00\x00\'\xd3\xa6v\x12\x00\x00\x00\t\x00\x00\x00\x1ehttps://t.me/+mVZySmEsBMkxNzE0\x00\xc9\x0ba\xbd\x12\x00\x00\x00\t\x00\x00\x00V\x00\x00\x00\x00\x00\x00\x00\x86\xb3*i\x15\xc4\xb5\x1c\x01\x00\x00\x00\xb4\xacr\xd0\x03ios\x04porn\x00\x00\x00]This message couldn\'t be displayed on your device because it contains pornographic materials.\x00\x00\xb7F\x01\x00\x01\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00"\x14\x0b\x02+@\x10\x02\x10\x00\x00\x00\x18\xac\'\x08\x00\x00\x00\x00\xb2\xce\x9c!q\x93\x1c\x1b\x07Channel\x0bChannel_Bot\x06\xf7\xd1\x82\x02\x00\x00\x00\xa9\xa71\x1b\x18\xac\'\x08\x10\x01\x08\x08\xb1\xf2\xf9_\xedg4QEp3\xad\x1f\x00\x00\x00\x01\x00\x00\x00\x04\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00USh\xfe`2\x10\x00\x0c\x00\x05\x00\xea\x97\xe3\x97\x00\x00\x00\x00n\xcf\xec\t\xf7\xd0\x9d\x15+\xe5\x88\x9d\xe6\x81\x8b\xe3\x81\xae\xe8\xa3\xb8\xe8\x81\x8a \xe4\xb8\x80\xe5\xaf\xb9\xe4\xb8\x80\xef\xbc\x88\xe6\xaf\x8f\xe6\x97\xa5\xe6\x8a\xbd\xe5\xa5\x96\xef\xbc\x89\x07lljhhda\x11\x1cn\x1c\x02\x00\x00\x00\xf0\xcc1\x1bA\xd9 V\x12\x01\x08\x08\x82i|\xcb\xe0\xe0\x9d\xc0r;t\xa2\x8a(\x03\x00\x05\x00\x00\x00@\x8bOh\x15\xc4\xb5\x1c\x01\x00\x00\x00\xb4\xacr\xd0\x03ios\x04porn\x00\x00\x00UThis channel can\xe2\x80\x99t be displayed because it was used to spread pornographic content.\x00\x00\xea\xe3\xdb\xb8\xf9\x00\x00\x00\x86\xb3*i\x00\x00\x00\x00-\x1c\xf9z\xa4\xb3*i\x1b\x00\x00\x00(\x00\x00\x00\xc1\xde\xd4x\x12[-\xc3\x16\xd7\x89\xb0\x00\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00\xb9\xab\x05\x00>\xb3\x0b\x00\x01\x00\x00\x00\x90\xb3*iO\x02Aa;\xdd\x85\xf3\xea\x07\x01\xc0\x8a\t\x84\xb5'
+INFO: 2025-11-29 16:49:40,750: Type 9815cec8 not found, remaining data b'\xc8\xce\x15\x98\xc8\x01\x00\x02\x00\x00\x00\x00\xafA\n\x00"\x17QY\x9a_\x02|\x01\x00\x00\x00\x1e7\xa5\xa2\x07\xbd\xf8\xa0\x00\x00\x00\x00\x0bV\x17i\x10\x00\x00\x00\xaeA\n\x00\x8a\xb3*i\xfeh\x03\x00\xe5\x85\xb3\xe9\x94\xae\xe8\xaf\x8d\xef\xbc\x9a\xe5\xb0\x91\xe8\x90\x9d\n\xf0\x9f\x98\x9a \xe8\xb5\x9e\xe5\x8a\xa9\xe5\x95\x86: KK\xe7\x94\xb5\xe5\xad\x90\xe4\xba\xa4\xe6\xb5\x81\xe7\xbe\xa4 \xe4\xb8\x8d\xe5\xae\x9a\xe6\x97\xb6\xe7\xba\xa2\xe5\x8c\x85 \xe7\xa6\x8f\xe5\x88\xa9\xe5\xa4\x9a\xe5\xa4\x9a\n\xf0\x9f\x93\xa2 \xe7\x86\x9f\xe5\xa5\xb3\xe5\xb0\x91\xe8\x90\x9d\xe5\x8f\xa3\xe4\xba\xa4 6.1 K\n\xf0\x9f\x93\xa2 \xe5\xb0\x91\xe8\x90\x9d\xe5\xb0\x91\xe5\xa5\xb3\xe8\x87\xaa\xe6\x8b\x8d\xe8\x87\xaa\xe6\x85\xb0\xe5\x86\x99\xe7\x9c\x9f\xf0\x9f\x94\x9e 42.9 K\n\xf0\x9f\x93\xa2 \xe7\xbb\xbf\xe5\xb8\xbd\xe5\x8f\xa3\xe4\xba\xa4\xe7\x99\xbd\xe8\x99\x8e\xe5\xb0\x91\xe8\x90\x9d 16.1 K\n\xf0\x9f\x93\xa2 COS\xe5\xb0\x91\xe8\x90\x9d\xe5\x8f\xa3\xe4\xba\xa491\xf0\x9f\x94\x9e 3.1 K\n\xf0\x9f\x93\xa2 \xe5\x88\x9d\xe4\xb8\xad\xe7\x94\x9f\xe7\xba\xa6\xe7\x82\xae\xe5\xb0\x91\xe8\x90\x9d\xe5\xbe\xa1\xe5\xa7\x90\xf0\x9f\x94\x9e 40.0 K\n\xf0\x9f\x92\x8e \xe5\xb0\x91\xe8\x90\x9dTV\xe8\xb0\x83\xe6\x95\x99\xf0\x9f\x92\x93\xe5\xb0\x91\xe8\x90\x9d\xe4\xb9\x8b\xe5\xae\xb6\xf0\x9f\x92\x93\xe7\xb2\x89\xe5\xab\xa9\xe5\xb0\x91\xe8\x90\x9d \xe4\xb8\x80\xe7\xba\xbf\xe5\xa4\xa9\xe7\x99\xbd\xe8\x99\x8e\xe7\xb2\x89\xe7\xa9\xb4 JK\xe9\xbb\x91\xe4\xb8\x9d\xe7\x99\xbd\xe4\xb8\x9d \xf0\x9f\x92\x93\xf0\x9f\x92\x93\xf0\x9f\x92\x93\n\xf0\x9f\x93\xa2 \xe5\xbc\xba\xe5\xa5\xb8\xe5\x81\xb7\xe6\x8b\x8d\xe5\x86\x85\xe5\xb0\x84\xe5\xb0\x91\xe8\x90\x9d\xe5\xa4\x84\xe5\xa5\xb3\xe7\xa0\xb4\xe5\xa4\x84 69.2 K\n\xf0\x9f\x92\x8e \xf0\x9f\x91\xb0\xf0\x9f\x8f\xbb\xe2\x80\x8d\xe2\x99\x80\xef\xb8\x8f\xe7\x82\xb9\xe6\x88\x91\xe5\x85\xb3\xe6\xb3\xa8soso\xe8\xae\xa4\xe8\xaf\x81\xe5\xa5\xb3\xe5\x9b\xa2\xe4\xb8\xaa\xe4\xba\xba\xe9\xa2\x91\xe9\x81\x93\n\xf0\x9f\x93\xa2 \xe5\xb0\x91\xe8\x90\x9d\xe8\x8e\x89\xe5\x86\x85\xe5\xb0\x84\xe7\xb2\xbe\xe7\xa5\x9e\xe5\xb0\x8f\xe5\xa6\xb9\xe8\x87\xaa\xe6\x85\xb0\xe6\x8e\xa2\xe8\x8a\xb1\xf0\x9f\x94\x9e 67.2 K\n\xf0\x9f\x93\xa2 \xe5\xb0\x91\xe8\x90\x9d/\xe5\xb0\x91\xe8\x90\x9d\xe5\xae\x9d\xe5\xae\x9d/\xe7\xa3\x95\xe7\x82\xae/\xe7\x99\xbd\xe8\x99\x8e/ASMR\xf0\x9f\x94\x9e 91.4 K\n\xf0\x9f\x93\xa2 \xe6\x9e\x81\xe5\x93\x81jk\xe5\xb0\x91\xe8\x90\x9d\xe5\x8b\xbe\xe5\xbc\x95\xe4\xb8\xa8\xe9\x9c\xb2\xe8\x84\xb8\xe7\xb2\xbe\xe7\xa5\x9e\xe5\xb0\x8f\xe5\xa6\xb9 12.4 K\n\xf0\x9f\x93\xa2 \xe7\xb2\xbe\xe7\xa5\x9e\xe5\xb0\x8f\xe5\xa6\xb9\xe5\xb0\x91\xe8\x90\x9d\xe5\x86\x85\xe5\xb0\x84\xe6\xb5\xb7\xe8\xa7\x92\xe4\xb9\xb1\xe4\xbc\xa6 42.5 K\n\xf0\x9f\x93\xa2 \xe5\xbc\xba\xe5\xa5\xb8\xe7\x99\xbd\xe8\x99\x8e\xe5\x88\x9d\xe4\xb8\xad91\xe5\xb0\x91\xe8\x90\x9d\xe5\x8b\xbe\xe5\xbc\x95 26.4 K\n\xf0\x9f\x93\xa2 \xe7\xb3\x96\xe5\xbf\x8391\xe9\xba\xbb\xe8\xb1\x86\xe5\xb0\x91\xe8\x90\x9d 11.5 K\n\n\xf0\x9f\x94\x8d\xe5\x85\xb110002\xe6\x9d\xa1\xe7\xbb\x93\xe6\x9e\x9c\xef\xbc\x8c\xe5\xbd\x93\xe5\x89\x8d\xe7\xac\xac1\xe9\xa1\xb5\xef\xbc\x8c\xe5\x85\xb1834\xe9\xa1\xb5\n\xf0\x9f\x92\xa1\xe7\x82\xb9\xe5\x87\xbb\xe6\x8c\x89\xe9\x92\xae\xe5\x8f\xaf\xe4\xbb\xa5\xe5\x88\x87\xe6\x8d\xa2\xe7\xb1\xbb\xe5\x9e\x8b\xe5\x93\xa6~\xf0\x9f\x91\x87T\x02\xa3H\x15\xc4\xb5\x1c\x04\x00\x00\x00\x83\x8b`w\x15\xc4\xb5\x1c\x07\x00\x00\x00k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x91\xa5\x00\x00\x00<type=SUPERGROUP&m=s&page=1&key=c31710f62757d3da&u=6680362491\x00\x00\x00k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x93\xa2\x00\x00\x009type=CHANNEL&m=s&page=1&key=c31710f62757d3da&u=6680362491\x00\x00k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x8e\xac\x00\x00\x007type=VIDEO&m=s&page=1&key=c31710f62757d3da&u=6680362491k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x8e\xb5\x00\x00\x007type=AUDIO&m=s&page=1&key=c31710f62757d3da&u=6680362491k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x96\xbc\x00\x00\x007type=PHOTO&m=s&page=1&key=c31710f62757d3da&u=6680362491k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x93\x84\x00\x00\x006type=TEXT&m=s&page=1&key=c31710f62757d3da&u=6680362491\x00k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x94\x97\x00\x00\x005type=WEB&m=s&page=1&key=c31710f62757d3da&u=6680362491\x00\x00\x83\x8b`w\x15\xc4\xb5\x1c\x01\x00\x00\x00k\xdb\xbb5\x00\x00\x00\x00#\xf0\x9f\x94\xb0 \xe6\x9f\xa5\xe7\x9c\x8b\xe7\xbc\xb4\xe7\xba\xb3\xe4\xbf\x9d\xe8\xaf\x81\xe9\x87\x91\xe7\x9a\x84\xe5\xba\x97\xe9\x93\xba6type=SHOP&m=s&page=1&key=c31710f62757d3da&u=6680362491\x00\x83\x8b`w\x15\xc4\xb5\x1c\x02\x00\x00\x00\x05\xff\x8a%\x14\xf0\x9f\x8e\xae \xe4\xbc\x91\xe9\x97\xb2\xe5\xb0\x8f\xe6\xb8\xb8\xe6\x88\x8f\x00\x00\x00\x11https://t.me/buff\x00\x00k\xdb\xbb5\x00\x00\x00\x00\x0f\xe2\x9e\xa1\xef\xb8\x8f\xe4\xb8\x8b\xe4\xb8\x80\xe9\xa1\xb5,m=s&key=c31710f62757d3da&page=2&u=6680362491\x00\x00\x00\x83\x8b`w\x15\xc4\xb5\x1c\x01\x00\x00\x00\x05\xff\x8a%<\xe8\xb5\x9e\xe5\x8a\xa9:\xf0\x9f\x94\xb0\xe8\xae\xa4\xe8\xaf\x81\xe8\xb5\x84\xe6\xb7\xb1\xe8\xb5\x8c\xe7\x90\x83\xe7\xa4\xbe\xe7\xbe\xa4\xf0\x9f\x91\x89\xe7\xba\xaf\xe5\xb0\x8f\xe7\x99\xbd\xe6\x85\x8e\xe5\x85\xa5\xe5\x8b\xbf\xe6\x89\xb0\x00\x00\x00\x1ehttps://t.me/+xNiBPUMVeAQ4NzBl\x00\x15\xc4\xb5\x1c"\x00\x00\x00q\x05\xa2(\x04\x00\x00\x00\x02\x00\x00\x00\'\xd3\xa6v\x0f\x00\x00\x00\x12\x00\x00\x00\x1ehttps://t.me/+l1ndvUUVwdhkMDMy\x00\'\xd3\xa6v%\x00\x00\x00\x06\x00\x00\x00\x13https://t.me/Edjdnd\xc9\x0ba\xbd\'\x00\x00\x00\x02\x00\x00\x00\'\xd3\xa6v5\x00\x00\x00\n\x00\x00\x00\x19https://t.me/qianqianenya\x00\x00\xc9\x0ba\xbd5\x00\x00\x00\x02\x00\x00\x00\'\xd3\xa6v?\x00\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\'\xd3\xa6vL\x00\x00\x00\x08\x00\x00\x00\x1chttps://t.me/gaiwenjianneihe\x00\x00\x00\xc9\x0ba\xbdR\x00\x00\x00\x02\x00\x00\x00\'\xd3\xa6v_\x00\x00\x00\t\x00\x00\x00\x14https://t.me/xgjrcos\x00\x00\x00\xc9\x0ba\xbdb\x00\x00\x00\x02\x00\x00\x00\'\xd3\xa6vh\x00\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\'\xd3\xa6vt\x00\x00\x00\t\x00\x00\x00\x1ahttps://t.me/siwasiwahouru\x00\xc9\x0ba\xbdy\x00\x00\x00\x02\x00\x00\x00\'\xd3\xa6v}\x00\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\'\xd3\xa6v\x8a\x00\x00\x00(\x00\x00\x00\x1ehttps://t.me/+dKAZs20XTggyYWYx\x00\'\xd3\xa6v\xb6\x00\x00\x00\x0c\x00\x00\x00\x15https://t.me/dhjdiznq\x00\x00\xc9\x0ba\xbd\xbc\x00\x00\x00\x02\x00\x00\x00\'\xd3\xa6v\xcd\x00\x00\x00\x17\x00\x00\x00%https://t.me/addlist/V2GBIiE4QJc1OGU1\x00\x00\'\xd3\xa6v\xe8\x00\x00\x00\r\x00\x00\x00\x12https://t.me/yywh3\x00\xc9\x0ba\xbd\xe8\x00\x00\x00\x02\x00\x00\x00\'\xd3\xa6v\xf5\x00\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\'\xd3\xa6v\x02\x01\x00\x00\x12\x00\x00\x00\x16https://t.me/shaoluo88\x00\xc9\x0ba\xbd\x02\x01\x00\x00\x02\x00\x00\x00\xc9\x0ba\xbd\x05\x01\x00\x00\x02\x00\x00\x00\'\xd3\xa6v\x14\x01\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\'\xd3\xa6v!\x01\x00\x00\x0f\x00\x00\x00\x16https://t.me/shaofuto1\x00\xc9\x0ba\xbd%\x01\x00\x00\x02\x00\x00\x00\'\xd3\xa6v;\x01\x00\x00\x0c\x00\x00\x00\x17https://t.me/shaoaasisi\xc9\x0ba\xbd?\x01\x00\x00\x02\x00\x00\x00\'\xd3\xa6vR\x01\x00\x00\x0c\x00\x00\x00\x13https://t.me/zxccjj\xc9\x0ba\xbdZ\x01\x00\x00\x02\x00\x00\x00\'\xd3\xa6vi\x01\x00\x00\x08\x00\x00\x00\x17https://t.me/sijitamhua\xc9\x0ba\xbdo\x01\x00\x00\x02\x00\x00\x00\x80:\t\x00\rx\x1a\x00\x01\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00"\x14\x0b\x02+@\x1c\x02\x10\x10\x00\x00\x9a_\x02|\x01\x00\x00\x00*GF\x98\xce-H\xd4\x1eSOSO\xe6\x90\x9c\xe6\x90\x9c\xf0\x9f\x94\x8d\xe4\xb8\xad\xe6\x96\x87\xe6\x90\x9c\xe7\xb4\xa2\xf0\x9f\x94\x9e\x00\tSosoCnBot\x00\x00\x06\xf7\xd1\x82\x02\x00\x00\x00k\xb61\x1b\xcd\xd0qU\r\x01\x08\x08\xd3\x1b\xb0s\x8cQE\x14X\x0f\x00\x00\x05\x00\x00\x00\x0e\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00\xb4\xacr\xd0\x03ios\x04porn\x00\x00\x00QThis bot can\xe2\x80\x99t be displayed because it was used to spread pornographic content.\x00\x00\x1e\xe8\xbe\x93\xe5\x85\xa5\xe6\x82\xa8\xe8\xa6\x81\xe6\x90\x9c\xe7\xb4\xa2\xe7\x9a\x84\xe5\x86\x85\xe5\xae\xb9...\x00C\x1e\x04\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00USh\xfe@1\x04\x00\x0c\x00\x00\x00\x07\xbd\xf8\xa0\x00\x00\x00\x00\xd9I\xac\x02\xf3\xb8\xb4& \xe5\x85\xa8\xe8\x83\xbd\xe6\x90\x9c\xe7\xb4\xa2\xe7\xbe\xa4 /\xe6\x83\xb3\xe7\x9c\x8b\xe5\x95\xa5\xe6\x90\x9c\xe5\x95\xa5\x00\x00\x00\x07wwannen\x11\x1cn\x1c\x02\x00\x00\x00\x85\xcb1\x1b\xf4\xa2\xc0T\x13\x01\x08\x08t\x90\x88\xa3f\xc8l}\xd2z\xf3\xd6\x8a(\xa9(\x05\x00\x00\x00\xf7\xa7\x98h\x18\x04\x12\x9f\xfc\x85\xfa\x01\xff\xff\xff\x7f\x8a\xb3*i\x00\x00\x00\x00\x15\x806\x8d\x8c\xb4\xe8s\xa6y\xb0S\x96\xa4\x8d#@k9('
+INFO: 2025-11-29 16:49:40,751: Type 9815cec8 not found, remaining data b'\xc8\xce\x15\x98\xc8\x81 \x02\x00\x00\x00\x00\xc5\x13\x08\x00"\x17QY\xd3Y\x1e\xa4\x01\x00\x00\x00\x1e7\xa5\xa2\x0bZ\xb9\xa5\x00\x00\x00\x00\x0bV\x17i\x10\x00\x00\x00\xc4\x13\x08\x00\x91\xb3*i\xfe\xf1\x03\x00\xe5\x85\xb3\xe9\x94\xae\xe8\xaf\x8d\xef\xbc\x9a\xe4\xb8\x9d\xe8\xa2\x9c\n\xf0\x9f\x98\x9a \xe8\xb5\x9e\xe5\x8a\xa9\xe5\x95\x86: \xe5\x8d\x97\xe5\xae\xab \xf0\x9f\x94\xa5\xe9\x97\xae\xe9\xbc\x8e \xf0\x9f\x94\xa5\xe9\x9d\x9e\xe5\x87\xa1 \xf0\x9f\x94\xa5PG\xe7\x94\xb5\xe5\xad\x90\xe9\x80\x8188\xe6\x89\xb6\xe6\x8c\x81\xe5\xbd\xa9\xe9\x87\x91\xf0\x9f\xa7\xa7\xf0\x9f\xa7\xa7\xf0\x9f\xa7\xa7 \xe4\xbd\x93\xe8\x82\xb2 \xe7\x94\xb5\xe5\xad\x90 \xe5\x8a\xa0\xe6\x8b\xbf\xe5\xa4\xa728 \xe5\xbd\xa9\xe7\xa5\xa8\xe8\x80\x81\xe8\x99\x8e\xe6\x9c\xba\n\xf0\x9f\x92\x8e \xf0\x9f\x94\xb4\xf0\x9f\x94\xb4\xe6\x9e\x81\xe5\x93\x81\xe7\xbd\x91\xe7\xba\xa2\xe5\xa5\xb3\xe7\xa5\x9e\xe5\xa6\xb9\xe5\xad\x90\xe5\xbe\xa1\xe5\xa7\x90\xe5\xa4\xa7\xe8\xb5\x8f\xf0\x9f\x94\xb4\xf0\x9f\x94\xb4\xe4\xb8\x9d\xe8\xa2\x9c\xe7\xbe\x8e\xe8\x85\xbf\n\xf0\x9f\x91\xa5 \xe7\xbe\x8e\xe8\x85\xbf\xe4\xb8\x9d\xe8\xa2\x9c\xe8\x82\x89\xe4\xb8\x9d\xf0\x9f\x94\x9e 2.8 K\n\xf0\x9f\x91\xa5 \xe7\x86\x9f\xe5\xa5\xb3\xe5\xb0\x91\xe5\xa6\x87\xe9\x9c\xb2\xe5\x87\xba\xe4\xb8\x9d\xe8\xa2\x9c\xe4\xb9\xb1\xe4\xbc\xa6\xe5\x81\xb7\xe6\x8b\x8d\xe6\xb7\xab\xe5\xa6\xbb\xe5\xad\xa6\xe7\x94\x9f\xe9\xab\x98\xe9\xa2\x9c\xe5\x80\xbc\xf0\x9f\x94\x9e 7.3 K\n\xf0\x9f\x91\xa5 \xe7\xa9\xba\xe5\xa7\x90\xe3\x80\x81\xe8\x88\x9e\xe8\xb9\x88\xe7\x94\x9f\xe3\x80\x81\xe4\xb8\x9d\xe8\xa2\x9c\xe5\x88\xb6\xe6\x9c\x8d\xef\xbc\x8c\xe5\x81\xb7\xe6\x8b\x8d\xe5\x8e\x95\xe6\x8b\x8d\xef\xbc\x8c\xe6\x98\x8e\xe6\x98\x9f\xe5\x90\x88\xe6\x88\x90\xe9\x89\xb4\xe9\xbb\x84\xe7\xbe\xa4\xf0\x9f\x94\x9e 4.7 K\n\xf0\x9f\x92\x8e \xe4\xb8\x9c\xe5\x8d\x97\xe4\xba\x9a\xe5\x8d\x8e\xe4\xba\xba\xe6\x9b\x9d\xe5\x85\x89\xe5\x90\x83\xe7\x93\x9c\n\xf0\x9f\x92\x8e \xe6\xb5\xb7\xe5\xa4\x96\xe5\x90\x83\xe7\x93\x9c\xe8\xb6\xa3\xe4\xba\x8b\xf0\x9f\x8d\x89 \xe4\xb8\x9c\xe5\x8d\x97\xe4\xba\x9a\xe6\x96\xb0\xe9\x97\xbb\xe8\x81\x9a\xe9\x9b\x86\xe5\x9c\xb0\n\xf0\x9f\x92\x8e \xe4\xb8\x9c\xe5\x8d\x97\xe4\xba\x9a\xe5\xa4\xb4\xe6\x9d\xa1\xe5\xa4\xa7\xe6\x9b\x9d\xe5\x85\x89\n\xf0\x9f\x92\x8e \xf0\x9f\x91\xb0\xf0\x9f\x8f\xbb\xe2\x80\x8d\xe2\x99\x80\xef\xb8\x8f\xe7\x82\xb9\xe6\x88\x91\xe5\x85\xb3\xe6\xb3\xa8soso\xe8\xae\xa4\xe8\xaf\x81\xe5\xa5\xb3\xe5\x9b\xa2\xe4\xb8\xaa\xe4\xba\xba\xe9\xa2\x91\xe9\x81\x93\n\xf0\x9f\x91\xa5 \xe8\xa5\xbf\xe5\xae\x89\xe5\xa4\x9c\xe7\x94\x9f\xe6\xb4\xbb\xe5\xa8\xb1\xe4\xb9\x90\xe6\x8c\x87\xe5\x8d\x97\xe6\x80\xbb\xe7\xbe\xa4 2.5 K\n\xf0\x9f\x91\xa5 \xe3\x80\x90\xe6\xa2\xa6\xe4\xb9\x83\xe7\x88\xb1\xe5\x8d\x8e\xe3\x80\x91\xe6\xa2\xa6\xe4\xb9\x83\xe3\x81\x82\xe3\x81\x84\xe3\x81\x8b\xef\xbc\x88Aika Yumeno\xef\xbc\x89AV\xe5\xa5\xb3\xe4\xbc\x98S1\xe4\xb8\x93\xe5\xb1\x9e 2.3 K\n\xf0\x9f\x91\xa5 \xe3\x80\x90\xe5\xbf\xab\xe7\x9c\x8b\xe3\x80\x91\xe5\x88\xb6\xe6\x9c\x8d\xe6\x8a\xa4\xe5\xa3\xab\xe8\x80\x81\xe5\xb8\x88\xe5\x88\xb6\xe6\x9c\x8d\xe8\xaf\xb1\xe6\x83\x91 1.4 K\n\xf0\x9f\x91\xa5 \xe4\xb8\x9d\xe8\xa2\x9c\xe7\x99\xbd\xe8\x99\x8e\xe8\xbf\xb7\xe5\xa5\xb8\xe6\x97\xa0\xe6\xaf\x9b\xe6\x97\xa0\xe7\xa0\x81\xe5\x86\x85\xe5\xb0\x84\xe7\xa6\x8f\xe5\x88\xa9\xe8\xa7\x86\xe9\xa2\x91\xf0\x9f\x94\x9e 1.8 K\n\xf0\x9f\x91\xa5 \xe7\x8e\x89\xe7\xb1\xb3\xe7\xb2\x92\xe5\x84\xbf 0.77 K\n\xf0\x9f\x91\xa5 \xe4\xb8\x9d\xe8\xa2\x9c\xe4\xbc\x9a\xe6\x89\x80\xe6\x89\xbe\xe6\x9c\xa8\xe6\x80\xbb@huisuo888\xf0\x9f\x94\x9e 1.8 K\n\xf0\x9f\x91\xa5 \xe4\xb8\x9d\xe8\xa2\x9c\xe9\xa2\x9c\xe5\xb0\x84\xe8\x87\xaa\xe6\x85\xb0 2.5 K\n\xf0\x9f\x91\xa5 \xe5\x9c\xa8\xe8\xbf\xaa\xe6\x8b\x9c\xe7\x9a\x84\xe4\xb8\xad\xe5\x9b\xbd\xe4\xba\xba 2.8 K\n\xf0\x9f\x91\xa5 \xe4\xb8\x9d\xe8\xa2\x9c\xe5\x88\xb6\xe6\x9c\x8d\xe8\xaf\xb1\xe6\x83\x91 10.3 K\n\n\xe7\xac\xac1/3\xe9\xa1\xb5\x00\x00\x00T\x02\xa3H\x15\xc4\xb5\x1c\x04\x00\x00\x00\x83\x8b`w\x15\xc4\xb5\x1c\x07\x00\x00\x00k\xdb\xbb5\x00\x00\x00\x00\x06\xe5\x85\xa8\xe9\x83\xa8\x00,page=1&m=s&key=9fdb96a67b98bc0c&u=7164612827\x00\x00\x00k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x93\xa2\x00\x00\x009page=1&type=CHANNEL&m=s&key=9fdb96a67b98bc0c&u=7164612827\x00\x00k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x8e\xac\x00\x00\x007page=1&type=VIDEO&m=s&key=9fdb96a67b98bc0c&u=7164612827k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x8e\xb5\x00\x00\x007page=1&type=AUDIO&m=s&key=9fdb96a67b98bc0c&u=7164612827k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x96\xbc\x00\x00\x007page=1&type=PHOTO&m=s&key=9fdb96a67b98bc0c&u=7164612827k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x93\x84\x00\x00\x006page=1&type=TEXT&m=s&key=9fdb96a67b98bc0c&u=7164612827\x00k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x94\x97\x00\x00\x005page=1&type=WEB&m=s&key=9fdb96a67b98bc0c&u=7164612827\x00\x00\x83\x8b`w\x15\xc4\xb5\x1c\x01\x00\x00\x00k\xdb\xbb5\x00\x00\x00\x00#\xf0\x9f\x94\xb0 \xe6\x9f\xa5\xe7\x9c\x8b\xe7\xbc\xb4\xe7\xba\xb3\xe4\xbf\x9d\xe8\xaf\x81\xe9\x87\x91\xe7\x9a\x84\xe5\xba\x97\xe9\x93\xba6page=1&type=SHOP&m=s&key=9fdb96a67b98bc0c&u=7164612827\x00\x83\x8b`w\x15\xc4\xb5\x1c\x02\x00\x00\x00\xb5\xfb\xb9\x93\x01\x00\x00\x00\x13\xe2\x9d\x87\xef\xb8\x8f \xe4\xbb\x8a\xe6\x97\xa5\xe8\xbf\x90\xe5\x8a\xbf\x06\xe6\x98\x9f\xe5\xba\xa7\x00k\xdb\xbb5\x00\x00\x00\x00\x06\xe2\x9e\xa1\xef\xb8\x8f\x00<page=2&type=SUPERGROUP&m=s&key=9fdb96a67b98bc0c&u=7164612827\x00\x00\x00\x83\x8b`w\x15\xc4\xb5\x1c\x01\x00\x00\x00\x05\xff\x8a%F\xe8\xb5\x9e\xe5\x8a\xa9:\xf0\x9f\x92\x8e \xe3\x80\x908.cc\xe3\x80\x91U\xe6\x8a\x95\xe9\xa2\x86\xe5\xaf\xbc\xe8\x80\x85 \xe5\x8d\x83\xe4\xb8\x87\xe5\x9f\x9f\xe5\x90\x8d \xe7\x99\xbe\xe4\xba\xbf\xe5\xa4\xa7\xe7\x9b\x98 \xe9\xa1\xb6\xe5\xa5\xa2..\x00\x11https://8cc70.cc/\x00\x00\x15\xc4\xb5\x1c1\x00\x00\x00q\x05\xa2(\x04\x00\x00\x00\x02\x00\x00\x00\xf8\x05\xcf\xc8\x07\x00\x00\x00\x02\x00\x00\x00\xd5\x06\x00\x00\xd8\x1e\xa1D\'\xd3\xa6v\x0f\x00\x00\x002\x00\x00\x00\x1ehttps://t.me/+vqjswZp8NII0MDA8\x00\xf8\x05\xcf\xc8B\x00\x00\x00\x02\x00\x00\x00\xf5!\x00\x00L\xc3\xb0I\'\xd3\xa6vE\x00\x00\x00\x18\x00\x00\x00"https://t.me/jipingnvshenjianshang\x00\xf8\x05\xcf\xc8^\x00\x00\x00\x02\x00\x00\x00\xfb\x0c\x00\x00\x93WyR\'\xd3\xa6va\x00\x00\x00\x06\x00\x00\x00\x13https://t.me/ntswrs\xc9\x0ba\xbdc\x00\x00\x00\x02\x00\x00\x00\'\xd3\xa6vg\x00\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\xf8\x05\xcf\xc8p\x00\x00\x00\x02\x00\x00\x00\xfb\x0c\x00\x00\x93WyR\'\xd3\xa6vs\x00\x00\x00\x13\x00\x00\x00\x1ahttps://t.me/Sexy_Girl_VIP\x00\xc9\x0ba\xbdy\x00\x00\x00\x02\x00\x00\x00\'\xd3\xa6v\x86\x00\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\xf8\x05\xcf\xc8\x8f\x00\x00\x00\x02\x00\x00\x00\xfb\x0c\x00\x00\x93WyR\'\xd3\xa6v\x92\x00\x00\x00\x18\x00\x00\x00\x1chttps://t.me/jinVIPqunjiaqun\x00\x00\x00\xc9\x0ba\xbd\x99\x00\x00\x00\x02\x00\x00\x00\'\xd3\xa6v\xaa\x00\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\xf8\x05\xcf\xc8\xb3\x00\x00\x00\x02\x00\x00\x00\xf5!\x00\x00L\xc3\xb0I\'\xd3\xa6v\xb6\x00\x00\x00\t\x00\x00\x00\x12https://t.me/MTGBG\x00\xf8\x05\xcf\xc8\xc0\x00\x00\x00\x02\x00\x00\x00\xf5!\x00\x00L\xc3\xb0I\'\xd3\xa6v\xc3\x00\x00\x00\x11\x00\x00\x00\x18https://t.me/DXdnyxinwen\x00\x00\x00\xf8\x05\xcf\xc8\xd5\x00\x00\x00\x02\x00\x00\x00\xf5!\x00\x00L\xc3\xb0I\'\xd3\xa6v\xd8\x00\x00\x00\x08\x00\x00\x00\x16https://t.me/danuide86\x00\xf8\x05\xcf\xc8\xe1\x00\x00\x00\x02\x00\x00\x00\xf5!\x00\x00L\xc3\xb0I\'\xd3\xa6v\xe4\x00\x00\x00\x17\x00\x00\x00%https://t.me/addlist/V2GBIiE4QJc1OGU1\x00\x00\xf8\x05\xcf\xc8\xfc\x00\x00\x00\x02\x00\x00\x00\xfb\x0c\x00\x00\x93WyR\'\xd3\xa6v\xff\x00\x00\x00\x0b\x00\x00\x00\x15https://t.me/mumu5155\x00\x00\xf8\x05\xcf\xc8\x11\x01\x00\x00\x02\x00\x00\x00\xfb\x0c\x00\x00\x93WyR\'\xd3\xa6v\x14\x01\x00\x00 \x00\x00\x00\x19https://t.me/guochan99999\x00\x00\xf8\x05\xcf\xc8;\x01\x00\x00\x02\x00\x00\x00\xfb\x0c\x00\x00\x93WyR\'\xd3\xa6v>\x01\x00\x00\x0e\x00\x00\x00\x15https://t.me/freevray\x00\x00\xf8\x05\xcf\xc8S\x01\x00\x00\x02\x00\x00\x00\xfb\x0c\x00\x00\x93WyR\'\xd3\xa6vV\x01\x00\x00\x10\x00\x00\x00\x1dhttps://t.me/chengwenxiaoshuo\x00\x00\xc9\x0ba\xbdV\x01\x00\x00\x02\x00\x00\x00\'\xd3\xa6vf\x01\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\xf8\x05\xcf\xc8o\x01\x00\x00\x02\x00\x00\x00\xfb\x0c\x00\x00\x93WyR\'\xd3\xa6vr\x01\x00\x00\x04\x00\x00\x00\x17https://t.me/dhhhfgjfgh\xf8\x05\xcf\xc8~\x01\x00\x00\x02\x00\x00\x00\xfb\x0c\x00\x00\x93WyR\'\xd3\xa6v\x81\x01\x00\x00\x11\x00\x00\x00\x1ahttps://t.me/baoyuhuisuo95\x00\xc9\x0ba\xbd\x81\x01\x00\x00\x02\x00\x00\x00\'\xd3\xa6v\x92\x01\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\xf8\x05\xcf\xc8\x9b\x01\x00\x00\x02\x00\x00\x00\xfb\x0c\x00\x00\x93WyR\'\xd3\xa6v\x9e\x01\x00\x00\x06\x00\x00\x00\x1bhttps://t.me/xiaoxin10086_2\xc9\x0ba\xbd\x9e\x01\x00\x00\x02\x00\x00\x00\xf8\x05\xcf\xc8\xab\x01\x00\x00\x02\x00\x00\x00\xfb\x0c\x00\x00\x93WyR\'\xd3\xa6v\xae\x01\x00\x00\x07\x00\x00\x00\x13https://t.me/jbai76\xf8\x05\xcf\xc8\xbc\x01\x00\x00\x02\x00\x00\x00\xfb\x0c\x00\x00\x93WyR\'\xd3\xa6v\xbf\x01\x00\x00\x06\x00\x00\x00\x14https://t.me/ownwjwk\x00\x00\x00\xc9\x0ba\xbd\xbf\x01\x00\x00\x02\x00\x00\x00\x94\xb3*i\x80Q\x01\x00\xca\xcd\x15\x00\x01\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00"\x14\x0b\x02#@\x18\x02\x11\x10\x00\x00\xd3Y\x1e\xa4\x01\x00\x00\x00\xb1D\x8a\xa8B~L\xa7\x0fSOSO\xe6\x90\x9c\xe6\x90\x9c \xf0\x9f\x94\x8d\x06\xf7\xd1\x82\x02\x00\x00\x00\x9b\xbf1\x1b!\x06\xf9W\r\x01\x08\x08\xd3]\xd89\xc6(\xa2\x8a,\x07\x00\x00\x05\x00\x00\x00\x06\x00\x00\x00!\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe6\x82\xa8\xe8\xa6\x81\xe6\x90\x9c\xe7\xb4\xa2\xe7\x9a\x84\xe5\x86\x85\xe5\xae\xb9...\x00\x00\x15\xc4\xb5\x1c\x02\x00\x00\x00G6\x07\xb4\x02\x00\x00\x00\x04soso\x00\x00\x00G6\x07\xb4\x03\x00\x00\x00\nsosoNewBot\x00y\xd8\x0f\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00USh\xfe@1\x04\x00\x0c\x00\x00\x00\x0bZ\xb9\xa5\x00\x00\x00\x00\xb55~ \x80\xb5V #\xe8\x89\xb2\xe8\x89\xb2/\xe8\xb5\x84\xe6\xba\x90\xe5\xba\x93/\xe5\x95\xa5\xe9\x83\xbd\xe8\x83\xbd\xe6\x90\x9c\xe7\xb4\xa2\xe7\xbe\xa4\x07qlm9990\x1c\x01\xc17-\xbeoh\x18\x04\x12\x9f\x8c\x85\xfa\x01\xff\xff\xff\x7f\x94\xb3*i\x00\x00\x00\x002\xe0\xeb\xdcROU\x00\xfd\x1bf\x91\xc0@v9\x07\xcfW`'
+INFO: 2025-11-29 16:49:40,901: Type 9815cec8 not found, remaining data b'\xc8\xce\x15\x98\xc8\x01\x00\x02\x00\x00\x00\x00\xc5\x13\x08\x00"\x17QY\xd3Y\x1e\xa4\x01\x00\x00\x00\x1e7\xa5\xa2\x0bZ\xb9\xa5\x00\x00\x00\x00\x0bV\x17i\x10\x00\x00\x00\xc4\x13\x08\x00\x91\xb3*i\xfe\x06\x04\x00\xe5\x85\xb3\xe9\x94\xae\xe8\xaf\x8d\xef\xbc\x9a\xe4\xb8\x9d\xe8\xa2\x9c\n\xf0\x9f\x98\x9a \xe8\xb5\x9e\xe5\x8a\xa9\xe5\x95\x86: \xe5\xa4\xa7\xe6\xb0\xb4\xe7\xbd\x91\xe5\x9d\x80 2028469.com 2028\xe4\xbd\x93\xe8\x82\xb2\xe5\x9b\xbd\xe9\x99\x85\xe7\xbb\xbc\xe5\x90\x88\xe7\x9b\x98\xe3\x80\x81\xe7\x94\xb5\xe5\xad\x90\xe7\x99\xbe\xe5\xae\xb6\xe4\xb9\x90\xe4\xbd\x93\xe8\x82\xb2\xe3\x80\x81u\xe5\xad\x98u\xe6\x8f\x90\xe4\xb8\x8d\xe9\x99\x90ip\xe5\x85\x8d\xe5\xae\x9e\xe5\x90\x8d \xe8\xbf\x98\xe6\x9c\x89\xe8\xb1\xaa\xe8\xbd\xa6\xe5\xab\xa9\xe6\xa8\xa1\xe7\xad\x89\xe4\xbd\xa0\xe6\x9d\xa5\xe6\x8b\xbf\n\xf0\x9f\x92\x8e \xf0\x9f\x94\xb4\xf0\x9f\x94\xb4\xe6\x9e\x81\xe5\x93\x81\xe7\xbd\x91\xe7\xba\xa2\xe5\xa5\xb3\xe7\xa5\x9e\xe5\xa6\xb9\xe5\xad\x90\xe5\xbe\xa1\xe5\xa7\x90\xe5\xa4\xa7\xe8\xb5\x8f\xf0\x9f\x94\xb4\xf0\x9f\x94\xb4\xe4\xb8\x9d\xe8\xa2\x9c\xe7\xbe\x8e\xe8\x85\xbf\n\xf0\x9f\x93\xa2 \xe7\x91\x9c\xe4\xbc\xbd\xe8\xa3\xa4\xe7\xb4\xa7\xe8\xba\xab\xe8\xa3\xa4\xe4\xb8\x9d\xe8\xa2\x9c\xe7\xbe\x8e\xe8\x85\xbf\xe7\xb2\xbe\xe5\x93\x81\xe9\xa6\x86\xf0\x9f\x94\x9e 52.4 K\n\xf0\x9f\x93\xa2 \xe4\xb8\x9d\xe8\xa2\x9c\xe8\xb6\xb3\xe4\xba\xa4\xe9\xbb\x91\xe4\xb8\x9d\xe7\x8e\x89\xe8\xb6\xb3\xe7\xa4\xbe\xe5\x8c\xba 101.4 K\n\xf0\x9f\x93\xa2 COS\xe4\xb8\x9d\xe8\xa2\x9c\xe7\xa0\xb4\xe5\xa4\x84\xe9\xbb\x91\xe4\xb8\x9d 3.3 K\n\xf0\x9f\x92\x8e \xe4\xb8\x9c\xe5\x8d\x97\xe4\xba\x9a\xe5\x8d\x8e\xe4\xba\xba\xe6\x9b\x9d\xe5\x85\x89\xe5\x90\x83\xe7\x93\x9c\n\xf0\x9f\x92\x8e \xe6\xb5\xb7\xe5\xa4\x96\xe5\x90\x83\xe7\x93\x9c\xe8\xb6\xa3\xe4\xba\x8b\xf0\x9f\x8d\x89 \xe4\xb8\x9c\xe5\x8d\x97\xe4\xba\x9a\xe6\x96\xb0\xe9\x97\xbb\xe8\x81\x9a\xe9\x9b\x86\xe5\x9c\xb0\n\xf0\x9f\x92\x8e \xe4\xb8\x9c\xe5\x8d\x97\xe4\xba\x9a\xe5\xa4\xb4\xe6\x9d\xa1\xe5\xa4\xa7\xe6\x9b\x9d\xe5\x85\x89\n\xf0\x9f\x92\x8e \xf0\x9f\x91\xb0\xf0\x9f\x8f\xbb\xe2\x80\x8d\xe2\x99\x80\xef\xb8\x8f\xe7\x82\xb9\xe6\x88\x91\xe5\x85\xb3\xe6\xb3\xa8soso\xe8\xae\xa4\xe8\xaf\x81\xe5\xa5\xb3\xe5\x9b\xa2\xe4\xb8\xaa\xe4\xba\xba\xe9\xa2\x91\xe9\x81\x93\n\xf0\x9f\x93\xa2 JK\xe4\xb8\x9d\xe8\xa2\x9c\xe7\xba\xa6\xe7\x82\xae\xe8\x87\xaa\xe6\x85\xb0\xe5\x81\xb7\xe6\x8b\x8d\xe5\x86\x99\xe7\x9c\x9f\xf0\x9f\x94\x9e 28.3 K\n\xf0\x9f\x93\xa2 COS\xe5\x9b\xbd\xe4\xba\xa7\xe4\xb8\x9d\xe8\xa2\x9c\xe6\x8e\xa8\xe7\x89\xb9\xe5\xa4\x84\xe5\xa5\xb3 6.6 K\n\xf0\x9f\x8e\xac \xe9\x86\x8b\xe6\xba\x9c\xe4\xb8\x9d\xe8\xa2\x9c\xe8\xb6\xb3\xe4\xba\xa4\xe8\x87\xaa\xe6\x85\xb0\xe6\xbd\xae\xe5\x96\xb7\xe5\x90\x88\xe9\x9b\x86\n\xf0\x9f\x93\xa2 \xe9\xbb\x91\xe4\xb8\x9d\xe7\x99\xbd\xe4\xb8\x9dJK\xe4\xb8\x9d\xe8\xa2\x9c\xe8\xb6\xb3\xe4\xba\xa4Cos 10.0 K\n\xf0\x9f\x93\xa2 \xe8\x87\xaa\xe6\x8b\x8d\xe5\xb0\x91\xe5\xa5\xb3\xe4\xb8\x9d\xe8\xa2\x9c\xe5\x96\xb7\xe6\xb0\xb4\xe9\x9c\xb2\xe5\x87\xba\xf0\x9f\x94\x9e 4.8 K\n\xf0\x9f\x93\xa2 \xe9\xbb\x91\xe4\xb8\x9d\xe7\x99\xbd\xe4\xb8\x9d\xe4\xb8\x9d\xe8\xa2\x9c\xe8\xb6\xb3\xe4\xba\xa4\xe8\xb6\xb3\xe6\x8e\xa7 147.6 K\n\xf0\x9f\x93\xa2 \xe7\xbe\x8e\xe8\x85\xbf\xe4\xb8\x9d\xe8\xa2\x9c\xf0\x9f\x94\x9e 33.6 K\n\xf0\x9f\x93\xa2 \xe8\xb6\xb3\xe4\xba\xa4\xe9\xbb\x91\xe4\xb8\x9d\xe7\x99\xbd\xe4\xb8\x9d\xe7\xbe\x8e\xe8\x85\xbf\xe9\x95\xbf\xe8\x85\xbf\xe4\xb8\x9d\xe8\xa2\x9c\xe6\x8e\xa7 26.2 K\n\xf0\x9f\x93\xa2 \xe4\xb8\x9d\xe8\xa2\x9c\xe9\xbb\x91\xe4\xb8\x9d\xe7\x99\xbd\xe4\xb8\x9d\xe8\xb6\xb3\xe4\xba\xa4\xe7\x8e\x89\xe8\xb6\xb3 24.9 K\n\n\xf0\x9f\x94\x8d\xe5\x85\xb110005\xe6\x9d\xa1\xe7\xbb\x93\xe6\x9e\x9c\xef\xbc\x8c\xe5\xbd\x93\xe5\x89\x8d\xe7\xac\xac1\xe9\xa1\xb5\xef\xbc\x8c\xe5\x85\xb1834\xe9\xa1\xb5\n\xf0\x9f\x92\xa1\xe7\x82\xb9\xe5\x87\xbb\xe6\x8c\x89\xe9\x92\xae\xe5\x8f\xaf\xe4\xbb\xa5\xe5\x88\x87\xe6\x8d\xa2\xe7\xb1\xbb\xe5\x9e\x8b\xe5\x93\xa6~\xf0\x9f\x91\x87\x00\x00T\x02\xa3H\x15\xc4\xb5\x1c\x04\x00\x00\x00\x83\x8b`w\x15\xc4\xb5\x1c\x07\x00\x00\x00k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x91\xa5\x00\x00\x00<type=SUPERGROUP&m=s&page=1&key=9fdb96a67b98bc0c&u=7164612827\x00\x00\x00k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x93\xa2\x00\x00\x009type=CHANNEL&m=s&page=1&key=9fdb96a67b98bc0c&u=7164612827\x00\x00k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x8e\xac\x00\x00\x007type=VIDEO&m=s&page=1&key=9fdb96a67b98bc0c&u=7164612827k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x8e\xb5\x00\x00\x007type=AUDIO&m=s&page=1&key=9fdb96a67b98bc0c&u=7164612827k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x96\xbc\x00\x00\x007type=PHOTO&m=s&page=1&key=9fdb96a67b98bc0c&u=7164612827k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x93\x84\x00\x00\x006type=TEXT&m=s&page=1&key=9fdb96a67b98bc0c&u=7164612827\x00k\xdb\xbb5\x00\x00\x00\x00\x04\xf0\x9f\x94\x97\x00\x00\x005type=WEB&m=s&page=1&key=9fdb96a67b98bc0c&u=7164612827\x00\x00\x83\x8b`w\x15\xc4\xb5\x1c\x01\x00\x00\x00k\xdb\xbb5\x00\x00\x00\x00#\xf0\x9f\x94\xb0 \xe6\x9f\xa5\xe7\x9c\x8b\xe7\xbc\xb4\xe7\xba\xb3\xe4\xbf\x9d\xe8\xaf\x81\xe9\x87\x91\xe7\x9a\x84\xe5\xba\x97\xe9\x93\xba6type=SHOP&m=s&page=1&key=9fdb96a67b98bc0c&u=7164612827\x00\x83\x8b`w\x15\xc4\xb5\x1c\x02\x00\x00\x00\x05\xff\x8a%\x14\xf0\x9f\x8e\xae \xe4\xbc\x91\xe9\x97\xb2\xe5\xb0\x8f\xe6\xb8\xb8\xe6\x88\x8f\x00\x00\x00\x11https://t.me/buff\x00\x00k\xdb\xbb5\x00\x00\x00\x00\x0f\xe2\x9e\xa1\xef\xb8\x8f\xe4\xb8\x8b\xe4\xb8\x80\xe9\xa1\xb5,m=s&key=9fdb96a67b98bc0c&page=2&u=7164612827\x00\x00\x00\x83\x8b`w\x15\xc4\xb5\x1c\x01\x00\x00\x00\x05\xff\x8a%D\xe8\xb5\x9e\xe5\x8a\xa9:\xf0\x9f\x94\xb0[\xe7\x94\xb5\xe6\x8a\xa5\xe4\xbd\x93\xe8\x82\xb2]\xe5\x8f\xaa\xe6\x94\xb6\xe6\x87\x82\xe7\x90\x83\xe8\x80\x81\xe7\x82\xae\xf0\x9f\x91\x89TG\xe6\x9c\x80\xe7\xa1\xac\xe6\xa0\xb8\xe7\xa4\xbe\xe5\x8c\xbaNO.1\x00\x00\x00\x1ehttps://t.me/+xNiBPUMVeAQ4NzBl\x00\x15\xc4\xb5\x1c5\x00\x00\x00q\x05\xa2(\x04\x00\x00\x00\x02\x00\x00\x00\xf8\x05\xcf\xc8\x07\x00\x00\x00\x02\x00\x00\x00\xd5\x06\x00\x00\xd8\x1e\xa1D\'\xd3\xa6v\x0f\x00\x00\x00;\x00\x00\x00\x18https://t.me/PG2028fanxi\x00\x00\x00\xf8\x05\xcf\xc8K\x00\x00\x00\x02\x00\x00\x00\xf5!\x00\x00L\xc3\xb0I\'\xd3\xa6vN\x00\x00\x00\x18\x00\x00\x00"https://t.me/jipingnvshenjianshang\x00\xf8\x05\xcf\xc8g\x00\x00\x00\x02\x00\x00\x00\xbd\x0f\x00\x00\xec1\xd0S\'\xd3\xa6vj\x00\x00\x00\r\x00\x00\x00\x15https://t.me/oksososo\x00\x00\xc9\x0ba\xbdp\x00\x00\x00\x02\x00\x00\x00\'\xd3\xa6vw\x00\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\xf8\x05\xcf\xc8\x81\x00\x00\x00\x02\x00\x00\x00\xbd\x0f\x00\x00\xec1\xd0S\'\xd3\xa6v\x84\x00\x00\x00\n\x00\x00\x00\x16https://t.me/aiboss123\x00\xc9\x0ba\xbd\x84\x00\x00\x00\x02\x00\x00\x00\xf8\x05\xcf\xc8\x97\x00\x00\x00\x02\x00\x00\x00\xbd\x0f\x00\x00\xec1\xd0S\'\xd3\xa6v\x9a\x00\x00\x00\t\x00\x00\x00\x14https://t.me/cosswka\x00\x00\x00\xc9\x0ba\xbd\x9d\x00\x00\x00\x02\x00\x00\x00\xf8\x05\xcf\xc8\xaa\x00\x00\x00\x02\x00\x00\x00\xf5!\x00\x00L\xc3\xb0I\'\xd3\xa6v\xad\x00\x00\x00\t\x00\x00\x00\x12https://t.me/MTGBG\x00\xf8\x05\xcf\xc8\xb7\x00\x00\x00\x02\x00\x00\x00\xf5!\x00\x00L\xc3\xb0I\'\xd3\xa6v\xba\x00\x00\x00\x11\x00\x00\x00\x18https://t.me/DXdnyxinwen\x00\x00\x00\xf8\x05\xcf\xc8\xcc\x00\x00\x00\x02\x00\x00\x00\xf5!\x00\x00L\xc3\xb0I\'\xd3\xa6v\xcf\x00\x00\x00\x08\x00\x00\x00\x16https://t.me/danuide86\x00\xf8\x05\xcf\xc8\xd8\x00\x00\x00\x02\x00\x00\x00\xf5!\x00\x00L\xc3\xb0I\'\xd3\xa6v\xdb\x00\x00\x00\x17\x00\x00\x00%https://t.me/addlist/V2GBIiE4QJc1OGU1\x00\x00\xf8\x05\xcf\xc8\xf3\x00\x00\x00\x02\x00\x00\x00\xbd\x0f\x00\x00\xec1\xd0S\'\xd3\xa6v\xf6\x00\x00\x00\x0c\x00\x00\x00\x17https://t.me/yzhuanqian\xc9\x0ba\xbd\xf8\x00\x00\x00\x02\x00\x00\x00\'\xd3\xa6v\x02\x01\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\xf8\x05\xcf\xc8\x0c\x01\x00\x00\x02\x00\x00\x00\xbd\x0f\x00\x00\xec1\xd0S\'\xd3\xa6v\x0f\x01\x00\x00\x0b\x00\x00\x00\x13https://t.me/msndmz\xc9\x0ba\xbd\x14\x01\x00\x00\x02\x00\x00\x00\xf8\x05\xcf\xc8!\x01\x00\x00\x02\x00\x00\x00\x13\x18\x00\x00)\x0b P\'\xd3\xa6v$\x01\x00\x00\x0c\x00\x00\x00\x1dhttps://t.me/ajsdllaksjdl/180\x00\x00\xc9\x0ba\xbd&\x01\x00\x00\x02\x00\x00\x00\xf8\x05\xcf\xc81\x01\x00\x00\x02\x00\x00\x00\xbd\x0f\x00\x00\xec1\xd0S\'\xd3\xa6v4\x01\x00\x00\r\x00\x00\x00\x16https://t.me/zukong234\x00\xc9\x0ba\xbd:\x01\x00\x00\x02\x00\x00\x00\xf8\x05\xcf\xc8I\x01\x00\x00\x02\x00\x00\x00\xbd\x0f\x00\x00\xec1\xd0S\'\xd3\xa6vL\x01\x00\x00\n\x00\x00\x00\x12https://t.me/iofyj\x00\xc9\x0ba\xbdP\x01\x00\x00\x02\x00\x00\x00\'\xd3\xa6vV\x01\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\xf8\x05\xcf\xc8_\x01\x00\x00\x02\x00\x00\x00\xbd\x0f\x00\x00\xec1\xd0S\'\xd3\xa6vb\x01\x00\x00\n\x00\x00\x00\x12https://t.me/hsqpc\x00\xc9\x0ba\xbdf\x01\x00\x00\x02\x00\x00\x00\xf8\x05\xcf\xc8u\x01\x00\x00\x02\x00\x00\x00\xbd\x0f\x00\x00\xec1\xd0S\'\xd3\xa6vx\x01\x00\x00\x04\x00\x00\x00\x13https://t.me/meinv9\xc9\x0ba\xbdz\x01\x00\x00\x02\x00\x00\x00\'\xd3\xa6v|\x01\x00\x00\x02\x00\x00\x00\x14https://t.me/ccav/22\x00\x00\x00\xf8\x05\xcf\xc8\x86\x01\x00\x00\x02\x00\x00\x00\xbd\x0f\x00\x00\xec1\xd0S\'\xd3\xa6v\x89\x01\x00\x00\r\x00\x00\x00\x17https://t.me/dsoxfichnk\xc9\x0ba\xbd\x93\x01\x00\x00\x02\x00\x00\x00\xf8\x05\xcf\xc8\x9e\x01\x00\x00\x02\x00\x00\x00\xbd\x0f\x00\x00\xec1\xd0S\'\xd3\xa6v\xa1\x01\x00\x00\n\x00\x00\x00\x13https://t.me/HY9566\xc9\x0ba\xbd\xa1\x01\x00\x00\x02\x00\x00\x00\x80Q\x01\x00\xc9\xcd\x15\x00\x01\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00"\x14\x0b\x02#@\x18\x02\x11\x10\x00\x00\xd3Y\x1e\xa4\x01\x00\x00\x00\xb1D\x8a\xa8B~L\xa7\x0fSOSO\xe6\x90\x9c\xe6\x90\x9c \xf0\x9f\x94\x8d\x06\xf7\xd1\x82\x02\x00\x00\x00\x9b\xbf1\x1b!\x06\xf9W\r\x01\x08\x08\xd3]\xd89\xc6(\xa2\x8a,\x07\x00\x00\x05\x00\x00\x00\x06\x00\x00\x00!\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe6\x82\xa8\xe8\xa6\x81\xe6\x90\x9c\xe7\xb4\xa2\xe7\x9a\x84\xe5\x86\x85\xe5\xae\xb9...\x00\x00\x15\xc4\xb5\x1c\x02\x00\x00\x00G6\x07\xb4\x02\x00\x00\x00\x04soso\x00\x00\x00G6\x07\xb4\x03\x00\x00\x00\nsosoNewBot\x00y\xd8\x0f\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00USh\xfe@1\x04\x00\x0c\x00\x00\x00\x0bZ\xb9\xa5\x00\x00\x00\x00\xb55~ \x80\xb5V #\xe8\x89\xb2\xe8\x89\xb2/\xe8\xb5\x84\xe6\xba\x90\xe5\xba\x93/\xe5\x95\xa5\xe9\x83\xbd\xe8\x83\xbd\xe6\x90\x9c\xe7\xb4\xa2\xe7\xbe\xa4\x07qlm9990\x1c\x01\xc17-\xbeoh\x18\x04\x12\x9f\x8c\x85\xfa\x01\xff\xff\xff\x7f\x91\xb3*i\x00\x00\x00\x00\xef\x16\xa3\x8du\x95#\xe4\xb4\x05\xbf\xba\xcd\x8fg\xf3\xd7\x15\xd1\xb5'
+INFO: 2025-11-29 16:49:40,901: Type 9815cec8 not found, remaining data b'\xc8\xce\x15\x98\x00\x01\x80\x02\x00\x00\x00\x00\xaeA\n\x00"\x17QY\xfb=.\x8e\x01\x00\x00\x00\x1e7\xa5\xa2\x07\xbd\xf8\xa0\x00\x00\x00\x00\x8a\xb3*i\x06\xe5\xb0\x91\xe8\x90\x9d\x00\xc2\x0f\xd6\x83\x00\x00\x00\x00\x00\x00\x00\x00\x0cx\x1a\x00\x80:\t\x00\x0cx\x1a\x00\x01\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00"\x14\x0b\x02G\x00\x10\x00\x10\x00\x00\x00\xfb=.\x8e\x01\x00\x00\x00Io\x9ez\x02\xda\x1dz\x06\xe5\xb0\x8f\xe7\x99\xbd\x00\x03\xe5\xb0\x8f\xc8}\x19{\x00\x00\x00\x00\x15\xc4\xb5\x1c\x01\x00\x00\x00USh\xfe@1\x04\x00\x0c\x00\x00\x00\x07\xbd\xf8\xa0\x00\x00\x00\x00\xd9I\xac\x02\xf3\xb8\xb4& \xe5\x85\xa8\xe8\x83\xbd\xe6\x90\x9c\xe7\xb4\xa2\xe7\xbe\xa4 /\xe6\x83\xb3\xe7\x9c\x8b\xe5\x95\xa5\xe6\x90\x9c\xe5\x95\xa5\x00\x00\x00\x07wwannen\x11\x1cn\x1c\x02\x00\x00\x00\x85\xcb1\x1b\xf4\xa2\xc0T\x13\x01\x08\x08t\x90\x88\xa3f\xc8l}\xd2z\xf3\xd6\x8a(\xa9(\x05\x00\x00\x00\xf7\xa7\x98h\x18\x04\x12\x9f\xfc\x85\xfa\x01\xff\xff\xff\x7f\x8a\xb3*i\x00\x00\x00\x00\xfb\x8aD=r\n\x19\xad%\xa3,a\x1f-\x1f#S\xed\x14\xc1\xe8\xa3\x8c\x94'
+INFO: 2025-11-29 16:49:47,257: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:49:47,257: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:49:47,258: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:49:47,258: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:49:47,259: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:49:47,259: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:49:47,259: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 16:49:47,259: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 16:49:47,966: libssl detected, it will be used for encryption
+INFO: 2025-11-29 16:49:48,061: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:49:51,031: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:49:53,286: Phone migrated to 5
+INFO: 2025-11-29 16:49:53,286: Reconnecting to new data center 5
+INFO: 2025-11-29 16:49:53,678: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:49:53,679: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:49:53,679: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 16:49:57,038: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 16:49:59,685: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:49:59,687: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:50:03,247: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:50:03,248: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:50:06,811: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:50:06,813: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:50:12,069: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:50:12,074: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:51:31,321: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:51:31,322: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:51:31,325: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:51:31,325: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:51:31,327: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:51:31,327: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:51:31,328: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 16:51:31,328: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 16:56:53,670: libssl detected, it will be used for encryption
+INFO: 2025-11-29 16:56:53,799: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:56:57,233: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:56:59,586: Phone migrated to 5
+INFO: 2025-11-29 16:56:59,587: Reconnecting to new data center 5
+INFO: 2025-11-29 16:57:00,006: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 16:57:00,007: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 16:57:00,007: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 16:57:03,618: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 16:57:07,189: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:57:07,191: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:57:10,572: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:57:10,573: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:57:14,013: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:57:14,015: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 16:57:19,283: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:57:19,285: Connection to 91.108.56.152:443/TcpFull complete!
+WARNING: 2025-11-29 16:58:45,618: Server closed the connection: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 16:58:45,620: Connection closed while receiving data: 0 bytes read on a total of 8 expected bytes
+INFO: 2025-11-29 16:58:45,620: Closing current connection to begin reconnect...
+INFO: 2025-11-29 16:58:45,621: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 16:58:45,623: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 17:01:43,493: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 17:01:43,494: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 17:01:43,500: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 17:01:43,500: Disconnection from 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-29 17:01:43,500: Unhandled exception from keepalive_handle after cancelling <class '_asyncio.Task'> (<Task finished name='Task-33' coro=<UpdateMethods._keepalive_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py:481> exception=OperationalError('database is locked')>)
+Traceback (most recent call last):
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 629, in run_until_complete
+    self.run_forever()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 596, in run_forever
+    self._run_once()
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/asyncio/base_events.py", line 1854, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/Library/Developer/CommandLineTools/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/selectors.py", line 562, in select
+    kev_list = self._selector.control(None, max_ev, timeout)
+KeyboardInterrupt
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/helpers.py", line 176, in _cancel
+    await task
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 517, in _keepalive_loop
+    self._save_states_and_entities()
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/telegrambaseclient.py", line 689, in _save_states_and_entities
+    self.session.process_entities(types.contacts.ResolvedPeer(None, [e._as_input_peer() for e in entities], []))
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/sessions/sqlite.py", line 301, in process_entities
+    c.executemany(
+sqlite3.OperationalError: database is locked
+INFO: 2025-11-29 17:07:41,575: libssl detected, it will be used for encryption
+INFO: 2025-11-29 17:07:41,712: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 17:07:44,795: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 17:07:47,678: Phone migrated to 5
+INFO: 2025-11-29 17:07:47,679: Reconnecting to new data center 5
+INFO: 2025-11-29 17:07:48,086: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 17:07:48,099: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 17:07:48,099: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 17:07:51,734: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 17:07:54,468: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 17:07:54,469: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 17:07:57,757: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 17:07:57,758: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 17:08:00,850: Got difference for channel 2975501107 updates
+INFO: 2025-11-29 17:08:01,326: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 17:08:01,328: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 17:08:06,611: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 17:08:06,613: Connection to 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-29 17:08:09,291: Task was destroyed but it is pending!
+task: <Task pending name='Task-49' coro=<Connection._send_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:310> wait_for=<Future cancelled>>
+ERROR: 2025-11-29 17:08:09,293: Task was destroyed but it is pending!
+task: <Task pending name='Task-50' coro=<Connection._recv_loop() running at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/connection/connection.py:355> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x104c0f730>()]>>
+ERROR: 2025-11-29 17:08:09,293: Task was destroyed but it is pending!
+task: <Task pending name='Task-51' coro=<MTProtoSender._send_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:446> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x104c0f760>()]>>
+ERROR: 2025-11-29 17:08:09,293: Task was destroyed but it is pending!
+task: <Task pending name='Task-52' coro=<MTProtoSender._recv_loop() done, defined at /Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/network/mtprotosender.py:497> wait_for=<Future cancelled>>
+INFO: 2025-11-29 17:08:16,691: Got difference for account updates
+INFO: 2025-11-29 17:09:13,562: Got difference for channel 2185062351 updates
+INFO: 2025-11-29 17:09:56,089: Got difference for account updates
+INFO: 2025-11-29 17:09:57,151: Got difference for channel 1369944285 updates
+INFO: 2025-11-29 17:10:45,128: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 17:10:45,130: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 17:10:45,144: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 17:10:45,145: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 17:10:45,157: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 17:10:45,158: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 17:14:25,433: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 17:14:25,440: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 17:16:40,693: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 17:16:40,694: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 17:16:40,696: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 17:16:40,698: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 17:34:48,965: libssl detected, it will be used for encryption
+INFO: 2025-11-29 17:34:49,107: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 17:34:52,527: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 17:34:55,125: Phone migrated to 5
+INFO: 2025-11-29 17:34:55,126: Reconnecting to new data center 5
+INFO: 2025-11-29 17:34:55,568: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-29 17:34:55,576: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-29 17:34:55,576: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 17:34:59,124: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-29 17:35:01,882: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 17:35:01,883: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 17:38:34,263: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-29 17:38:34,264: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-29 17:38:34,267: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-29 17:38:34,267: Disconnection from 91.108.56.139:443/TcpFull complete!

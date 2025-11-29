@@ -42,6 +42,26 @@ def get(account_id):
         cur.close()
         conn.close()
 
+def find_by_phone_or_username(phone, username):
+    """根据 phone 或 username 查找账号"""
+    conn = cfg.pool.connection()
+    cur = conn.cursor(cfg.pymysql.cursors.DictCursor)
+    try:
+        if phone:
+            cur.execute("SELECT * FROM accounts WHERE phone=%s LIMIT 1", (phone,))
+            result = cur.fetchone()
+            if result:
+                return result
+        if username:
+            cur.execute("SELECT * FROM accounts WHERE username=%s LIMIT 1", (username,))
+            result = cur.fetchone()
+            if result:
+                return result
+        return None
+    finally:
+        cur.close()
+        conn.close()
+
 
 def delete(account_id):
     conn = cfg.pool.connection()

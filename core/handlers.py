@@ -1,5 +1,6 @@
 import asyncio
 import random
+from datetime import datetime
 from core.filters import match_keywords
 from services.alerting import send_alert
 from services import settings_service
@@ -19,93 +20,103 @@ def _get_semaphore(account_id: int) -> asyncio.Semaphore:
 
 async def on_new_message(event, account: dict, bot_client):
     try:
-        # bot_client 参数保留以保持兼容性，但不再使用（现在使用监听账号的客户端发送）
+        # bot_client 用于发送监听提醒消息到目标群组
+        # 只处理群组消息
+        print(f"[监听日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 📨 账号 #{account['id']} 收到新消息 (私聊: {event.is_private})")
+        if event.is_private:
+            print(f"[监听日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 账号 #{account['id']} 收到私聊消息，跳过处理")
+            return
         
+        # 获取消息文本（包括纯文本和媒体消息的标题/说明）
         text = event.message.message or ''
+        # 如果没有文本，尝试获取其他可能的文本内容
+        if not text:
+            # 尝试获取原始文本
+            text = getattr(event.message, 'raw_text', '') or ''
+            # 尝试获取消息的文本属性
+            if not text:
+                text = str(event.message.text) if hasattr(event.message, 'text') else ''
+        
+        # 获取群组信息用于日志
+        try:
+            chat = await event.get_chat()
+            chat_id = event.chat_id
+            chat_type = type(chat).__name__
+            chat_title = getattr(chat, 'title', '') or getattr(chat, 'username', '') or f"Chat#{chat_id}"
+            chat_username = getattr(chat, 'username', None)
+            is_megagroup = getattr(chat, 'megagroup', False)
+            is_broadcast = getattr(chat, 'broadcast', False)
+            print(f"[监听日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 账号 #{account['id']} 在群组 '{chat_title}' (ID: {chat_id}, 类型: {chat_type}, 用户名: {chat_username}, 超级群: {is_megagroup}, 频道: {is_broadcast}) 收到消息")
+        except Exception as e:
+            chat_title = f"Chat#{event.chat_id}"
+            print(f"[监听日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 账号 #{account['id']} 在群组 '{chat_title}' 收到消息 (获取群组信息失败: {str(e)})")
+        
+        # 显示完整的消息文本（用于调试）
+        text_display = repr(text) if text else "''"
+        print(f"[监听日志] 消息文本 (repr): {text_display}")
+        print(f"[监听日志] 消息文本 (显示): '{text}' (长度: {len(text)})")
+        
         role = settings_service.get_account_role(account['id']) or 'both'
+        print(f"[监听日志] 账号 #{account['id']} 的角色: {role}")
 
         # 1) 关键词提醒（仅当角色包含 listen）
         if role in ('listen', 'both'):
-            # listen whitelist filtering
-            sources = settings_service.get_listen_sources(account['id']) or []
-            if sources:
-                # build possible identifiers for current chat
-                candidates = set()
-                try:
-                    cid = str(event.chat_id)
-                    candidates.add(cid)
-                    # 对于超级群组/频道，chat_id 是负数，也尝试添加绝对值
-                    try:
-                        cid_int = int(cid)
-                        if cid_int < 0:
-                            candidates.add(str(abs(cid_int)))
-                            # 对于 -100xxxxxxxxxx 格式，也添加 xxxxxxxx
-                            if str(cid_int).startswith('-100'):
-                                candidates.add(str(cid_int)[4:])
-                    except Exception:
-                        pass
-                except Exception:
-                    pass
-                try:
-                    ent = await event.get_chat()
-                    uname = getattr(ent, 'username', None)
-                    if uname:
-                        candidates.add('@' + uname)
-                        candidates.add(uname)  # 不带 @
-                        candidates.add(f't.me/{uname}')
-                        candidates.add(f'https://t.me/{uname}')
-                except Exception:
-                    pass
-                # 检查是否匹配（支持多种格式）
-                matched_source = False
-                for src in sources:
-                    if not src or not src.strip():
-                        continue
-                    src_clean = src.strip()
-                    # 直接匹配
-                    if src_clean in candidates:
-                        matched_source = True
-                        break
-                    # 处理 @username 格式
-                    if src_clean.startswith('@'):
-                        if src_clean[1:] in candidates or src_clean in candidates:
-                            matched_source = True
-                            break
-                    # 处理 t.me/username 格式
-                    if 't.me/' in src_clean:
-                        username_part = src_clean.split('t.me/')[-1].split('/')[0].split('?')[0]
-                        if username_part in candidates or f'@{username_part}' in candidates:
-                            matched_source = True
-                            break
-                    # 处理 chat_id 匹配
-                    try:
-                        src_id = int(src_clean)
-                        if str(src_id) in candidates or str(-src_id) in candidates:
-                            matched_source = True
-                            break
-                    except Exception:
-                        pass
-                
-                # 如果设置了监听源但没有匹配，跳过处理
-                if not matched_source:
-                    return
+            print(f"[监听日志] 账号 #{account['id']} 角色包含 listen，开始检查关键词")
+            # 监听账号监听所有群组（不再使用监听源过滤）
             
             # 检查关键词匹配
             keywords = settings_service.get_account_keywords(account['id'], kind='listen') or []
+            print(f"[监听日志] 账号 #{account['id']} 的监听关键词列表: {keywords}")
             if not keywords:
-                # 如果没有设置关键词，不处理
+                print(f"[监听日志] 账号 #{account['id']} 没有设置监听关键词，跳过处理")
                 return
             
+            # 详细显示匹配过程
+            print(f"[监听日志] 开始匹配关键词...")
+            for kw in keywords:
+                kw_clean = kw.strip() if kw else ''
+                if kw_clean:
+                    in_text = kw_clean in text
+                    print(f"[监听日志]   检查关键词 '{kw_clean}' (repr: {repr(kw_clean)}) 是否在文本中: {in_text}")
+                    if in_text:
+                        print(f"[监听日志]   ✅ 找到匹配: '{kw_clean}'")
+            
             matched = match_keywords(account['id'], text, kind='listen')
+            print(f"[监听日志] 关键词匹配结果: {matched if matched else '未匹配'}")
             if matched:
-                # 检查转发目标（只使用账号专属的，不使用全局的）
-                target = settings_service.get_account_target_chat(account['id'])
+                print(f"[监听日志] ✅ 匹配到关键词: '{matched}'")
+                # 使用全局转发目标
+                target = settings_service.get_target_chat()
+                print(f"[监听日志] 全局转发目标: {target if target else '未设置'}")
                 if not target or not target.strip():
+                    print(f"[监听日志] ❌ 转发目标未设置，跳过发送")
                     return
                 
-                # 使用监听账号的客户端发送（而不是机器人客户端）
-                account_client = event.client
-                await send_alert(account_client, account, event, matched)
+                # 如果已设置转发目标，过滤掉机器人发送的消息
+                try:
+                    sender = await event.get_sender()
+                    is_bot = getattr(sender, 'bot', False)
+                    if is_bot:
+                        print(f"[监听日志] ⚠️ 消息来自机器人，已设置转发目标，跳过处理")
+                        return
+                except Exception:
+                    # 如果获取发送者失败，继续处理
+                    pass
+                
+                # 使用机器人客户端发送监听信息
+                if not bot_client:
+                    print(f"[监听日志] ❌ bot_client 为空，无法发送提醒")
+                    return
+                
+                print(f"[监听日志] 准备发送提醒到目标: {target}")
+                try:
+                    await send_alert(bot_client, account, event, matched)
+                    print(f"[监听日志] ✅ 提醒发送成功")
+                except Exception as e:
+                    print(f"[监听日志] ❌ 发送提醒失败: {str(e)}")
+                    import traceback
+                    traceback.print_exc()
+                
                 # optional: start sending template message
                 if settings_service.get_start_sending(account['id']):
                     tpl = settings_service.get_template_message(account['id'])
@@ -126,6 +137,10 @@ async def on_new_message(event, account: dict, bot_client):
                                 await _send()
                         # do not block handler
                         asyncio.create_task(_runner())
+            else:
+                print(f"[监听日志] 消息文本 '{text}' 未匹配任何关键词")
+        else:
+            print(f"[监听日志] 账号 #{account['id']} 角色为 '{role}'，不包含 listen，跳过监听处理")
 
         # 2) 按钮点击（仅当角色包含 click）
         if role not in ('click', 'both'):
@@ -158,6 +173,14 @@ async def on_new_message(event, account: dict, bot_client):
                         except Exception:
                             pass
                     return
-    except Exception:
-        # best-effort; do not raise
-        pass
+    except (GeneratorExit, RuntimeError) as e:
+        # 忽略 Telethon 内部连接关闭时的错误
+        if 'GeneratorExit' in str(type(e).__name__) or 'coroutine ignored' in str(e):
+            return
+        # 其他错误打印日志
+        print(f"[监听日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ⚠️ 账号 #{account.get('id', '?')} 处理消息时发生 RuntimeError: {str(e)}")
+    except Exception as e:
+        # 打印错误以便调试
+        print(f"[监听日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ❌ 账号 #{account.get('id', '?')} 处理消息时发生未预期错误: {str(e)}")
+        import traceback
+        traceback.print_exc()

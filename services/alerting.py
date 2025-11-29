@@ -4,7 +4,10 @@ from telethon.tl.custom import Button
 from storage import dao_alerts
 from services import settings_service
 
-async def send_alert(account_client, account, event, matched_keyword: str):
+async def send_alert(bot_client, account, event, matched_keyword: str):
+    from datetime import datetime
+    print(f"[发送提醒] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 开始构建提醒消息...")
+    
     sender = await event.get_sender()
     chat = await event.get_chat()
     sender_name = f"{getattr(sender,'first_name', '') or ''} {getattr(sender,'last_name','') or ''}".strip() or 'Unknown'
@@ -14,10 +17,16 @@ async def send_alert(account_client, account, event, matched_keyword: str):
     text = event.message.message or ''
     source_chat_id = getattr(chat, 'id', None)
     sender_id = getattr(sender, 'id', None)
+    
+    print(f"[发送提醒] 发送者: {sender_name} ({sender_username_display})")
+    print(f"[发送提醒] 来源群组: {source_title} (ID: {source_chat_id})")
+    print(f"[发送提醒] 消息内容: {text[:100]}...")
 
-    # 只使用账号专属的转发目标（不使用全局的）
-    target = settings_service.get_account_target_chat(account['id'])
+    # 使用全局转发目标
+    target = settings_service.get_target_chat()
+    print(f"[发送提醒] 转发目标: {target}")
     if not target or not target.strip():
+        print(f"[发送提醒] ❌ 转发目标未配置")
         delivered = 'error'
         error = 'Target chat not configured'
     else:
@@ -55,18 +64,15 @@ async def send_alert(account_client, account, event, matched_keyword: str):
                 text = text.replace('`', '\\`')
                 return text
             
-            # 构建美观的消息格式
+            # 构建消息格式（去掉分隔线，直接显示内容）
             message_text = (
-                f"🔔 **关键词提醒**\n"
-                f"━━━━━━━━━━━━━━━━\n\n"
+                f"🔔 **关键词提醒**\n\n"
                 f"📱 **监听账号：** `{escape_md(account_display)}`\n"
-                f"🔑 **关键字：** `{escape_md(matched_keyword)}`\n\n"
+                f"🔑 **关键字：** `{escape_md(matched_keyword)}`\n"
                 f"👤 **发送者：** {escape_md(sender_name)}\n"
                 f"📝 **用户名：** {escape_md(sender_username_display)}\n"
-                f"💬 **来源群组：** `{escape_md(source_title)}`\n\n"
-                f"━━━━━━━━━━━━━━━━\n"
-                f"📄 **消息内容：**\n\n"
-                f"```\n{text}\n```"
+                f"💬 **来源群组：** `{escape_md(source_title)}`\n"
+                f"📄 **消息内容：** {escape_md(text)}"
             )
             
             # 构建按钮（添加emoji和合适的按钮）
@@ -75,23 +81,24 @@ async def send_alert(account_client, account, event, matched_keyword: str):
             msg_link = None
             if source_chat_id and event.message.id:
                 try:
-                    # 对于超级群组/频道，chat_id 格式为 -100xxxxxxxxxx
-                    if str(source_chat_id).startswith('-100'):
+                    # 优先尝试使用群组的 username（公开群组/频道）
+                    chat_username = getattr(chat, 'username', None)
+                    if chat_username:
+                        # 公开群组/频道，使用 username 格式
+                        msg_link = f"https://t.me/{chat_username}/{event.message.id}"
+                    elif str(source_chat_id).startswith('-100'):
+                        # 私有超级群组/频道，chat_id 格式为 -100xxxxxxxxxx
                         # 提取频道ID（去掉 -100 前缀）
                         channel_id = str(source_chat_id)[4:]
                         msg_link = f"https://t.me/c/{channel_id}/{event.message.id}"
                     else:
-                        # 对于普通群组，尝试使用 chat_id
+                        # 普通群组，使用 tg:// 协议（可能不太可靠，但作为备选）
                         msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
                 except Exception:
                     pass
             
-            # 构建按钮行
+            # 构建按钮行 - 只添加"查看消息"按钮
             button_row = []
-            # 回复按钮
-            if msg_link:
-                button_row.append(Button.url('💬 回复', msg_link))
-            # 查看消息按钮
             if msg_link:
                 button_row.append(Button.url('👁️ 查看消息', msg_link))
             if button_row:
@@ -101,17 +108,23 @@ async def send_alert(account_client, account, event, matched_keyword: str):
             if sender_id:
                 buttons.append([Button.inline('🚫 屏蔽该用户', data=f'block_user:{sender_id}')])
             
-            # 使用监听账号的客户端发送消息（而不是机器人客户端）
+            # 使用机器人客户端发送消息
             # 使用Markdown解析模式
-            await account_client.send_message(
+            print(f"[发送提醒] 准备发送到: {target_clean}")
+            print(f"[发送提醒] 消息长度: {len(message_text)} 字符")
+            await bot_client.send_message(
                 target_clean, 
                 message_text, 
                 parse_mode='markdown',
                 buttons=buttons if buttons else None
             )
+            print(f"[发送提醒] ✅ 消息发送成功到 {target_clean}")
             delivered = 'success'
             error = None
         except Exception as e:
+            print(f"[发送提醒] ❌ 发送失败: {str(e)}")
+            import traceback
+            traceback.print_exc()
             delivered = 'error'
             error = f"Failed to send to {target}: {str(e)}"
 
