@@ -34,10 +34,7 @@ async def main():
         
         # 主循环：保持程序运行
         print(f"[启动日志] 程序正在运行，按 Ctrl+C 退出...")
-        try:
-            await asyncio.Event().wait()
-        except KeyboardInterrupt:
-            print(f"\n[启动日志] 收到退出信号，正在关闭...")
+        await asyncio.Event().wait()  # Keep main task running
     except KeyboardInterrupt:
         # graceful shutdown on Ctrl+C
         print(f"\n[启动日志] 收到退出信号，正在关闭...")

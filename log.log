@@ -1404,3 +1404,1447 @@ INFO: 2025-11-30 00:19:15,153: Disconnecting from 91.108.56.152:443/TcpFull...
 INFO: 2025-11-30 00:19:15,154: Disconnection from 91.108.56.152:443/TcpFull complete!
 INFO: 2025-11-30 00:19:15,155: Disconnecting from 91.108.56.139:443/TcpFull...
 INFO: 2025-11-30 00:19:15,155: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 00:37:15,295: libssl detected, it will be used for encryption
+INFO: 2025-11-30 00:37:15,411: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 00:37:18,229: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 00:37:20,403: Phone migrated to 5
+INFO: 2025-11-30 00:37:20,403: Reconnecting to new data center 5
+INFO: 2025-11-30 00:37:20,859: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 00:37:20,860: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 00:37:20,860: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 00:37:24,378: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 00:37:27,050: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 00:37:27,052: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-30 00:37:41,203: Got difference for channel 2185062351 updates
+INFO: 2025-11-30 00:37:46,054: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,099: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,103: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,103: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,107: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,111: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,111: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,111: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,111: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,112: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,321: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,322: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,322: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,323: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,323: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,324: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,324: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,325: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,325: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,326: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,326: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,326: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,327: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,331: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,331: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:38:36,331: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,350: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,351: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,351: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,351: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,370: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,371: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,371: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,371: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,371: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,372: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,372: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,373: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,373: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,376: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:08,376: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:41,125: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:41,126: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:41,129: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:41,129: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:39:41,129: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:13,285: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:13,287: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:13,287: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:13,293: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:13,296: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:13,296: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:13,297: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:13,303: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:13,304: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:13,304: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,096: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,098: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,099: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,099: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,100: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,101: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,101: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,102: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,102: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,103: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,104: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,104: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,105: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,105: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,106: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,106: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,107: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,331: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,331: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,332: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,332: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,332: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,332: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,333: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,333: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,333: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,333: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,333: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,333: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,334: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,334: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,334: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,334: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,334: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:40:47,334: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,846: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,848: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,849: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,851: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,853: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,853: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,853: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,854: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,854: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,862: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,863: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,863: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,864: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,864: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,865: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:14,867: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:15,095: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:15,095: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:15,101: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:15,101: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:15,102: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:15,105: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:15,105: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:15,334: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:15,353: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:46,834: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,049: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,053: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,054: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,054: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,055: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,055: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,059: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,059: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,059: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,060: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,060: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,060: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,061: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:41:47,061: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:19,127: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:19,350: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:19,351: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:19,351: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:19,352: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:52,151: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:52,152: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:52,155: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:52,155: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:52,156: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:52,156: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:52,158: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:52,159: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:52,159: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:52,163: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:42:54,159: Got difference for channel 2509862916 updates
+INFO: 2025-11-30 00:43:20,523: Got difference for channel 2509862916 updates
+INFO: 2025-11-30 00:43:26,985: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:26,987: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:26,987: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:26,989: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:26,989: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:26,989: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:26,990: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:26,990: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:26,999: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,000: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,000: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,001: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,002: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,003: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,003: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,004: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,004: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,005: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,227: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,227: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,228: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,229: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,229: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,230: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,230: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,231: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,231: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,232: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,233: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,233: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,234: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,234: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,235: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,235: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:27,236: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:34,878: Got difference for channel 2509862916 updates
+INFO: 2025-11-30 00:43:54,776: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,778: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,779: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,781: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,784: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,785: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,787: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,790: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,791: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,791: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,793: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,793: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,794: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,794: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,795: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:54,796: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:55,035: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:55,039: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:55,261: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:55,261: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:55,267: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:55,268: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:55,268: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:55,269: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:43:55,276: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:26,818: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,035: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,039: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,040: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,040: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,041: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,046: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,046: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,047: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,047: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,051: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,054: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,054: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,057: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:27,059: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:59,342: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:59,342: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:59,343: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:59,343: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:44:59,346: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:45:32,203: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:45:32,203: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:45:32,204: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:45:32,205: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:45:32,206: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:45:32,206: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:45:32,207: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:45:32,207: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:45:32,208: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:45:32,208: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,285: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,287: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,287: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,288: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,289: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,289: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,290: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,290: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,290: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,290: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,292: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,292: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,292: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,292: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,292: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,293: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,293: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,293: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,293: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,294: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,294: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,296: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,296: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,296: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,298: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,298: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,298: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,520: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,521: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,521: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,521: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,521: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,522: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,522: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:07,522: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,411: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,411: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,412: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,412: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,413: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,413: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,413: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,414: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,645: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,645: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,646: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,646: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,646: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,647: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,648: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,648: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,649: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,649: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,654: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,655: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,655: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,655: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,656: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,656: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:46:34,657: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,172: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,176: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,371: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,378: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,379: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,379: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,379: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,381: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,383: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,384: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,384: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,384: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,384: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,387: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:07,387: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:37,722: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:37,724: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:37,724: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:37,724: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:47:37,725: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:10,574: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:10,576: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:10,576: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:10,577: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:10,577: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:10,577: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:10,578: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:10,578: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:10,578: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:10,582: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:28,879: Got difference for channel 2509862916 updates
+INFO: 2025-11-30 00:48:45,752: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,754: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,755: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,756: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,757: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,759: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,760: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,761: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,762: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,762: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,763: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,764: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,764: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,765: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,765: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,766: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,766: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,767: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,767: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,768: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,768: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,768: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,989: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,990: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,991: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,991: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,992: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,993: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,993: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,994: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,994: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,995: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,995: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,996: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:48:45,997: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,473: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,474: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,478: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,478: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,484: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,484: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,486: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,488: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,491: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,492: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,494: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,497: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,498: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,715: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,716: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,721: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,721: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,727: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,731: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,735: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,974: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,978: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,979: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,979: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:12,979: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,715: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,720: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,723: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,727: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,727: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,728: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,731: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,733: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,734: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,734: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,734: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,734: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,737: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,738: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:49:44,936: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:15,766: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:15,979: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:15,989: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:15,993: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:15,994: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:16,013: Got difference for channel 1839245983 updates
+INFO: 2025-11-30 00:50:34,403: Got difference for channel 2509862916 updates
+INFO: 2025-11-30 00:50:48,832: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:48,833: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:48,838: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:48,838: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:48,838: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:48,839: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:48,841: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:48,844: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:48,845: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:50:48,845: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,924: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,925: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,925: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,926: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,926: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,926: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,927: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,927: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,929: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,929: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,932: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,932: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,932: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,932: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,933: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,935: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,936: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,936: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,936: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,936: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,937: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,937: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,939: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,939: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,939: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,939: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:23,940: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:24,160: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:24,161: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:24,162: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:24,162: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:24,162: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:24,162: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:24,163: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:24,163: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,640: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,641: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,644: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,647: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,649: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,653: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,653: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,654: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,656: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,659: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,662: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,662: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,662: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,881: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,881: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,882: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,882: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,882: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:51,922: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:52,120: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:52,130: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:52,130: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:52,131: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:52,131: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:51:52,131: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,897: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,898: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,901: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,902: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,903: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,903: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,909: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,909: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,909: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,925: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,927: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,927: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,927: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,927: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:23,928: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:32,135: Got difference for channel 1161631495 updates
+INFO: 2025-11-30 00:52:34,211: Got difference for channel 2813098647 updates
+INFO: 2025-11-30 00:52:38,425: Got difference for channel 1369944285 updates
+INFO: 2025-11-30 00:52:40,477: Got difference for channel 1555693413 updates
+INFO: 2025-11-30 00:52:43,085: Got difference for channel 2114987005 updates
+INFO: 2025-11-30 00:52:50,709: Got difference for channel 2713501654 updates
+INFO: 2025-11-30 00:52:55,499: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:55,500: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:55,503: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:55,504: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:52:55,505: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:53:28,398: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:53:28,400: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:53:28,402: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:53:28,403: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:53:28,403: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:53:28,407: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:53:28,407: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:53:28,407: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:53:28,408: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:53:28,408: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:53:31,885: Got difference for channel 2114987005 updates
+INFO: 2025-11-30 00:54:02,591: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,591: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,592: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,592: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,592: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,592: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,593: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,593: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,599: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,599: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,600: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,600: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,600: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,600: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,600: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,600: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,600: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,603: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,603: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,603: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,604: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,604: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,604: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,604: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,606: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,606: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,607: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,826: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,827: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,827: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,827: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,827: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,828: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,828: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:02,828: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,362: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,366: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,367: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,367: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,367: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,368: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,368: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,368: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,368: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,588: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,588: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,589: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,589: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,589: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,590: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,590: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,590: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,591: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,611: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,611: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,611: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,614: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,614: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,834: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:54:29,834: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,623: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,626: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,626: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,631: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,631: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,632: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,632: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,632: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,632: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,633: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,633: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,633: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,635: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,636: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:00,636: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:32,686: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:32,687: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:32,687: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:32,690: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:55:32,690: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:05,512: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:05,513: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:05,514: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:05,527: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:05,527: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:05,528: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:05,529: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:05,529: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:05,531: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:05,531: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,407: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,408: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,409: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,412: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,416: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,416: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,417: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,419: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,419: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,421: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,425: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,425: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,426: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,427: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,645: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,645: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,646: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,646: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,646: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,646: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,647: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,647: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,647: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,647: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,648: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,648: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,648: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,649: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,649: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,649: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,650: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,650: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,651: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,651: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:56:38,651: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,696: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,697: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,697: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,698: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,698: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,698: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,698: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,699: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,699: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,700: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,700: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,700: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,700: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,701: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,701: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,701: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,701: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,701: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,702: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,703: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,704: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,704: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,704: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,704: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:05,704: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:36,989: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,000: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,000: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,001: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,001: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,001: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,006: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,007: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,007: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,007: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,007: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,009: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,010: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,010: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:57:37,010: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:09,590: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:09,591: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:09,594: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:09,594: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:09,594: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:17,375: Got difference for channel 2114987005 updates
+INFO: 2025-11-30 00:58:42,379: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:42,380: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:42,381: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:42,391: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:42,392: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:42,394: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:42,394: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:42,395: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:42,395: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:58:42,396: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,270: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,271: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,272: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,273: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,273: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,274: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,274: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,277: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,277: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,277: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,281: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,281: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,282: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,282: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,286: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,286: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,286: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,286: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,290: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,291: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,291: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,292: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,294: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,294: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,508: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,509: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,510: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,510: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,510: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,511: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,511: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,511: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,512: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,512: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:16,513: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:33,728: Got difference for channel 1839245983 updates
+INFO: 2025-11-30 00:59:43,288: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,289: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,526: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,527: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,527: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,528: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,528: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,529: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,529: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,530: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,530: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,531: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,531: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,532: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,538: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,539: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,539: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,540: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,540: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,540: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,540: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,541: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,541: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,541: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 00:59:43,542: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,503: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,507: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,507: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,507: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,508: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,508: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,513: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,513: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,514: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,515: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,515: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,515: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,530: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,545: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:15,548: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:00:28,703: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 01:00:28,707: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-30 01:00:28,710: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 01:00:28,710: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 01:00:31,719: libssl detected, it will be used for encryption
+INFO: 2025-11-30 01:03:18,240: libssl detected, it will be used for encryption
+INFO: 2025-11-30 01:03:31,695: libssl detected, it will be used for encryption
+INFO: 2025-11-30 01:08:17,929: libssl detected, it will be used for encryption
+INFO: 2025-11-30 01:09:24,260: libssl detected, it will be used for encryption
+INFO: 2025-11-30 01:11:23,470: libssl detected, it will be used for encryption
+INFO: 2025-11-30 01:11:23,597: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 01:11:24,187: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 01:11:24,187: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 01:11:27,744: libssl detected, it will be used for encryption
+INFO: 2025-11-30 01:11:27,808: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 01:11:30,917: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 01:11:34,378: Phone migrated to 5
+INFO: 2025-11-30 01:11:34,378: Reconnecting to new data center 5
+INFO: 2025-11-30 01:11:34,761: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 01:11:34,763: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 01:11:34,764: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 01:11:38,177: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 01:11:41,372: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 01:11:41,373: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-30 01:11:56,161: Got difference for account updates
+INFO: 2025-11-30 01:11:56,703: Got difference for channel 2713501654 updates
+INFO: 2025-11-30 01:11:57,253: Got difference for channel 2185062351 updates
+INFO: 2025-11-30 01:12:01,542: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:06,320: Got difference for channel 2509862916 updates
+INFO: 2025-11-30 01:12:53,257: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,259: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,260: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,260: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,261: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,261: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,262: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,262: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,263: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,263: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,263: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,264: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,264: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,265: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,265: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,266: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,266: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,266: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,267: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,267: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,267: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,267: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,268: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,268: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:12:53,268: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,629: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,630: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,633: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,844: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,845: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,845: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,847: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,855: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,855: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,856: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,856: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,859: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,859: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,859: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:25,862: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:57,267: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:57,267: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:57,268: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:57,268: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:13:57,272: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:14:29,569: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:14:29,570: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:14:29,570: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:14:29,571: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:14:29,571: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:14:29,572: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:14:29,572: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:14:29,576: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:14:29,577: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:14:29,577: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,776: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,777: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,777: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,777: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,778: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,779: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,780: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,780: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,781: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,781: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,789: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,789: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,790: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,791: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,791: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,792: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,792: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:03,793: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,029: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,030: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,031: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,031: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,032: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,032: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,032: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,033: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,033: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,033: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,034: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,034: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,035: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,035: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,036: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,036: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:04,036: Sleeping for 21s (0:00:21) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,095: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,104: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,105: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,117: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,118: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,341: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,342: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,342: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,349: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,360: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,361: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,602: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,603: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,604: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,609: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,610: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,610: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,610: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,611: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,611: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,611: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,612: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,612: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,612: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:15:31,612: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,585: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,586: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,589: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,595: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,597: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,600: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,603: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,606: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,606: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,607: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,607: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,607: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,607: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,611: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:03,786: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:08,811: Got difference for channel 2114987005 updates
+INFO: 2025-11-30 01:16:25,242: Got difference for channel 2712703794 updates
+INFO: 2025-11-30 01:16:36,303: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:36,495: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:36,495: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:36,496: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:16:36,496: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:04,153: Got difference for account updates
+INFO: 2025-11-30 01:17:05,198: Got difference for channel 2114987005 updates
+INFO: 2025-11-30 01:17:05,781: Got difference for channel 2185062351 updates
+INFO: 2025-11-30 01:17:09,737: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:09,738: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:10,023: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:10,023: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:10,024: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:10,024: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:10,025: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:10,025: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:10,026: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:10,026: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:24,140: Got difference for channel 1555693413 updates
+INFO: 2025-11-30 01:17:46,012: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,014: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,014: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,015: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,015: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,016: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,016: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,016: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,017: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,018: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,021: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,024: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,025: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,025: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,026: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,026: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,027: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,027: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,027: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,028: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,029: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,030: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,030: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,030: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,247: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,247: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,248: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,248: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,248: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,248: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,249: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,249: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,249: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,249: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:17:46,250: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,495: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,496: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,496: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,497: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,498: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,498: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,498: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,500: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,500: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,502: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,504: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,505: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,505: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,505: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,506: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,507: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,507: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,508: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,745: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,745: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,746: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,746: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,747: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,747: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:13,748: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:45,995: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:45,998: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:45,998: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:45,999: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:46,004: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:46,004: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:46,006: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:46,007: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:46,007: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:46,007: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:46,007: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:46,008: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:46,008: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:46,008: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:18:46,008: Sleeping for 23s (0:00:23) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:16,659: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:16,661: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:16,666: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:16,666: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:16,666: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:45,688: Got difference for channel 2509862916 updates
+INFO: 2025-11-30 01:19:52,217: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:52,218: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:52,218: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:52,223: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:52,223: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:52,223: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:52,224: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:52,224: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:52,225: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:52,226: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:19:59,768: Got difference for channel 2712703794 updates
+INFO: 2025-11-30 01:20:27,774: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,774: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,775: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,776: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,776: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,777: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,783: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,783: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,783: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,784: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,784: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,785: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,785: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,785: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,786: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,786: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,787: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,787: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,787: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,787: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:27,788: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,012: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,013: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,013: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,013: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,014: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,014: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,014: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,015: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,015: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,016: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,016: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,016: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,016: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:28,017: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:53,838: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:53,838: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,190: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,191: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,191: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,191: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,192: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,193: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,193: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,194: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,194: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,195: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,195: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,334: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,334: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,335: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,335: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,336: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,339: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,339: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,340: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,340: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,340: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,351: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:20:54,351: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:17,772: Got difference for channel 2509862916 updates
+INFO: 2025-11-30 01:21:26,071: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,078: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,078: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,088: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,088: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,088: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,298: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,334: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,334: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,334: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,334: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,335: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,338: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,340: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:26,340: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:40,896: Got difference for channel 2509862916 updates
+INFO: 2025-11-30 01:21:58,584: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:58,585: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:58,586: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:58,586: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:21:58,591: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:22:31,811: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:22:31,813: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:22:31,818: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:22:31,822: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:22:31,822: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:22:31,823: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:22:31,823: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:22:31,827: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:22:31,828: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:22:31,828: Sleeping for 22s (0:00:22) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:22:37,427: Got difference for channel 2509862916 updates
+INFO: 2025-11-30 01:23:05,756: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,758: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,759: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,760: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,760: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,761: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,761: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,761: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,762: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,762: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,762: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,762: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,762: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,763: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,763: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,767: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,767: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,767: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,768: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,769: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,769: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,769: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,771: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,771: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,975: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,976: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,976: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,977: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,977: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,978: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,979: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,979: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,980: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,980: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:05,980: Sleeping for 20s (0:00:20) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:23:08,032: Got difference for channel 2509862916 updates
+INFO: 2025-11-30 01:23:17,036: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 01:23:17,036: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-30 01:23:17,039: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 01:23:17,039: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 01:23:17,856: libssl detected, it will be used for encryption
+INFO: 2025-11-30 01:23:18,024: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 01:23:21,030: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 01:23:23,474: Phone migrated to 5
+INFO: 2025-11-30 01:23:23,474: Reconnecting to new data center 5
+INFO: 2025-11-30 01:23:23,863: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 01:23:23,864: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 01:23:23,865: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 01:23:27,334: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 01:23:29,861: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 01:23:29,865: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-30 01:23:49,464: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,639: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,639: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,639: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,856: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,857: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,857: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,858: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,858: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,859: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,859: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,860: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,860: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,860: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,861: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,861: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,867: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,867: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,872: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,872: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,872: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,872: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,873: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,873: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,873: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:24:39,879: Sleeping for 24s (0:00:24) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,259: Got difference for account updates
+INFO: 2025-11-30 01:25:09,347: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,350: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,356: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,361: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,367: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,371: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,372: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,372: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,373: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,374: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,378: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,382: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,383: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,383: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:09,384: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:25:12,659: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 01:25:12,660: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-30 01:25:12,661: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 01:25:12,662: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 01:38:52,256: libssl detected, it will be used for encryption
+INFO: 2025-11-30 01:38:52,369: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 01:38:55,378: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 01:38:57,671: Phone migrated to 5
+INFO: 2025-11-30 01:38:57,671: Reconnecting to new data center 5
+INFO: 2025-11-30 01:38:58,054: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 01:38:58,055: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 01:38:58,055: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 01:39:01,497: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 01:39:03,969: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 01:39:03,970: Connection to 91.108.56.152:443/TcpFull complete!
+ERROR: 2025-11-30 01:39:19,613: Unhandled exception on _
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 570, in _dispatch_update
+    await callback(event)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/bot/control_bot.py", line 870, in _
+    match1 = re.search(r't\.me/c/(\d+)/(\d+)', msg_link)
+UnboundLocalError: local variable 're' referenced before assignment
+INFO: 2025-11-30 01:39:23,048: Sleeping for 19s (0:00:19) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:39:38,025: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 01:39:38,025: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-30 01:39:38,028: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 01:39:38,028: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 01:49:14,210: libssl detected, it will be used for encryption
+INFO: 2025-11-30 01:49:14,312: Connecting to 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 01:49:17,169: Connection to 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 01:49:19,608: Phone migrated to 5
+INFO: 2025-11-30 01:49:19,608: Reconnecting to new data center 5
+INFO: 2025-11-30 01:49:20,028: Disconnecting from 149.154.167.51:443/TcpFull...
+INFO: 2025-11-30 01:49:20,029: Disconnection from 149.154.167.51:443/TcpFull complete!
+INFO: 2025-11-30 01:49:20,030: Connecting to 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 01:49:23,843: Connection to 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 01:49:26,519: Connecting to 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 01:49:26,520: Connection to 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-30 01:49:40,648: Got difference for channel 2185062351 updates
+INFO: 2025-11-30 01:49:45,497: Sleeping for 18s (0:00:18) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:33,754: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:33,758: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:33,763: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:33,764: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:33,764: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:33,770: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:33,776: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:33,776: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:33,776: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:33,776: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:33,782: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:33,782: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:33,782: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:34,005: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:34,005: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:34,227: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:34,243: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:34,243: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:34,244: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:34,244: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:34,244: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:34,244: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:34,247: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:34,247: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:50:34,247: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+ERROR: 2025-11-30 01:50:37,324: Unhandled exception on _
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 570, in _dispatch_update
+    await callback(event)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/bot/control_bot.py", line 738, in _
+    rows = list_accounts('listen' if kind == 'listen' else 'click')
+UnboundLocalError: local variable 'kind' referenced before assignment
+ERROR: 2025-11-30 01:50:39,661: Unhandled exception on _
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 570, in _dispatch_update
+    await callback(event)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/bot/control_bot.py", line 738, in _
+    rows = list_accounts('listen' if kind == 'listen' else 'click')
+UnboundLocalError: local variable 'kind' referenced before assignment
+ERROR: 2025-11-30 01:50:39,875: Unhandled exception on _
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 570, in _dispatch_update
+    await callback(event)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/bot/control_bot.py", line 738, in _
+    rows = list_accounts('listen' if kind == 'listen' else 'click')
+UnboundLocalError: local variable 'kind' referenced before assignment
+ERROR: 2025-11-30 01:50:43,338: Unhandled exception on _
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 570, in _dispatch_update
+    await callback(event)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/bot/control_bot.py", line 738, in _
+    rows = list_accounts('listen' if kind == 'listen' else 'click')
+UnboundLocalError: local variable 'kind' referenced before assignment
+ERROR: 2025-11-30 01:50:43,552: Unhandled exception on _
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 570, in _dispatch_update
+    await callback(event)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/bot/control_bot.py", line 738, in _
+    rows = list_accounts('listen' if kind == 'listen' else 'click')
+UnboundLocalError: local variable 'kind' referenced before assignment
+ERROR: 2025-11-30 01:50:51,533: Unhandled exception on _
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 570, in _dispatch_update
+    await callback(event)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/bot/control_bot.py", line 738, in _
+    rows = list_accounts('listen' if kind == 'listen' else 'click')
+UnboundLocalError: local variable 'kind' referenced before assignment
+ERROR: 2025-11-30 01:50:53,596: Unhandled exception on _
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 570, in _dispatch_update
+    await callback(event)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/bot/control_bot.py", line 738, in _
+    rows = list_accounts('listen' if kind == 'listen' else 'click')
+UnboundLocalError: local variable 'kind' referenced before assignment
+INFO: 2025-11-30 01:50:56,439: Got difference for channel 2509862916 updates
+ERROR: 2025-11-30 01:50:56,642: Unhandled exception on _
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 570, in _dispatch_update
+    await callback(event)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/bot/control_bot.py", line 738, in _
+    rows = list_accounts('listen' if kind == 'listen' else 'click')
+UnboundLocalError: local variable 'kind' referenced before assignment
+ERROR: 2025-11-30 01:50:56,902: Unhandled exception on _
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 570, in _dispatch_update
+    await callback(event)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/bot/control_bot.py", line 738, in _
+    rows = list_accounts('listen' if kind == 'listen' else 'click')
+UnboundLocalError: local variable 'kind' referenced before assignment
+INFO: 2025-11-30 01:51:05,991: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:05,994: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:05,994: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:05,995: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:05,995: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:05,995: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:06,002: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:06,002: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:06,010: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:06,010: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:06,208: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:06,208: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:06,209: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:06,210: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:06,210: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:32,289: Got difference for channel 2509862916 updates
+INFO: 2025-11-30 01:51:38,298: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:38,299: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:38,299: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:38,306: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:51:38,307: Sleeping for 26s (0:00:26) on GetHistoryRequest flood wait
+ERROR: 2025-11-30 01:51:38,366: Unhandled exception on _
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 570, in _dispatch_update
+    await callback(event)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/bot/control_bot.py", line 738, in _
+    rows = list_accounts('listen' if kind == 'listen' else 'click')
+UnboundLocalError: local variable 'kind' referenced before assignment
+ERROR: 2025-11-30 01:51:38,691: Unhandled exception on _
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 570, in _dispatch_update
+    await callback(event)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/bot/control_bot.py", line 738, in _
+    rows = list_accounts('listen' if kind == 'listen' else 'click')
+UnboundLocalError: local variable 'kind' referenced before assignment
+ERROR: 2025-11-30 01:51:50,144: Unhandled exception on _
+Traceback (most recent call last):
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/venv/lib/python3.9/site-packages/telethon/client/updates.py", line 570, in _dispatch_update
+    await callback(event)
+  File "/Users/wanghaixin/Development/telegramBotWork/TelegramMessage/bot/control_bot.py", line 738, in _
+    rows = list_accounts('listen' if kind == 'listen' else 'click')
+UnboundLocalError: local variable 'kind' referenced before assignment
+INFO: 2025-11-30 01:52:11,208: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:52:11,209: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:52:11,210: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:52:11,214: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:52:11,215: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:52:11,219: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:52:11,221: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:52:11,224: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:52:11,224: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:52:11,225: Sleeping for 25s (0:00:25) on GetHistoryRequest flood wait
+INFO: 2025-11-30 01:52:26,933: Disconnecting from 91.108.56.152:443/TcpFull...
+INFO: 2025-11-30 01:52:26,933: Disconnection from 91.108.56.152:443/TcpFull complete!
+INFO: 2025-11-30 01:52:26,935: Disconnecting from 91.108.56.139:443/TcpFull...
+INFO: 2025-11-30 01:52:26,935: Disconnection from 91.108.56.139:443/TcpFull complete!
+INFO: 2025-11-30 02:24:17,507: libssl detected, it will be used for encryption
+INFO: 2025-11-30 02:24:28,053: libssl detected, it will be used for encryption
+INFO: 2025-11-30 02:24:33,749: libssl detected, it will be used for encryption
+INFO: 2025-11-30 02:24:38,816: libssl detected, it will be used for encryption
+INFO: 2025-11-30 02:24:43,241: libssl detected, it will be used for encryption
+INFO: 2025-11-30 02:24:50,660: libssl detected, it will be used for encryption
+INFO: 2025-11-30 02:24:56,618: libssl detected, it will be used for encryption
+INFO: 2025-11-30 02:25:20,002: libssl detected, it will be used for encryption
+INFO: 2025-11-30 02:25:50,200: libssl detected, it will be used for encryption
+INFO: 2025-11-30 02:26:24,863: libssl detected, it will be used for encryption
+INFO: 2025-11-30 02:27:07,837: libssl detected, it will be used for encryption
+INFO: 2025-11-30 02:28:07,680: libssl detected, it will be used for encryption
+INFO: 2025-11-30 02:28:17,258: libssl detected, it will be used for encryption

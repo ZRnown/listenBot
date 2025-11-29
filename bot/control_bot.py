@@ -494,6 +494,49 @@ async def setup_handlers(manager: ClientManager):
             await event.answer('已删除')
             return
 
+    @bot.on(events.CallbackQuery(pattern=b'test_click:redpacket'))
+    async def _(event):
+        """处理测试点击内联按钮的回调"""
+        from telethon.tl.custom import Button
+        
+        chat_id = event.chat_id
+        
+        # 初始化计数（如果不存在）
+        if not hasattr(bot, '_test_click_count'):
+            bot._test_click_count = {}
+        
+        if chat_id not in bot._test_click_count:
+            bot._test_click_count[chat_id] = 0
+        
+        # 增加计数
+        bot._test_click_count[chat_id] += 1
+        count = bot._test_click_count[chat_id]
+        
+        # 创建新的按钮
+        buttons = [[Button.inline('红包', data='test_click:redpacket')]]
+        
+        # 编辑消息，更新计数
+        try:
+            await event.edit(
+                f'🧪 **测试点击成功！**\n\n'
+                f'当前点击次数：{count}\n\n'
+                f'继续点击"红包"按钮可以继续计数。',
+                buttons=buttons,
+                parse_mode='markdown'
+            )
+            await event.answer(f'✅ 点击成功！当前计数：{count}')
+        except Exception as e:
+            # 如果编辑失败（例如消息太旧），发送新消息
+            await event.answer('⚠️ 无法更新消息，发送新消息')
+            await bot.send_message(
+                chat_id,
+                f'🧪 **测试点击成功！**\n\n'
+                f'当前点击次数：{count}\n\n'
+                f'继续点击"红包"按钮可以继续计数。',
+                buttons=buttons,
+                parse_mode='markdown'
+            )
+
     async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id, accounts: List[dict], report_chat_id: int):
         """开始点击任务：获取消息、匹配关键词并依次点击"""
         bot = manager.bot
@@ -645,6 +688,11 @@ async def setup_handlers(manager: ClientManager):
     async def _(event):
         chat_id = event.chat_id
         text = (event.raw_text or '').strip()
+        
+        # 排除 /start 命令，避免重复处理（已在上面单独处理）
+        if text == '/start':
+            return
+        
         st = get_state(chat_id)
 
         # 如果在 set_target_bot 模式下且输入包含 emoji，直接拒绝（可能是按钮点击）
@@ -663,7 +711,7 @@ async def setup_handlers(manager: ClientManager):
             '⏱️ 设置点击延迟',
             '▶️ 开始发送',
             '🎯 设置目标机器人', '🚪 自动进群',
-            '🗑️ 移除所有账号'
+            '🗑️ 移除所有账号', '🧪 测试点击'
         }
         
         # 检查是否为主菜单命令
@@ -673,45 +721,48 @@ async def setup_handlers(manager: ClientManager):
                 is_main_menu_cmd = True
                 break
         
-        if is_main_menu_cmd:
-            # 如果是主菜单命令，直接清除状态，让后续的命令处理器接管
-            set_state(chat_id, None)
-            st = None
-
-        # 进行中的状态优先
+        # 进行中的状态优先处理
         if st:
             mode = st['mode']
-            if mode == 'bulk_keywords_input':
-                kind = st['pending']['kind']
-                t = (text or '').strip()
-                rows = list_accounts('listen' if kind == 'listen' else 'click')
-                if not rows:
-                    set_state(chat_id)
-                    await event.respond('⚠️ 当前没有可用账号，请先添加。', buttons=main_keyboard())
-                    return
-                if t in ('完成', '返回'):
-                    set_state(chat_id)
-                    await event.respond('✅ 已返回主菜单', buttons=main_keyboard())
-                    return
-                if t.lower() in ('清空', 'clear'):
+            
+            # 如果用户在添加账号状态下发送主菜单命令，清除状态并允许命令执行
+            if is_main_menu_cmd and mode in ('add_listen_account_wait_string', 'add_click_account_wait_file'):
+                set_state(chat_id, None)
+                st = None
+                # 继续执行，让命令处理器处理（不在这里 return）
+            else:
+                # 正常处理状态
+                if mode == 'bulk_keywords_input':
+                    kind = st['pending']['kind']
+                    t = (text or '').strip()
+                    rows = list_accounts('listen' if kind == 'listen' else 'click')
+                    if not rows:
+                        set_state(chat_id)
+                        await event.respond('⚠️ 当前没有可用账号，请先添加。', buttons=main_keyboard())
+                        return
+                    if t in ('完成', '返回'):
+                        set_state(chat_id)
+                        await event.respond('✅ 已返回主菜单', buttons=main_keyboard())
+                        return
+                    if t.lower() in ('清空', 'clear'):
+                        for r in rows:
+                            dao_keywords.set_keywords(r['id'], [], kind=kind)
+                        set_state(chat_id)
+                        await event.respond(f"🧹 已清空 {len(rows)} 个{keywords_label(kind)}账号的关键字", buttons=main_keyboard())
+                        return
+                    parts = split_keywords_payload(t)
+                    if not parts:
+                        await event.respond('⚠️ 请发送关键字内容，或发送"完成"返回主菜单。')
+                        return
                     for r in rows:
-                        dao_keywords.set_keywords(r['id'], [], kind=kind)
+                        for word in parts:
+                            settings_service.add_keyword(r['id'], word, kind=kind)
                     set_state(chat_id)
-                    await event.respond(f"🧹 已清空 {len(rows)} 个{keywords_label(kind)}账号的关键字", buttons=main_keyboard())
+                    await event.respond(
+                        f"✅ 已为 {len(rows)} 个{keywords_label(kind)}账号追加 {len(parts)} 条关键字",
+                        buttons=main_keyboard()
+                    )
                     return
-                parts = split_keywords_payload(t)
-                if not parts:
-                    await event.respond('⚠️ 请发送关键字内容，或发送"完成"返回主菜单。')
-                    return
-                for r in rows:
-                    for word in parts:
-                        settings_service.add_keyword(r['id'], word, kind=kind)
-                set_state(chat_id)
-                await event.respond(
-                    f"✅ 已为 {len(rows)} 个{keywords_label(kind)}账号追加 {len(parts)} 条关键字",
-                    buttons=main_keyboard()
-                )
-                return
             if mode == 'choose_account_role':
                 account_id = st['pending']['account_id']
                 t = text.strip()
@@ -736,27 +787,27 @@ async def setup_handlers(manager: ClientManager):
                     return
                 await event.respond('请选择账号角色：', buttons=roles_keyboard())
                 return
-            if mode == 'change_account_role':
-                account_id = st['pending']['account_id']
-                t = text.strip()
-                if t in ('监听账号', '监听', 'listen'):
-                    settings_service.set_account_role(account_id, 'listen')
-                    set_state(chat_id)
-                    await event.respond(f'✅ 账号 #{account_id} 已设置为"监听账号"', buttons=main_keyboard())
-                    return
-                if t in ('点击账号', '点击', 'click'):
-                    settings_service.set_account_role(account_id, 'click')
-                    set_state(chat_id)
-                    await event.respond(f'✅ 账号 #{account_id} 已设置为"点击账号"', buttons=main_keyboard())
-                    return
-                if t in ('同时监听与点击', 'both'):
-                    settings_service.set_account_role(account_id, 'both')
-                    set_state(chat_id)
-                    await event.respond(f'✅ 账号 #{account_id} 已设置为"同时监听与点击"', buttons=main_keyboard())
-                    return
-                if t in ('取消', '退出', 'cancel'):
-                    set_state(chat_id)
-                    await event.respond('✅ 已取消', buttons=main_keyboard())
+                if mode == 'change_account_role':
+                    account_id = st['pending']['account_id']
+                    t = text.strip()
+                    if t in ('监听账号', '监听', 'listen'):
+                        settings_service.set_account_role(account_id, 'listen')
+                        set_state(chat_id)
+                        await event.respond(f'✅ 账号 #{account_id} 已设置为"监听账号"', buttons=main_keyboard())
+                        return
+                    if t in ('点击账号', '点击', 'click'):
+                        settings_service.set_account_role(account_id, 'click')
+                        set_state(chat_id)
+                        await event.respond(f'✅ 账号 #{account_id} 已设置为"点击账号"', buttons=main_keyboard())
+                        return
+                    if t in ('同时监听与点击', 'both'):
+                        settings_service.set_account_role(account_id, 'both')
+                        set_state(chat_id)
+                        await event.respond(f'✅ 账号 #{account_id} 已设置为"同时监听与点击"', buttons=main_keyboard())
+                        return
+                    if t in ('取消', '退出', 'cancel'):
+                        set_state(chat_id)
+                        await event.respond('✅ 已取消', buttons=main_keyboard())
                     return
                 await event.respond('请选择账号角色：', buttons=roles_keyboard())
                 return
@@ -772,245 +823,285 @@ async def setup_handlers(manager: ClientManager):
                 set_state(chat_id)
                 await event.respond('✅ 已设置账号专属提醒目标', buttons=main_keyboard())
                 return
-            if mode == 'set_forward_target_global':
-                t = (text or '').strip()
-                if t in ('取消', '退出', 'cancel'):
+                if mode == 'set_forward_target_global':
+                    t = (text or '').strip()
+                    if t in ('取消', '退出', 'cancel'):
+                        set_state(chat_id)
+                        await event.respond('✅ 已取消', buttons=main_keyboard())
+                        return
+                    if t in ('清空', 'clear'):
+                        settings_service.set_target_chat('')
+                        set_state(chat_id)
+                        await event.respond('✅ 已清空转发目标', buttons=main_keyboard())
+                        return
+                    # 处理输入：支持 @username, chat_id, https://t.me/username
+                    clean_target = t.strip()
+                    if clean_target.startswith('http://') or clean_target.startswith('https://'):
+                        # 提取用户名或处理邀请链接
+                        if '/joinchat/' in clean_target or '/+' in clean_target:
+                            # 邀请链接，保持原样
+                            pass
+                        else:
+                            clean_target = clean_target.rsplit('/', 1)[-1]
+                    if clean_target.startswith('@'):
+                        clean_target = clean_target[1:]
+                    # 设置全局转发目标
+                    final_target = clean_target if clean_target else t
+                    settings_service.set_target_chat(final_target)
                     set_state(chat_id)
-                    await event.respond('✅ 已取消', buttons=main_keyboard())
-                    return
-                if t in ('清空', 'clear'):
-                    settings_service.set_target_chat('')
-                    set_state(chat_id)
-                    await event.respond('✅ 已清空转发目标', buttons=main_keyboard())
-                    return
-                # 处理输入：支持 @username, chat_id, https://t.me/username
-                clean_target = t.strip()
-                if clean_target.startswith('http://') or clean_target.startswith('https://'):
-                    # 提取用户名或处理邀请链接
-                    if '/joinchat/' in clean_target or '/+' in clean_target:
-                        # 邀请链接，保持原样
-                        pass
-                    else:
-                        clean_target = clean_target.rsplit('/', 1)[-1]
-                if clean_target.startswith('@'):
-                    clean_target = clean_target[1:]
-                # 设置全局转发目标
-                final_target = clean_target if clean_target else t
-                settings_service.set_target_chat(final_target)
-                set_state(chat_id)
-                await event.respond(f'✅ 转发目标已设置：{final_target}', buttons=main_keyboard())
+                    await event.respond(f'✅ 转发目标已设置：{final_target}', buttons=main_keyboard())
                 return
             if mode == 'set_target_chat':
                 settings_service.set_target_chat(text)
                 set_state(chat_id)
                 await event.respond('已设置提醒目标', buttons=main_keyboard())
                 return
-            if mode == 'start_click_wait_link':
-                t = (text or '').strip()
-                if t in ('取消', '退出', 'cancel'):
-                    set_state(chat_id)
-                    await event.respond('✅ 已取消', buttons=main_keyboard())
+                if mode == 'start_click_wait_link':
+                    t = (text or '').strip()
+                    if t in ('取消', '退出', 'cancel'):
+                        set_state(chat_id)
+                        await event.respond('✅ 已取消', buttons=main_keyboard())
                     return
-                
-                # 解析消息链接
-                # 支持格式：https://t.me/c/xxx/123 或 https://t.me/username/123
-                msg_link = t
-                chat_id_from_link = None
-                msg_id_from_link = None
-                
-                # 解析 t.me/c/xxx/123 格式（超级群组/频道）
-                match1 = re.search(r't\.me/c/(\d+)/(\d+)', msg_link)
-                if match1:
-                    channel_id = match1.group(1)
-                    msg_id_from_link = int(match1.group(2))
-                    # 转换为 -100xxxxxxxxxx 格式
-                    chat_id_from_link = int(f'-100{channel_id}')
-                else:
-                    # 解析 t.me/username/123 格式
-                    match2 = re.search(r't\.me/([a-zA-Z0-9_]+)/(\d+)', msg_link)
-                    if match2:
-                        username = match2.group(1)
-                        msg_id_from_link = int(match2.group(2))
-                        chat_id_from_link = username
-                
-                if not chat_id_from_link or not msg_id_from_link:
-                    await event.respond('⚠️ 消息链接格式无效，请发送类似 https://t.me/c/xxx/123 或 https://t.me/username/123 的链接')
+                    
+                    # 解析消息链接
+                    # 支持格式：https://t.me/c/xxx/123 或 https://t.me/username/123
+                    msg_link = t
+                    chat_id_from_link = None
+                    msg_id_from_link = None
+                    
+                    # 解析 t.me/c/xxx/123 格式（超级群组/频道）
+                    match1 = re.search(r't\.me/c/(\d+)/(\d+)', msg_link)
+                    if match1:
+                        channel_id = match1.group(1)
+                        msg_id_from_link = int(match1.group(2))
+                        # 转换为 -100xxxxxxxxxx 格式
+                        chat_id_from_link = int(f'-100{channel_id}')
+                    else:
+                        # 解析 t.me/username/123 格式
+                        match2 = re.search(r't\.me/([a-zA-Z0-9_]+)/(\d+)', msg_link)
+                        if match2:
+                            username = match2.group(1)
+                            msg_id_from_link = int(match2.group(2))
+                            chat_id_from_link = username
+                    
+                    if not chat_id_from_link or not msg_id_from_link:
+                        await event.respond('⚠️ 消息链接格式无效，请发送类似 https://t.me/c/xxx/123 或 https://t.me/username/123 的链接')
+                        return
+                    
+                    # 获取所有点击账号
+                    click_accounts = list_accounts('click')
+                    if not click_accounts:
+                        set_state(chat_id)
+                        await event.respond('⚠️ 没有可用的点击账号', buttons=main_keyboard())
                     return
-                
-                # 获取所有点击账号
-                click_accounts = list_accounts('click')
-                if not click_accounts:
-                    set_state(chat_id)
-                    await event.respond('⚠️ 没有可用的点击账号', buttons=main_keyboard())
-                    return
-                
+                    
                 set_state(chat_id)
                 await event.respond(
-                    f'✅ 已解析消息链接，准备为 {len(click_accounts)} 个点击账号依次执行点击操作。',
+                        f'✅ 已解析消息链接，准备为 {len(click_accounts)} 个点击账号依次执行点击操作。',
                     buttons=main_keyboard()
                 )
-                
-                # 异步执行点击任务
+                    
+                    # 异步执行点击任务
                 asyncio.create_task(start_click_job(
-                    manager, chat_id_from_link, msg_id_from_link, click_accounts, event.chat_id
-                ))
+                        manager, chat_id_from_link, msg_id_from_link, click_accounts, event.chat_id
+                    ))
                 return
-            if mode == 'set_target_bot':
-                t = (text or '').strip()
-                if not t:
-                    await event.respond('⚠️ 请输入机器人用户名', buttons=None)
+                if mode == 'set_target_bot':
+                    t = (text or '').strip()
+                    if not t:
+                        await event.respond('⚠️ 请输入机器人用户名', buttons=None)
                     return
-                
-                # 允许取消
-                if t in ('取消', '退出', 'cancel', 'exit'):
-                    set_state(chat_id)
-                    await event.respond('✅ 已取消', buttons=main_keyboard())
+                    
+                    # 允许取消
+                    if t in ('取消', '退出', 'cancel', 'exit'):
+                        set_state(chat_id)
+                        await event.respond('✅ 已取消', buttons=main_keyboard())
                     return
-                
-                # 检查是否包含emoji（按钮文本）
-                has_emoji = any(unicodedata.category(c) == 'So' for c in t)
-                if has_emoji:
-                    await event.respond('⚠️ 请输入正确的用户名（不含emoji）', buttons=None)
+                    
+                    # 检查是否包含emoji（按钮文本）
+                    has_emoji = any(unicodedata.category(c) == 'So' for c in t)
+                    if has_emoji:
+                        await event.respond('⚠️ 请输入正确的用户名（不含emoji）', buttons=None)
                     return
-                
-                # 处理输入
-                clean = t.lstrip('@')
-                if clean.startswith('http://') or clean.startswith('https://'):
-                    clean = clean.rsplit('/', 1)[-1].lstrip('@')
-                
-                # 验证格式
-                if not re.match(r'^[a-zA-Z0-9_]{1,32}$', clean):
-                    await event.respond('⚠️ 用户名格式无效，只能包含字母、数字、下划线', buttons=None)
+                    
+                    # 处理输入
+                    clean = t.lstrip('@')
+                    if clean.startswith('http://') or clean.startswith('https://'):
+                        clean = clean.rsplit('/', 1)[-1].lstrip('@')
+                    
+                    # 验证格式
+                    if not re.match(r'^[a-zA-Z0-9_]{1,32}$', clean):
+                        await event.respond('⚠️ 用户名格式无效，只能包含字母、数字、下划线', buttons=None)
+                        return
+                    
+                    # 保存
+                    try:
+                        settings_service.set_target_bot(clean)
+                        set_state(chat_id)
+                        await event.respond(
+                            f'✅ 目标机器人已设置：@{clean}\n\n'
+                            '点击"▶️ 开始发送"按钮来批量发送消息。',
+                            buttons=main_keyboard()
+                    )
+                    except Exception as e:
+                        set_state(chat_id)
+                        await event.respond(f'⚠️ 设置失败：{e}', buttons=main_keyboard())
+                return
+                if mode == 'set_global_template':
+                    t = (text or '').strip()
+                    if not t:
+                        await event.respond('⚠️ 请输入消息内容', buttons=None)
+                        return
+                    if t in ('取消', '退出', 'cancel'):
+                        set_state(chat_id)
+                        await event.respond('✅ 已取消', buttons=main_keyboard())
                     return
-                
-                # 保存
-                try:
-                    settings_service.set_target_bot(clean)
+                    settings_service.set_global_template(t)
                     set_state(chat_id)
                     await event.respond(
-                        f'✅ 目标机器人已设置：@{clean}\n\n'
+                        f'✅ 发送消息已设置：\n{t}\n\n'
                         '点击"▶️ 开始发送"按钮来批量发送消息。',
                         buttons=main_keyboard()
                     )
-                except Exception as e:
-                    set_state(chat_id)
-                    await event.respond(f'⚠️ 设置失败：{e}', buttons=main_keyboard())
                 return
-            if mode == 'set_global_template':
-                t = (text or '').strip()
-                if not t:
-                    await event.respond('⚠️ 请输入消息内容', buttons=None)
+                if mode == 'set_global_send_delay':
+                    t = (text or '').strip()
+                    if t in ('取消', '退出', 'cancel'):
+                        set_state(chat_id)
+                        await event.respond('✅ 已取消', buttons=main_keyboard())
                     return
-                if t in ('取消', '退出', 'cancel'):
-                    set_state(chat_id)
-                    await event.respond('✅ 已取消', buttons=main_keyboard())
+                    try:
+                        val = float(t)
+                        if val < 0:
+                            raise ValueError('延迟不能为负数')
+                        settings_service.set_global_send_delay(val)
+                        set_state(chat_id)
+                        await event.respond(f'✅ 发送延迟已设置：{val} 秒', buttons=main_keyboard())
+                    except ValueError:
+                        await event.respond('⚠️ 请输入有效的数字（如 0.5、1、2）', buttons=None)
                     return
-                settings_service.set_global_template(t)
-                set_state(chat_id)
-                await event.respond(
-                    f'✅ 发送消息已设置：\n{t}\n\n'
-                    '点击"▶️ 开始发送"按钮来批量发送消息。',
-                    buttons=main_keyboard()
-                )
-                return
-            if mode == 'set_global_send_delay':
-                t = (text or '').strip()
-                if t in ('取消', '退出', 'cancel'):
-                    set_state(chat_id)
-                    await event.respond('✅ 已取消', buttons=main_keyboard())
+                if mode == 'add_account_wait_file':
+                    await event.respond('请发送 .session 文件作为文档（不是文本）')
                     return
-                try:
-                    val = float(t)
-                    if val < 0:
-                        raise ValueError('延迟不能为负数')
-                    settings_service.set_global_send_delay(val)
-                    set_state(chat_id)
-                    await event.respond(f'✅ 发送延迟已设置：{val} 秒', buttons=main_keyboard())
-                except ValueError:
-                    await event.respond('⚠️ 请输入有效的数字（如 0.5、1、2）', buttons=None)
-                return
-            if mode == 'add_account_wait_file':
-                await event.respond('请发送 .session 文件作为文档（不是文本）')
-                return
-            if mode == 'add_listen_account_wait_string':
-                # 如果消息包含文件，让文件处理器处理，不在这里处理
-                if event.file:
-                    return
+                if mode == 'add_listen_account_wait_string':
+                    # 如果消息包含文件，让文件处理器处理，不在这里处理
+                    if event.file:
+                        return
                 tmsg = (text or '').strip()
                 if tmsg in ('完成', '结束', '返回'):
                     set_state(chat_id)
                     await event.respond('✅ 已结束添加', buttons=main_keyboard())
                     return
-                session_str = tmsg
-                if not session_str:
-                    await event.respond('⚠️ 请输入有效的 StringSession 文本，或发送 .session 文件（作为文档）')
+                
+                # 检查是否为空或明显不是 StringSession
+                if not tmsg:
+                    await event.respond('⚠️ 请输入 StringSession 文本，或发送 .session 文件（作为文档）\n发送"完成"可结束添加')
                     return
-                try:
-                    info = await manager.add_account_from_string_session(session_str)
-                    account_id = info['id']
-                    # 如果账号已存在，合并角色；否则设置为 listen
-                    current_role = settings_service.get_account_role(account_id) or 'both'
-                    if info.get('existing'):
-                        # 账号已存在，合并角色
-                        if current_role == 'click':
-                            settings_service.set_account_role(account_id, 'both')
-                            role_msg = "（角色已合并为：监听+点击）"
-                        elif current_role == 'listen':
-                            role_msg = "（角色保持为：监听）"
+                
+                    # StringSession 通常以 "1A" 开头，如果不是，提示用户
+                    if not tmsg.startswith('1'):
+                        await event.respond(
+                            '⚠️ 这看起来不是有效的 StringSession 文本。\n'
+                            'StringSession 通常以 "1A" 开头。\n'
+                            '请检查后重新发送，或发送 .session 文件（作为文档）。\n'
+                            '发送"完成"可结束添加'
+                        )
+                        return
+                    
+                    try:
+                        info = await manager.add_account_from_string_session(tmsg)
+                        account_id = info['id']
+                        # 如果账号已存在，合并角色；否则设置为 listen
+                        current_role = settings_service.get_account_role(account_id) or 'both'
+                        if info.get('existing'):
+                            # 账号已存在，合并角色
+                            if current_role == 'click':
+                                settings_service.set_account_role(account_id, 'both')
+                                role_msg = "（角色已合并为：监听+点击）"
+                            elif current_role == 'listen':
+                                role_msg = "（角色保持为：监听）"
+                            else:
+                                role_msg = f"（角色：{format_role_label(current_role)}）"
                         else:
-                            role_msg = f"（角色：{format_role_label(current_role)}）"
-                    else:
-                        # 新账号，设置为 listen
-                        settings_service.set_account_role(account_id, 'listen')
-                        role_msg = "（角色：监听）"
-                    # 保持在连续添加模式
-                    await event.respond(
-                        f"✅ 监听账号添加成功！\n用户昵称：{info.get('nickname') or ''}\n用户名：{info.get('username') or '无'}\n账号：{info.get('phone') or ''}\n{role_msg}\n\n继续添加：发送 StringSession 文本或 .session 文件\n结束：发送「完成」\n（提醒目标可稍后在菜单中为该账号设置）"
-                    )
-                except Exception as e:
-                    await event.respond(f"⚠️ 解析为 StringSession 失败：{e}\n也可以直接发送 .session 文件（作为文档）来添加。")
+                            # 新账号，设置为 listen
+                            settings_service.set_account_role(account_id, 'listen')
+                            role_msg = "（角色：监听）"
+                        # 保持在连续添加模式
+                        await event.respond(
+                            f"✅ 监听账号添加成功！\n用户昵称：{info.get('nickname') or ''}\n用户名：{info.get('username') or '无'}\n账号：{info.get('phone') or ''}\n{role_msg}\n\n继续添加：发送 StringSession 文本或 .session 文件\n结束：发送「完成」\n（提醒目标可稍后在菜单中为该账号设置）"
+                        )
+                    except Exception as e:
+                        # 解析失败，提示用户但保持状态，允许重试
+                        error_msg = str(e)
+                        await event.respond(
+                            f"⚠️ 解析为 StringSession 失败：{error_msg}\n\n"
+                            "请检查 StringSession 文本是否正确，或发送 .session 文件（作为文档）。\n"
+                            '发送"完成"可结束添加'
+                        )
                 return
-            if mode == 'add_click_account_wait_file':
-                # 如果消息包含文件，让文件处理器处理，不在这里处理
-                if event.file:
-                    return
-                # 也支持文本 StringSession，作为点击账号
-                t = (text or '').strip()
-                if t in ('完成', '结束', '返回'):
-                    set_state(chat_id)
-                    await event.respond('✅ 已结束添加', buttons=main_keyboard())
-                    return
-                try:
-                    info = await manager.add_account_from_string_session(t)
-                    account_id = info['id']
-                    # 如果账号已存在，合并角色；否则设置为 click
-                    current_role = settings_service.get_account_role(account_id) or 'both'
-                    if info.get('existing'):
-                        # 账号已存在，合并角色
-                        if current_role == 'listen':
-                            settings_service.set_account_role(account_id, 'both')
-                            role_msg = "（角色已合并为：监听+点击）"
-                        elif current_role == 'click':
-                            role_msg = "（角色保持为：点击）"
+                if mode == 'add_click_account_wait_file':
+                    # 如果消息包含文件，让文件处理器处理，不在这里处理
+                    if event.file:
+                        return
+                    # 也支持文本 StringSession，作为点击账号
+                    t = (text or '').strip()
+                    if t in ('完成', '结束', '返回'):
+                        set_state(chat_id)
+                        await event.respond('✅ 已结束添加', buttons=main_keyboard())
+                        return
+                    
+                    # 检查是否为空或明显不是 StringSession
+                    if not t:
+                        await event.respond('⚠️ 请输入 StringSession 文本，或发送 .session 文件（作为文档）\n发送"完成"可结束添加')
+                        return
+                    
+                    # StringSession 通常以 "1A" 开头，如果不是，提示用户
+                    if not t.startswith('1'):
+                        await event.respond(
+                            '⚠️ 这看起来不是有效的 StringSession 文本。\n'
+                            'StringSession 通常以 "1A" 开头。\n'
+                            '请检查后重新发送，或发送 .session 文件（作为文档）。\n'
+                            '发送"完成"可结束添加'
+                        )
+                        return
+                    
+                    try:
+                        info = await manager.add_account_from_string_session(t)
+                        account_id = info['id']
+                        # 如果账号已存在，合并角色；否则设置为 click
+                        current_role = settings_service.get_account_role(account_id) or 'both'
+                        if info.get('existing'):
+                            # 账号已存在，合并角色
+                            if current_role == 'listen':
+                                settings_service.set_account_role(account_id, 'both')
+                                role_msg = "（角色已合并为：监听+点击）"
+                            elif current_role == 'click':
+                                role_msg = "（角色保持为：点击）"
+                            else:
+                                role_msg = f"（角色：{format_role_label(current_role)}）"
                         else:
-                            role_msg = f"（角色：{format_role_label(current_role)}）"
-                    else:
-                        # 新账号，设置为 click
-                        settings_service.set_account_role(account_id, 'click')
-                        role_msg = "（角色：点击）"
-                    # 保持在连续添加模式
-                    await event.respond(
-                        f"✅ 点击账号添加成功！\n用户昵称：{info.get('nickname') or ''}\n用户名：{info.get('username') or '无'}\n账号：{info.get('phone') or ''}\n{role_msg}\n\n继续添加：发送 StringSession 文本或 .session 文件\n结束：发送「完成」"
-                    )
-                except Exception as e:
-                    await event.respond(f"⚠️ 解析为 StringSession 失败：{e}\n也可以发送 .session 文件（作为文档）来添加点击账号。")
+                            # 新账号，设置为 click
+                            settings_service.set_account_role(account_id, 'click')
+                            role_msg = "（角色：点击）"
+                        # 保持在连续添加模式
+                        await event.respond(
+                            f"✅ 点击账号添加成功！\n用户昵称：{info.get('nickname') or ''}\n用户名：{info.get('username') or '无'}\n账号：{info.get('phone') or ''}\n{role_msg}\n\n继续添加：发送 StringSession 文本或 .session 文件\n结束：发送「完成」"
+                        )
+                    except Exception as e:
+                        # 解析失败，提示用户但保持状态，允许重试
+                        error_msg = str(e)
+                        await event.respond(
+                            f"⚠️ 解析为 StringSession 失败：{error_msg}\n\n"
+                            "请检查 StringSession 文本是否正确，或发送 .session 文件（作为文档）。\n"
+                            '发送"完成"可结束添加'
+                        )
                 return
             if mode == 'keywords_manage':
                 account_id = st['pending']['account_id']
                 kind = st['pending']['kind']
                 t = (text or '').strip()
                 if not t:
-                    await event.respond('⚠️ 请发送指令，或发送“完成”返回主菜单。')
+                    await event.respond('⚠️ 请发送指令，或发送"完成"返回主菜单。')
                     return
                 lower = t.lower()
                 if lower in ('完成', '返回'):
@@ -1039,7 +1130,7 @@ async def setup_handlers(manager: ClientManager):
                         return
                     for word in parts:
                         settings_service.add_keyword(account_id, word, kind=kind)
-                        after = set(settings_service.get_account_keywords(account_id, kind=kind) or [])
+                    after = set(settings_service.get_account_keywords(account_id, kind=kind) or [])
                     message = f"✅ 已追加 {len(after - before)} 条关键字"
                 elif t.startswith(('-', '－')) or t.lower().startswith('q'):
                     parts = split_keywords_payload(payload)
@@ -1228,14 +1319,14 @@ async def setup_handlers(manager: ClientManager):
                 if target_row:
                     set_state(chat_id, 'change_account_role', account_id=acc_hint)
                     current_role = get_account_role(acc_hint)
-                    await event.respond(
+                await event.respond(
                         f'🔄 修改账号 #{acc_hint} 的角色\n'
                         f'当前角色：{format_role_label(current_role)}\n\n'
                         '请选择新角色：',
                         buttons=roles_keyboard()
                     )
-                    return
-            
+            return
+
             listen_rows = list_accounts('listen')
             click_rows = list_accounts('click')
             def format_rows(items):
@@ -1268,7 +1359,33 @@ async def setup_handlers(manager: ClientManager):
                 buttons=None
             )
             return
-        
+
+        if is_cmd(text, '🧪 测试点击'):
+            # 测试点击功能：发送一个带"红包"内联按钮的消息，每次点击计数
+            from telethon.tl.custom import Button
+            
+            # 使用全局变量存储点击计数（实际应用中应该使用数据库）
+            if not hasattr(bot, '_test_click_count'):
+                bot._test_click_count = {}
+            
+            # 初始化当前用户的计数
+            if chat_id not in bot._test_click_count:
+                bot._test_click_count[chat_id] = 0
+            
+            # 创建带内联按钮的消息
+            buttons = [[Button.inline('红包', data='test_click:redpacket')]]
+            bot._test_click_count[chat_id] += 1
+            count = bot._test_click_count[chat_id]
+            
+            await event.respond(
+                f'🧪 **测试点击功能**\n\n'
+                f'点击次数：{count}\n\n'
+                f'请点击下面的"红包"内联按钮进行测试。每次点击都会增加计数。',
+                buttons=buttons,
+                parse_mode='markdown'
+            )
+            return
+
         # 诊断功能：列出账号加入的所有群组
         if text.startswith('诊断群组') or text.startswith('诊断 #'):
             import re
@@ -1278,8 +1395,8 @@ async def setup_handlers(manager: ClientManager):
                 client = manager.account_clients.get(account_id)
                 if not client:
                     await event.respond(f'❌ 账号 #{account_id} 未在线')
-                    return
-                
+                return
+
                 await event.respond('🔍 正在获取群组列表，请稍候...')
                 try:
                     groups = []
@@ -1345,21 +1462,33 @@ async def setup_handlers(manager: ClientManager):
             return
 
         if is_cmd(text, '添加监听账号'):
+            # 检查是否已经在添加账号状态，避免重复提示
+            current_st = get_state(chat_id)
+            if current_st and current_st.get('mode') == 'add_listen_account_wait_string':
+                await event.respond('⚠️ 您已经在添加监听账号模式中，请发送 StringSession 文本或 .session 文件，或发送"完成"结束添加')
+                return
+            
             set_state(chat_id, 'add_listen_account_wait_string')
             await event.respond(
                 '🔑 添加监听账号（可连续）\n'
                 '• 发送 StringSession 文本 或 .session 文件（作为文档）进行添加\n'
-                '• 发送“完成”结束添加\n'
+                '• 发送"完成"结束添加\n'
                 '提示：StringSession 通常以 1A 开头'
             )
             return
 
         if is_cmd(text, '添加点击账号'):
+            # 检查是否已经在添加账号状态，避免重复提示
+            current_st = get_state(chat_id)
+            if current_st and current_st.get('mode') == 'add_click_account_wait_file':
+                await event.respond('⚠️ 您已经在添加点击账号模式中，请发送 StringSession 文本或 .session 文件，或发送"完成"结束添加')
+                return
+            
             set_state(chat_id, 'add_click_account_wait_file')
             await event.respond(
                 '🖱️ 添加点击账号（可连续）\n'
                 '• 发送 .session 文件（作为文档）或 StringSession 文本进行添加\n'
-                '• 发送“完成”结束添加\n'
+                '• 发送"完成"结束添加\n'
                 '提示：StringSession 通常以 1A 开头'
             )
             return
