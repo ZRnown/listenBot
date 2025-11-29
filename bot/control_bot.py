@@ -124,8 +124,7 @@ def account_menu_buttons(acc_id: int):
     role = get_account_role(acc_id)
     buttons = []
     if role_allows_listen(role):
-        buttons.append([Button.inline('监听关键字', data=f'acc|{acc_id}|kwl'),
-                        Button.inline('监听群组', data=f'acc|{acc_id}|lsrc')])
+        buttons.append([Button.inline('监听关键字', data=f'acc|{acc_id}|kwl')])
     if role_allows_click(role):
         buttons.append([Button.inline('点击关键字', data=f'acc|{acc_id}|kwc')])
         buttons.append([Button.inline('📝 模板', data=f'acc|{acc_id}|tmpl'),
@@ -442,20 +441,6 @@ async def setup_handlers(manager: ClientManager):
                 return
             await open_keywords_editor(event.chat_id, acc_id, 'click', via_callback=event)
             return
-        if action == 'lsrc':
-            if not role_allows_listen(role):
-                await event.answer('该账号不是监听账号', alert=True)
-                return
-            set_state(event.chat_id, 'listen_sources_manage', account_id=acc_id)
-            cur = settings_service.get_listen_sources(acc_id) or []
-            preview = '\n'.join(['• ' + x for x in cur[:20]]) or '（空）'
-            await bot.send_message(
-                event.chat_id,
-                f"📡 监听群组（共 {len(cur)} 条，预览前20条）：\n{preview}\n\n"
-                '新增：直接发送（可多行）\n删除：发送 q值\n导入：发送“导入”上传文本文件\n导出、清空、完成亦可发送对应指令'
-            )
-            await event.answer('请在聊天中继续操作')
-            return
         if action == 'tmpl':
             if not role_allows_click(role):
                 await event.answer('仅点击账号支持设置发送消息', alert=True)
@@ -627,7 +612,7 @@ async def setup_handlers(manager: ClientManager):
             )
         except Exception as e:
             await bot.send_message(report_chat_id, f'❌ 点击任务出错：{e}')
-    
+
     @bot.on(events.NewMessage)
     async def _(event):
         chat_id = event.chat_id
@@ -645,7 +630,7 @@ async def setup_handlers(manager: ClientManager):
             '🧩 监听关键词', '🧩 点击关键词',
             '📒 账号列表', '▶️ 开始点击',
             '➕ 添加监听账号', '➕ 添加点击账号',
-            '📡 设置监听群组', '📤 设置转发目标',
+            '📤 设置转发目标',
             '📝 设置发送消息', '🐢 设置发送延迟',
             '⏱️ 设置点击延迟',
             '▶️ 开始发送',
@@ -765,7 +750,7 @@ async def setup_handlers(manager: ClientManager):
                 account_id = st['pending']['account_id']
                 t = (text or '').strip()
                 if t in ('取消', '退出', 'cancel'):
-                    set_state(chat_id)
+                set_state(chat_id)
                     await event.respond('✅ 已取消', buttons=main_keyboard())
                     return
                 if t in ('清空', 'clear'):
@@ -869,12 +854,12 @@ async def setup_handlers(manager: ClientManager):
                 # 保存
                 try:
                     settings_service.set_target_bot(clean)
-                    set_state(chat_id)
-                    await event.respond(
+                set_state(chat_id)
+                await event.respond(
                         f'✅ 目标机器人已设置：@{clean}\n\n'
                         '点击"▶️ 开始发送"按钮来批量发送消息。',
-                        buttons=main_keyboard()
-                    )
+                    buttons=main_keyboard()
+                )
                 except Exception as e:
                     set_state(chat_id)
                     await event.respond(f'⚠️ 设置失败：{e}', buttons=main_keyboard())
@@ -981,7 +966,7 @@ async def setup_handlers(manager: ClientManager):
                     set_state(chat_id, 'keywords_import_wait_file', account_id=account_id, kind=kind)
                     await event.respond('📄 请发送包含关键字的文本文件（每行一个，支持逗号/换行分隔），作为文档上传。')
                     return
-                before = set(settings_service.get_account_keywords(account_id, kind=kind) or [])
+                        before = set(settings_service.get_account_keywords(account_id, kind=kind) or [])
                 message = None
                 payload = t[1:] if t[:1] in ('+', '＋', '-', '－', 'q', 'Q') else t
                 if t.startswith(('+', '＋')):
@@ -1121,89 +1106,13 @@ async def setup_handlers(manager: ClientManager):
                 await event.respond(msg, buttons=main_keyboard())
                 return
 
-            if mode == 'set_listen_sources_choose_account':
-                try:
-                    acc_id = int(text)
-                    row = dao_accounts.get(acc_id)
-                    if not row:
-                        await event.respond('⚠️ 账号不存在，请重新输入账号ID')
-                        return
-                    if not role_allows_listen(get_account_role(acc_id)):
-                        await event.respond('⚠️ 该账号不是监听账号，请重新输入监听账号ID')
-                        return
-                    set_state(chat_id, 'listen_sources_manage', account_id=acc_id)
-                    cur = settings_service.get_listen_sources(acc_id) or []
-                    preview = '\n'.join(['• ' + x for x in cur[:20]]) or '（空）'
-                    await event.respond(
-                        f"📡 监听群组（共 {len(cur)} 条，预览前20条）：\n{preview}\n\n"
-                        '新增：直接发送 @group / 123456789 / https://t.me/xxx（支持多行）\n'
-                        '删除：发送 q值（例：q@group / q123456）\n'
-                        '导入：发送“导入”，上传文本文件（每行一个）\n'
-                        '导出：发送“导出”\n'
-                        '清空：发送“清空”\n'
-                        '返回：发送“完成”'
-                    )
-                except Exception:
-                    await event.respond('⚠️ 请输入有效的账号ID（数字）')
-                return
-            if mode == 'listen_sources_manage':
-                acc_id = st['pending']['account_id']
-                t = (text or '').strip()
-                if t in ('完成', '返回'):
-                    set_state(chat_id)
-                    await event.respond('⬅️ 已返回主菜单', buttons=main_keyboard())
-                    return
-                if t in ('导出', 'export'):
-                    cur = settings_service.get_listen_sources(acc_id) or []
-                    listing = '\n'.join(cur) or '（空）'
-                    await event.respond(f"📡 监听群组共 {len(cur)} 条：\n{listing}")
-                    return
-                if t in ('导入', 'import'):
-                    set_state(chat_id, 'listen_sources_import_wait_file', account_id=acc_id)
-                    await event.respond('📄 请发送包含群组的文本文件（每行一个，支持 @username / chat_id / t.me 链接），作为文档上传。')
-                    return
-                if t in ('清空',):
-                    settings_service.clear_listen_sources(acc_id)
-                elif t.startswith('q') or t.startswith('Q'):
-                    value = t[1:].strip()
-                    if value:
-                        settings_service.delete_listen_source(acc_id, value)
-                else:
-                    # 支持多行批量新增
-                    sources = [l.strip() for l in t.splitlines() if l.strip()]
-                    settings_service.bulk_add_listen_sources(acc_id, sources)
-                cur = settings_service.get_listen_sources(acc_id) or []
-                preview = '\n'.join(['• ' + x for x in cur[:20]]) or '（空）'
-                await event.respond(
-                    f"📡 监听群组（共 {len(cur)} 条，预览前20条）：\n{preview}\n\n"
-                    '新增：直接发送（可多行）; 删除：q值；导入/导出/清空/完成'
-                )
-                return
-
-        if is_cmd(text, '设置监听群组'):
-            rows = list_accounts('listen')
-            if not rows:
-                await event.respond('⚠️ 尚无监听账号，请先添加。')
-                return
-
-            # 直接将所有监听账号改为「监听全部群组」：
-            # 实现方式：清空每个账号的自定义监听群组列表，
-            # 代码中约定：未设置监听群组 = 监听全部群组
-            for r in rows:
-                acc_id = r['id']
-                settings_service.clear_listen_sources(acc_id)
-
-            await event.respond(
-                f'📡 已将所有监听账号的监听范围设置为：**全部群组**。\n'
-                f'共处理监听账号：{len(rows)} 个。'
-            )
-            return
+            # 监听群组配置相关模式已废弃，不再处理
 
         if is_cmd(text, '设置转发目标'):
             rows = list_accounts('listen')
             if not rows:
                 await event.respond('⚠️ 尚无监听账号，请先添加。')
-                return
+                        return
             
             # 显示所有监听账号的转发目标（只显示账号专属的）
             lines = []
@@ -1230,7 +1139,7 @@ async def setup_handlers(manager: ClientManager):
                 acc_id = target_row['id']
                 cur = settings_service.get_account_target_chat(acc_id) or '（未设置）'
                 set_state(chat_id, 'set_forward_target', account_id=acc_id)
-                await event.respond(
+                    await event.respond(
                     f'📤 设置转发目标\n\n'
                     f'当前所有转发目标：\n{summary}\n\n'
                     f'────────────\n'
@@ -1242,7 +1151,7 @@ async def setup_handlers(manager: ClientManager):
                     '• 输入"清空"清除设置\n'
                     '• 输入"取消"退出'
                 )
-            else:
+                else:
                 set_state(chat_id, 'set_forward_target_choose_account')
                 await event.respond(
                     f'📤 设置转发目标\n\n'
@@ -1488,7 +1397,6 @@ async def setup_handlers(manager: ClientManager):
             'add_click_account_wait_file',
             'add_listen_account_wait_string',
             'keywords_import_wait_file',
-            'listen_sources_import_wait_file',
         ):
             return
         try:
@@ -1567,40 +1475,6 @@ async def setup_handlers(manager: ClientManager):
                     f"本次新增：{added} 条，当前总数：{len(cur)} 条"
                 )
                 await event.respond(keywords_overview_text(account_id, kind))
-            elif st['mode'] == 'listen_sources_import_wait_file':
-                # 从文本文件批量导入监听群组
-                account_id = st['pending']['account_id']
-
-                tmp_dir = 'tmp_import'
-                os.makedirs(tmp_dir, exist_ok=True)
-                tmp_path = os.path.join(tmp_dir, f'src_{event.id}_{name}')
-                await event.download_media(file=tmp_path)
-
-                sources = []
-                try:
-                    with open(tmp_path, 'r', encoding='utf-8') as f:
-                        for line in f:
-                            t = (line or '').strip()
-                            if t:
-                                sources.append(t)
-                finally:
-                    try:
-                        os.remove(tmp_path)
-                    except OSError:
-                        pass
-
-                before = settings_service.get_listen_sources(account_id) or []
-                settings_service.bulk_add_listen_sources(account_id, sources)
-                after = settings_service.get_listen_sources(account_id) or []
-                added = max(0, len(after) - len(before))
-
-                set_state(chat_id, 'listen_sources_manage', account_id=account_id)
-                preview = '\n'.join(['• ' + x for x in after[:20]]) or '（空）'
-                await event.respond(
-                    f"📥 监听群组导入完成\n"
-                    f"本次新增：{added} 条，当前总数：{len(after)} 条（预览前20条）：\n{preview}\n\n"
-                    "新增：直接发送（可多行）; 删除：q值；导入/导出/清空/完成"
-                )
         except Exception as e:
             set_state(chat_id)
             await event.respond(f"文件处理失败：{e}", buttons=main_keyboard())
