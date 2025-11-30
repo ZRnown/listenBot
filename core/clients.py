@@ -243,37 +243,59 @@ class ClientManager:
             print(f"[客户端连接] 账号 #{account_id} 连接失败: {e}")
 
     def _register_handlers_for_account(self, client: TelegramClient, account_id: int, group_list: list = None):
-        """为账号注册事件处理器（支持多账号并发）"""
+        """为账号注册事件处理器（完全按照 TelegramForwarder 的被动监听方式）"""
         if group_list:
             group_ids_set = {g['id'] for g in group_list}
             client._monitored_group_ids = group_ids_set
         else:
             client._monitored_group_ids = None
         
-        @client.on(events.NewMessage(incoming=True))
+        # 过滤器：排除控制机器人自己的消息（完全按照 TelegramForwarder 的方式）
+        async def not_from_control_bot(event):
+            """过滤函数：排除控制机器人自己的消息"""
+            if self.bot_id is None:
+                return True  # 如果未获取到机器人ID，不进行过滤
+            
+            # 快速检查：跳过私聊、非群组、自己发送的消息
+            if event.is_private or not event.is_group or event.message.out:
+                return False
+            
+            # 检查发送者是否是控制机器人
+            try:
+                sender_id = event.sender_id
+                if sender_id is not None:
+                    sender_id_int = int(sender_id) if sender_id is not None else None
+                    is_not_bot = sender_id_int != self.bot_id
+                    return is_not_bot
+            except (ValueError, TypeError):
+                pass  # 转换失败时不过滤
+            
+            return True
+        
+        # 用户客户端监听器 - 使用过滤器，避免处理控制机器人消息（完全按照 TelegramForwarder 的方式）
+        @client.on(events.NewMessage(func=not_from_control_bot))
         async def handle_new_message(event):
+            # 如果指定了群组列表，只处理这些群组
             if group_list and hasattr(client, '_monitored_group_ids'):
                 if event.chat_id not in client._monitored_group_ids:
                     return
             await self._process_message(event, account_id, "NewMessage")
         
-        @client.on(events.MessageEdited(incoming=True))
+        @client.on(events.MessageEdited(func=not_from_control_bot))
         async def handle_message_edited(event):
+            # 如果指定了群组列表，只处理这些群组
             if group_list and hasattr(client, '_monitored_group_ids'):
                 if event.chat_id not in client._monitored_group_ids:
                     return
             await self._process_message(event, account_id, "MessageEdited")
     
     async def _process_message(self, event, account_id: int, handler_name: str):
-        """处理收到的消息（极致优化：立即处理，不阻塞）"""
+        """处理收到的消息（完全按照 TelegramForwarder 的方式：被动接收，立即处理）"""
         try:
-            # 快速过滤：只处理群组消息
-            if event.is_private or not event.is_group:
-                return
-            
+            # 过滤器已经处理了基本过滤（私聊、非群组、控制机器人消息等），这里直接处理
             account = dao_accounts.get(account_id)
             if account:
-                # 极致优化：直接调用，不等待完成，让关键词检测和推送立即进行
+                # 完全按照 TelegramForwarder 的方式：立即处理，不阻塞
                 # 传递控制机器人的 ID，用于过滤自己的消息
                 # 注意：on_new_message 内部已经使用 create_task 来发送提醒，所以这里直接 await 不会阻塞
                 await on_new_message(event, account, self.bot, self.bot_id)
@@ -303,12 +325,15 @@ class ClientManager:
         self.account_clients[account_id] = client
         await client.catch_up()
         
-        # 极速优化：完全移除主动轮询，完全依赖事件推送（Socket推送）
-        # 原因：主动轮询有网络延迟（RTT），且极易触发 Telegram 的 FloodWait（API 限流）
-        # Telethon 维持着 TCP 长连接，当有新消息时，Telegram 服务端会主动推送到客户端
-        # events.NewMessage 的响应速度永远比主动 get_messages 要快，而且没有限流风险
-        print(f"[启动] 账号 #{account_id} 已注册事件处理器，完全依赖事件推送（极速模式）")
-        # 不再启动 _active_polling_task，完全依赖 events.NewMessage 和 events.MessageEdited
+        # 完全按照 TelegramForwarder 的方式：只使用被动事件监听，不进行轮询
+        # 事件监听器已经在 _register_handlers_for_account 中注册
+        # TelegramForwarder 使用 run_until_disconnected() 保持连接，等待消息推送
+        from services import settings_service
+        role = settings_service.get_account_role(account_id) or 'both'
+        if role in ('listen', 'both'):
+            print(f"[启动] 账号 #{account_id} 是监听账号，使用被动事件监听（完全按照 TelegramForwarder 方式，无轮询）")
+        else:
+            print(f"[启动] 账号 #{account_id} 是点击账号，使用被动事件监听（仅在收到链接时点击）")
     
     async def _list_account_groups(self, client: TelegramClient, account_id: int):
         """列出账号加入的所有群组"""

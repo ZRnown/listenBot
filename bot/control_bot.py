@@ -13,6 +13,7 @@ from storage import dao_accounts
 from storage import dao_keywords
 from services import sessions as sess_service
 from core.clients import ClientManager
+from core.filters import normalize_text_for_matching
 
 # 简单会话状态管理
 STATE = {}
@@ -38,10 +39,6 @@ def _strip_emoji_prefix(value: str) -> str:
             break
         s = s[1:].lstrip()
     return s
-
-
-# 导入规范化函数（从 core.filters 导入，避免重复定义）
-from core.filters import normalize_text_for_matching
 
 
 def is_cmd(text: str, label: str) -> bool:
@@ -1412,13 +1409,13 @@ async def setup_handlers(manager: ClientManager):
                     if t in ('取消', '退出', 'cancel', 'exit'):
                         set_state(chat_id)
                         await event.respond('✅ 已取消', buttons=main_keyboard())
-                    return
+                        return
                     
                     # 检查是否包含emoji（按钮文本）
                     has_emoji = any(unicodedata.category(c) == 'So' for c in t)
                     if has_emoji:
                         await event.respond('⚠️ 请直接输入用户名，不要点击按钮', buttons=None)
-                    return
+                        return
                     
                     # 处理输入
                     clean = t.lstrip('@')
@@ -1618,7 +1615,7 @@ async def setup_handlers(manager: ClientManager):
                         await event.respond(
                             f"当前关键字（{keywords_label(kind)}）共 {len(cur)} 条：\n{listing}"
                         )
-                    return
+                        return
                     if lower in ('导入', 'import'):
                         set_state(chat_id, 'keywords_import_wait_file', account_id=account_id, kind=kind)
                         await event.respond('📄 请发送包含关键字的文本文件（每行一个，支持逗号/换行分隔），作为文档上传。')
@@ -1752,24 +1749,24 @@ async def setup_handlers(manager: ClientManager):
                     for target in lines:
                         for acc_id in account_ids:
                             client = manager.account_clients.get(acc_id)
-                        if not client:
-                            continue
-                        try:
-                            await joining.join_chat(client, target)
-                            ok += 1
-                        except Exception:
-                            fail += 1
-                        await asyncio.sleep(random.uniform(mn, mx))
-                set_state(chat_id)
-                msg = (
+                            if not client:
+                                continue
+                            try:
+                                await joining.join_chat(client, target)
+                                ok += 1
+                            except Exception:
+                                fail += 1
+                            await asyncio.sleep(random.uniform(mn, mx))
+                    set_state(chat_id)
+                    msg = (
                         f"✅ 批量进群完成（使用{'监听' if role_sel=='listen' else '点击'}账号）\n"
-                    '────────────\n'
-                    f'处理链接：{len(lines)} 个\n'
-                    f'✅ 成功次数：{ok}\n'
-                    f'❌ 失败次数：{fail}'
-                )
-                await event.respond(msg, buttons=main_keyboard())
-                return
+                        '────────────\n'
+                        f'处理链接：{len(lines)} 个\n'
+                        f'✅ 成功次数：{ok}\n'
+                        f'❌ 失败次数：{fail}'
+                    )
+                    await event.respond(msg, buttons=main_keyboard())
+                    return
 
         if is_cmd(text, '设置转发目标'):
             # 显示当前全局转发目标
@@ -2036,7 +2033,7 @@ async def setup_handlers(manager: ClientManager):
             bot_username = settings_service.get_target_bot()
             if not bot_username:
                 await event.respond('⚠️ 请先设置目标机器人（点击"🎯 设置目标机器人"）', buttons=main_keyboard())
-            return
+                return
 
             # 获取发送消息（默认 /start）
             send_msg = settings_service.get_global_template() or '/start'
