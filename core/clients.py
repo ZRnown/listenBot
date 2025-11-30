@@ -400,21 +400,16 @@ class ClientManager:
             except Exception:
                 last_message_ids[group_info['id']] = 0
         
-        # 优化轮询参数：极致性能优化（在防封前提下）
-        poll_interval = 0.8  # 从 1.5 秒减少到 0.8 秒，极致轮询频率
-        concurrent_limit = 120  # 从 80 增加到 120，最大化并发度
-        min_concurrent_limit = 50
-        max_concurrent_limit = 150
-        batch_delay = 0.005  # 从 0.01 减少到 0.005，最小批次延迟
+        # 全速运行：不考虑封号，极致性能
+        poll_interval = 0.1  # 0.1秒轮询间隔，全速运行
+        concurrent_limit = 200  # 最大化并发度
+        min_concurrent_limit = 100
+        max_concurrent_limit = 300
+        batch_delay = 0.001  # 最小批次延迟
         floodwait_count = 0
         last_floodwait_time = 0
         
-        # 为不同账号错开轮询时间，避免所有账号同时轮询
-        # 使用账号ID作为随机种子，确保每个账号的初始延迟不同但稳定
-        import random
-        random.seed(account_id)
-        initial_delay = random.uniform(0, poll_interval * 0.5)  # 随机延迟 0-0.75 秒
-        await asyncio.sleep(initial_delay)
+        # 移除初始延迟，立即开始轮询
         
         while True:
             try:
@@ -741,27 +736,21 @@ class ClientManager:
                     if batch_start + current_concurrent_limit < total_groups:
                         await asyncio.sleep(batch_delay)
                 
-                # 计算实际耗时，动态调整下次轮询间隔
+                # 计算实际耗时
                 elapsed = time.time() - start_time
                 if new_messages_count > 0:
                     print(f"[轮询] 账号 #{account_id}: 发现 {new_messages_count} 条新消息 (耗时 {elapsed:.3f}秒)")
                 
-                # 智能调整：如果轮询很快完成，可以提前开始下次轮询（但保持最小间隔）
-                # 如果耗时较长，适当延长间隔（防止过载）
-                min_sleep = 0.05  # 最小间隔 50ms，防止过于频繁
-                if elapsed < poll_interval * 0.3:
-                    # 轮询很快完成，可以提前开始（但保持最小间隔）
-                    sleep_time = max(min_sleep, poll_interval - elapsed * 0.7)
-                elif elapsed > poll_interval * 2:
-                    # 轮询耗时过长，适当延长间隔
-                    sleep_time = poll_interval * 1.2
+                # 全速运行：最小延迟，立即开始下次轮询
+                min_sleep = 0.01  # 最小间隔 10ms
+                if elapsed < poll_interval:
+                    # 轮询很快完成，立即开始下次轮询
+                    sleep_time = max(min_sleep, poll_interval - elapsed)
                 else:
-                    sleep_time = max(min_sleep, poll_interval - elapsed * 0.3)
+                    # 轮询耗时较长，使用最小间隔
+                    sleep_time = min_sleep
                 
                 await asyncio.sleep(sleep_time)
-                
-                if new_messages_count > 0:
-                    print(f"[轮询] 账号 #{account_id}: 发现 {new_messages_count} 条新消息")
                     
             except (ConnectionError, RuntimeError) as e:
                 # 捕获断开连接错误，优雅退出

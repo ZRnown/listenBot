@@ -474,17 +474,8 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
                 print(f"[点击任务] ✅ 账号 {acc_name} 客户端已连接")
                 
                 try:
-                    # 优化延迟策略：在防封前提下最小化延迟
-                    delay = settings_service.get_click_delay(acc_id) or 0
-                    # 减少抖动范围，提高响应速度
-                    jitter = random.uniform(0.2, 0.6)  # 从 0.5-1.5 减少到 0.2-0.6
-                    # 减少索引延迟，提高并发度
-                    index_delay = index * 0.2  # 从 0.5 减少到 0.2
-                    total_delay = delay + jitter + index_delay
-                    # 确保最小延迟（防封）
-                    total_delay = max(0.1, total_delay)
-                    print(f"[点击任务] 账号 {acc_name} 等待延迟: {total_delay:.2f} 秒 (基础延迟: {delay}, 抖动: {jitter:.2f}, 索引延迟: {index_delay:.2f})")
-                    await asyncio.sleep(total_delay)
+                    # 全速运行：移除所有延迟，立即点击
+                    # 不再等待，直接执行点击
                     
                     # 获取消息
                     print(f"[点击任务] 账号 {acc_name} 开始获取消息: chat_id={target_chat_id}, msg_id={target_msg_id}")
