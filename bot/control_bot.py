@@ -40,6 +40,10 @@ def _strip_emoji_prefix(value: str) -> str:
     return s
 
 
+# 导入规范化函数（从 core.filters 导入，避免重复定义）
+from core.filters import normalize_text_for_matching
+
+
 def is_cmd(text: str, label: str) -> bool:
     """Match button text regardless of emoji或尾部追加的数字。"""
     candidate = (text or '').strip()
@@ -357,8 +361,16 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
                 continue
             for i, j, btn_text in button_positions:
                 matched_kw = None
+                # 规范化按钮文本（去除emoji、零宽字符、空格）
+                normalized_btn_text = normalize_text_for_matching(btn_text)
+                print(f"[点击任务] 按钮文本: '{btn_text}' -> 规范化后: '{normalized_btn_text}'")
                 for k in keywords:
-                    if k and k in btn_text:
+                    if not k:
+                        continue
+                    # 规范化关键词（去除空格）
+                    normalized_keyword = k.strip()
+                    # 检查关键词是否在规范化后的按钮文本中
+                    if normalized_keyword and normalized_keyword in normalized_btn_text:
                         matched_kw = k
                         break
                 if matched_kw:

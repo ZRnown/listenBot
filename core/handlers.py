@@ -1,7 +1,7 @@
 import asyncio
 import random
 from datetime import datetime
-from core.filters import match_keywords
+from core.filters import match_keywords, match_keywords_normalized
 from services.alerting import send_alert
 from services import settings_service
 
@@ -136,12 +136,14 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
             if buttons:
                 keywords = settings_service.get_account_keywords(account['id'], kind='click') or []
                 if keywords:
-                    # 遍历按钮，查找匹配
+                    # 遍历按钮，查找匹配（使用规范化匹配，处理emoji和零宽字符）
                     for i, row in enumerate(buttons):
                         for j, btn in enumerate(row):
                             btn_text = getattr(btn, 'text', None) or ''
-                            if any(k for k in keywords if k and k in btn_text):
-                                print(f"[点击] ✅ 账号 #{account['id']} 匹配按钮: '{btn_text}'")
+                            # 使用规范化匹配，可以处理包含emoji和零宽字符的按钮文本
+                            matched_keyword = match_keywords_normalized(account['id'], btn_text, kind='click')
+                            if matched_keyword:
+                                print(f"[点击] ✅ 账号 #{account['id']} 匹配按钮: '{btn_text}' (关键词: {matched_keyword})")
                                 
                                 # 定义点击任务（优化：减少延迟，提高响应速度）
                                 async def _click_button(row_idx, col_idx, b_text):
