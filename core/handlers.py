@@ -56,56 +56,69 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
                 # 获取消息ID用于日志
                 msg_id = getattr(event.message, 'id', None)
                 chat_id = getattr(event, 'chat_id', None)
-                print(f"[监听] ✅ 账号 #{account['id']} 匹配关键词: '{matched}' (消息ID: {msg_id}, Chat ID: {chat_id})")
+                timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]  # 毫秒精度
+                print(f"[监听] [{timestamp}] ✅ 账号 #{account['id']} 匹配关键词: '{matched}' (消息ID: {msg_id}, Chat ID: {chat_id})")
                 
                 # 检查是否需要过滤机器人消息
                 should_alert = True
                 target = settings_service.get_target_chat()
-                print(f"[监听] 转发目标: {target if target else '未设置'}")
+                print(f"[监听] [{timestamp}] 转发目标: {target if target else '未设置'}")
                 
                 if target and target.strip() and bot_client:
-                    try:
-                        sender = await event.get_sender()
-                        sender_id = getattr(sender, 'id', None)
-                        is_bot = getattr(sender, 'bot', False)
-                        
-                        # 只有当消息来自控制机器人本身时才跳过
-                        # 其他机器人的消息正常处理
-                        if is_bot and control_bot_id and sender_id == control_bot_id:
-                            print(f"[监听] ⚠️ 消息来自控制机器人本身（ID: {sender_id}），跳过发送提醒")
-                            should_alert = False
-                        else:
-                            if is_bot:
-                                print(f"[监听] 消息来自其他机器人（ID: {sender_id}），允许发送提醒")
-                            else:
-                                print(f"[监听] 消息来自用户（ID: {sender_id}），允许发送提醒")
-                    except Exception as e:
-                        print(f"[监听] ⚠️ 获取发送者失败: {str(e)}，默认允许发送")
-                        pass # 获取发送者失败，默认不跳过
-                else:
-                    if not target or not target.strip():
-                        print(f"[监听] ⚠️ 转发目标未设置，跳过发送提醒")
-                    if not bot_client:
-                        print(f"[监听] ⚠️ bot_client 为空，跳过发送提醒")
-                    should_alert = False
-                
-                if should_alert:
-                    # 全速运行：立即发送提醒，直接调用（不创建任务，减少延迟）
-                    # 使用 create_task 异步执行，不阻塞消息处理，榨干性能
+                    # 极致优化：立即创建发送任务，不等待任何操作，真正并发
+                    # 每个匹配的消息都立即创建独立任务，不受其他消息影响
                     async def _send_alert_task():
                         try:
-                            print(f"[监听] 立即发送提醒...")
+                            task_start_time = datetime.now()
+                            task_timestamp = task_start_time.strftime('%H:%M:%S.%f')[:-3]
+                            print(f"[监听] [{task_timestamp}] 🚀 立即创建发送任务（账号 #{account['id']}, 消息ID: {getattr(event.message, 'id', '?')})")
+                            
+                            # 在任务内部获取发送者信息，不阻塞主流程
+                            # 使用超时机制，避免长时间阻塞
+                            try:
+                                sender = await asyncio.wait_for(event.get_sender(), timeout=5.0)
+                                sender_id = getattr(sender, 'id', None)
+                                is_bot = getattr(sender, 'bot', False)
+                                
+                                # 只有当消息来自控制机器人本身时才跳过
+                                if is_bot and control_bot_id and sender_id == control_bot_id:
+                                    print(f"[监听] [{task_timestamp}] ⚠️ 消息来自控制机器人本身（ID: {sender_id}），跳过发送提醒")
+                                    return
+                                else:
+                                    if is_bot:
+                                        print(f"[监听] [{task_timestamp}] 消息来自其他机器人（ID: {sender_id}），允许发送提醒")
+                                    else:
+                                        print(f"[监听] [{task_timestamp}] 消息来自用户（ID: {sender_id}），允许发送提醒")
+                            except asyncio.TimeoutError:
+                                print(f"[监听] [{task_timestamp}] ⚠️ 获取发送者超时，默认允许发送")
+                            except Exception as e:
+                                print(f"[监听] [{task_timestamp}] ⚠️ 获取发送者失败: {str(e)}，默认允许发送")
+                            
+                            # 立即发送提醒，不等待，不受限流影响
+                            send_start_time = datetime.now()
+                            send_timestamp = send_start_time.strftime('%H:%M:%S.%f')[:-3]
+                            print(f"[监听] [{send_timestamp}] 📤 开始调用 send_alert（账号 #{account['id']}, 消息ID: {getattr(event.message, 'id', '?')})...")
                             await send_alert(bot_client, account, event, matched)
-                            print(f"[监听] ✅ 提醒发送成功")
+                            send_end_time = datetime.now()
+                            send_duration = (send_end_time - send_start_time).total_seconds()
+                            end_timestamp = send_end_time.strftime('%H:%M:%S.%f')[:-3]
+                            print(f"[监听] [{end_timestamp}] ✅ 提醒发送成功 (耗时: {send_duration:.3f}秒, 账号 #{account['id']})")
                         except Exception as e:
-                            print(f"[监听] ❌ 发送提醒失败: {str(e)}")
+                            error_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+                            print(f"[监听] [{error_timestamp}] ❌ 发送提醒失败 (账号 #{account['id']}): {str(e)}")
                             import traceback
                             traceback.print_exc()
                     
-                    # 立即创建任务，不等待完成，充分利用CPU
-                    asyncio.create_task(_send_alert_task())
+                    # 立即创建任务，不等待完成，充分利用CPU，真正并发
+                    # 每个消息匹配都立即创建独立任务，不受其他任务影响
+                    task = asyncio.create_task(_send_alert_task())
+                    # 不等待任务完成，立即返回，让其他消息也能立即处理
                 else:
-                    print(f"[监听] ⚠️ 跳过发送提醒（should_alert=False）")
+                    if not target or not target.strip():
+                        print(f"[监听] [{timestamp}] ⚠️ 转发目标未设置，跳过发送提醒")
+                    if not bot_client:
+                        print(f"[监听] [{timestamp}] ⚠️ bot_client 为空，跳过发送提醒")
+                    print(f"[监听] [{timestamp}] ⚠️ 跳过发送提醒（should_alert=False）")
                     
                 # 自动发送模板消息（全速运行：立即发送，无延迟）
                 if settings_service.get_start_sending(account['id']):

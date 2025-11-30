@@ -450,33 +450,36 @@ class ClientManager:
                     if not client.is_connected():
                         break
                     
-                    async with poll_semaphore:  # 使用信号量控制并发度
-                        entity = group_info['entity']
-                        # 如果还没初始化完成，使用0作为last_id
-                        last_id = last_message_ids.get(chat_id, 0)
-                        
-                        try:
+                    entity = group_info['entity']
+                    # 如果还没初始化完成，使用0作为last_id
+                    last_id = last_message_ids.get(chat_id, 0)
+                    
+                    # 信号量只用于 API 调用，不阻塞消息处理
+                    try:
+                        async with poll_semaphore:  # 只控制 API 调用的并发度
                             # 极致优化：只获取最新3条消息，减少数据传输，提升速度
                             messages = await client.get_messages(entity, min_id=last_id, limit=3)
-                        except FloodWaitError as e:
-                            wait_seconds = e.seconds
-                            await self._notify_user_waiting(account_id, wait_seconds, f"检查群组 '{group_title}'")
-                            await asyncio.sleep(wait_seconds)
-                            if not client.is_connected():
-                                break
+                    except FloodWaitError as e:
+                        wait_seconds = e.seconds
+                        await self._notify_user_waiting(account_id, wait_seconds, f"检查群组 '{group_title}'")
+                        await asyncio.sleep(wait_seconds)
+                        if not client.is_connected():
+                            break
+                        async with poll_semaphore:
                             messages = await client.get_messages(entity, min_id=last_id, limit=3)
-                        except (ConnectionError, RuntimeError) as e:
-                            if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
-                                break
-                            await asyncio.sleep(1)  # 出错后等待1秒再继续
-                            continue
-                        
-                        if messages:
-                            # 极致优化：立即处理每条消息，不等待，不阻塞
-                            for msg in reversed(messages):
-                                if msg.id > last_id and not msg.out:
-                                    try:
-                                        class MockEvent:
+                    except (ConnectionError, RuntimeError) as e:
+                        if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
+                            break
+                        await asyncio.sleep(1)  # 出错后等待1秒再继续
+                        continue
+                    
+                    # 消息处理在信号量外进行，确保真正并发
+                    if messages:
+                        # 极致优化：立即处理每条消息，不等待，不阻塞，真正并发
+                        for msg in reversed(messages):
+                            if msg.id > last_id and not msg.out:
+                                try:
+                                    class MockEvent:
                                             def __init__(self, msg_obj, chat_entity, chat_id_val, client_obj):
                                                 self.message = msg_obj
                                                 self.chat_id = chat_id_val
@@ -533,22 +536,25 @@ class ClientManager:
                                                 except Exception as e:
                                                     raise Exception(f"点击按钮失败: {str(e)}")
                                         
-                                        mock_event = MockEvent(msg, entity, chat_id, client)
-                                        
-                                        if mock_event.is_group:
-                                            # 极致优化：立即处理消息，不等待，不阻塞
-                                            # 使用 create_task 异步执行，立即调度，不阻塞其他群组
-                                            # 检测到关键词后立即推送，不等待整个轮询周期
-                                            asyncio.create_task(self._process_message(mock_event, account_id, "ActivePolling"))
-                                        
-                                        last_message_ids[chat_id] = msg.id
-                                    except Exception as e:
-                                        last_message_ids[chat_id] = msg.id
-                            
-                            if messages:
-                                last_message_ids[chat_id] = max(msg.id for msg in messages)
+                                    mock_event = MockEvent(msg, entity, chat_id, client)
+                                    
+                                    if mock_event.is_group:
+                                        # 极致优化：立即处理消息，不等待，不阻塞，真正并发
+                                        # 使用 create_task 异步执行，立即调度，不阻塞其他群组
+                                        # 检测到关键词后立即推送，不等待整个轮询周期
+                                        # 不在信号量内，确保消息处理真正并发
+                                        asyncio.create_task(self._process_message(mock_event, account_id, "ActivePolling"))
+                                    
+                                    # 立即更新 last_id，不等待消息处理完成
+                                    last_message_ids[chat_id] = msg.id
+                                except Exception as e:
+                                    last_message_ids[chat_id] = msg.id
+                        
+                        # 更新最后的消息ID
+                        if messages:
+                            last_message_ids[chat_id] = max(msg.id for msg in messages)
                     
-                    # 每个群组独立轮询间隔
+                    # 每个群组独立轮询间隔（在信号量外，不阻塞其他群组）
                     await asyncio.sleep(poll_interval)
                     
                 except (ConnectionError, RuntimeError) as e:

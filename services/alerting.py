@@ -6,10 +6,15 @@ from services import settings_service
 
 async def send_alert(bot_client, account, event, matched_keyword: str):
     from datetime import datetime
-    print(f"[发送提醒] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 开始构建提醒消息...")
+    start_time = datetime.now()
+    timestamp = start_time.strftime('%H:%M:%S.%f')[:-3]  # 毫秒精度
+    print(f"[发送提醒] [{timestamp}] 开始构建提醒消息...")
     
-    sender = await event.get_sender()
-    chat = await event.get_chat()
+    # 极致优化：并发获取 sender 和 chat，不串行等待
+    sender_task = asyncio.create_task(event.get_sender())
+    chat_task = asyncio.create_task(event.get_chat())
+    sender = await sender_task
+    chat = await chat_task
     sender_name = f"{getattr(sender,'first_name', '') or ''} {getattr(sender,'last_name','') or ''}".strip() or 'Unknown'
     sender_username = getattr(sender, 'username', None)
     sender_username_display = f"@{sender_username}" if sender_username else '无'
@@ -30,15 +35,17 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
     except:
         pass
     
-    print(f"[发送提醒] 发送者: {sender_name} ({sender_username_display})")
-    print(f"[发送提醒] 来源群组: {source_title} (ID: {source_chat_id})")
-    print(f"[发送提醒] 消息内容: {text[:100]}...")
+    info_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+    print(f"[发送提醒] [{info_timestamp}] 发送者: {sender_name} ({sender_username_display})")
+    print(f"[发送提醒] [{info_timestamp}] 来源群组: {source_title} (ID: {source_chat_id})")
+    print(f"[发送提醒] [{info_timestamp}] 消息内容: {text[:100]}...")
 
     # 使用全局转发目标
     target = settings_service.get_target_chat()
-    print(f"[发送提醒] 转发目标: {target}")
+    print(f"[发送提醒] [{info_timestamp}] 转发目标: {target}")
     if not target or not target.strip():
-        print(f"[发送提醒] ❌ 转发目标未配置")
+        error_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+        print(f"[发送提醒] [{error_timestamp}] ❌ 转发目标未配置")
         delivered = 'error'
         error = 'Target chat not configured'
     else:
@@ -59,7 +66,8 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
                 test_value = target_clean.strip()
                 chat_id_int = int(test_value)
                 is_chat_id = True
-                print(f"[发送提醒] 检测到 Chat ID 格式: {chat_id_int}")
+                chat_id_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+                print(f"[发送提醒] [{chat_id_timestamp}] 检测到 Chat ID 格式: {chat_id_int}")
             except (ValueError, AttributeError):
                 pass
             
@@ -122,7 +130,8 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
                     if chat_username:
                         # 公开群组/频道，使用 username 格式（最可靠，所有客户端都支持）
                         msg_link = f"https://t.me/{chat_username}/{event.message.id}"
-                        print(f"[发送提醒] ✅ 生成公开链接: {msg_link} (username: {chat_username})")
+                        link_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+                        print(f"[发送提醒] [{link_timestamp}] ✅ 生成公开链接: {msg_link} (username: {chat_username})")
                     else:
                         # 私有群组/频道，需要特殊处理
                         chat_id_str = str(source_chat_id)
@@ -138,9 +147,11 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
                             if channel_id.isdigit():
                                 # 尝试使用 https:// 链接（如果用户已加入频道，这个链接可以工作）
                                 msg_link = f"https://t.me/c/{channel_id}/{event.message.id}"
-                                print(f"[发送提醒] ✅ 生成私有频道链接: {msg_link} (原始 Chat ID: {source_chat_id}, 频道 ID: {channel_id})")
+                                link_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+                                print(f"[发送提醒] [{link_timestamp}] ✅ 生成私有频道链接: {msg_link} (原始 Chat ID: {source_chat_id}, 频道 ID: {channel_id})")
                             else:
-                                print(f"[发送提醒] ⚠️ 无法生成私有频道链接: channel_id={channel_id} 格式无效 (原始: {source_chat_id})")
+                                link_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+                                print(f"[发送提醒] [{link_timestamp}] ⚠️ 无法生成私有频道链接: channel_id={channel_id} 格式无效 (原始: {source_chat_id})")
                         elif chat_id_str.startswith('-'):
                             # 普通私有群组（负数但不是 -100 开头）
                             # 对于普通群组，Telegram 不支持 https:// 链接，但可以尝试使用 tg:// 协议
@@ -160,7 +171,8 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
                                 # 尝试 1: 直接使用正数作为频道 ID（https://t.me/c/{chat_id}/{message_id}）
                                 # 这适用于某些类型的频道
                                 msg_link = f"https://t.me/c/{source_chat_id}/{event.message.id}"
-                                print(f"[发送提醒] ✅ 正数 Chat ID: {source_chat_id}，尝试生成 https:// 链接: {msg_link}")
+                                link_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+                                print(f"[发送提醒] [{link_timestamp}] ✅ 正数 Chat ID: {source_chat_id}，尝试生成 https:// 链接: {msg_link}")
                                 
                                 # 尝试 2: 如果上面的格式不工作，也可以尝试转换为 -100 格式
                                 # 某些情况下，正数 Chat ID 可能需要转换为 -100{chat_id} 格式
@@ -185,7 +197,8 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
                 # 验证链接格式是否正确
                 if msg_link.startswith('https://') or msg_link.startswith('tg://'):
                     button_row.append(Button.url('👁️ 查看消息', msg_link))
-                    print(f"[发送提醒] ✅ 已添加'查看消息'按钮，链接: {msg_link}")
+                    button_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+                    print(f"[发送提醒] [{button_timestamp}] ✅ 已添加'查看消息'按钮，链接: {msg_link}")
                 else:
                     print(f"[发送提醒] ⚠️ 链接格式无效: {msg_link}")
                     # 尝试生成备选链接
@@ -222,17 +235,22 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
             
             # 使用机器人客户端发送消息
             # 使用Markdown解析模式
-            print(f"[发送提醒] 准备发送到: {target_clean}")
-            print(f"[发送提醒] 消息长度: {len(message_text)} 字符")
+            send_prep_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+            print(f"[发送提醒] [{send_prep_timestamp}] 准备发送到: {target_clean}")
+            print(f"[发送提醒] [{send_prep_timestamp}] 消息长度: {len(message_text)} 字符")
             
             try:
                 # 如果是 Chat ID，直接使用整数；否则使用字符串（用户名）
                 if is_chat_id:
                     target_entity = chat_id_int
-                    print(f"[发送提醒] 使用 Chat ID 发送: {target_entity}")
+                    print(f"[发送提醒] [{send_prep_timestamp}] 使用 Chat ID 发送: {target_entity}")
                 else:
                     target_entity = target_clean
-                    print(f"[发送提醒] 使用用户名发送: {target_entity}")
+                    print(f"[发送提醒] [{send_prep_timestamp}] 使用用户名发送: {target_entity}")
+                
+                send_start_time = datetime.now()
+                send_start_timestamp = send_start_time.strftime('%H:%M:%S.%f')[:-3]
+                print(f"[发送提醒] [{send_start_timestamp}] 开始发送消息...")
                 
                 await bot_client.send_message(
                     target_entity, 
@@ -240,7 +258,11 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
                     parse_mode='markdown',
                     buttons=buttons if buttons else None
                 )
-                print(f"[发送提醒] ✅ 消息发送成功到 {target_entity}")
+                
+                send_end_time = datetime.now()
+                send_end_timestamp = send_end_time.strftime('%H:%M:%S.%f')[:-3]
+                send_duration = (send_end_time - send_start_time).total_seconds()
+                print(f"[发送提醒] [{send_end_timestamp}] ✅ 消息发送成功到 {target_entity} (耗时: {send_duration:.3f}秒)")
                 delivered = 'success'
                 error = None
             except Exception as send_error:
