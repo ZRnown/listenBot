@@ -1167,22 +1167,74 @@ async def setup_handlers(manager: ClientManager):
                         set_state(chat_id)
                         await event.respond('✅ 已清空转发目标', buttons=main_keyboard())
                         return
+                    
+                    # 检查是否是邀请链接
+                    if t.startswith('https://t.me/+') or t.startswith('https://t.me/joinchat/') or t.startswith('t.me/+') or t.startswith('t.me/joinchat/'):
+                        set_state(chat_id)
+                        await event.respond(
+                            '❌ **不能使用邀请链接**\n\n'
+                            '机器人无法解析邀请链接。请使用：\n'
+                            '• 公开群组/频道：@groupname\n'
+                            '• 私有群组/频道：Chat ID（如 -1001234567890）\n\n'
+                            '💡 获取 Chat ID：使用命令 `诊断群组 #账号ID`',
+                            parse_mode='markdown',
+                            buttons=main_keyboard()
+                        )
+                        return
+                    
                     # 处理输入：支持 @username, chat_id, https://t.me/username
                     clean_target = t.strip()
-                    if clean_target.startswith('http://') or clean_target.startswith('https://'):
-                        # 提取用户名或处理邀请链接
-                        if '/joinchat/' in clean_target or '/+' in clean_target:
-                            # 邀请链接，保持原样
-                            pass
-                        else:
-                            clean_target = clean_target.rsplit('/', 1)[-1]
-                    if clean_target.startswith('@'):
-                        clean_target = clean_target[1:]
-                    # 设置全局转发目标
-                    final_target = clean_target if clean_target else t
+                    
+                    # 检查是否是 Chat ID（数字格式，包括负数）
+                    is_chat_id = False
+                    try:
+                        chat_id_int = int(clean_target)
+                        is_chat_id = True
+                        print(f"[设置转发目标] 检测到 Chat ID 格式: {chat_id_int}")
+                    except ValueError:
+                        pass
+                    
+                    if not is_chat_id:
+                        # 处理 URL 格式
+                        if clean_target.startswith('http://') or clean_target.startswith('https://'):
+                            # 提取用户名或处理邀请链接
+                            if '/joinchat/' in clean_target or '/+' in clean_target:
+                                set_state(chat_id)
+                                await event.respond(
+                                    '❌ **不能使用邀请链接**\n\n'
+                                    '请使用群组/频道用户名（@groupname）或 Chat ID',
+                                    parse_mode='markdown',
+                                    buttons=main_keyboard()
+                                )
+                                return
+                            else:
+                                clean_target = clean_target.rsplit('/', 1)[-1]
+                        
+                        # 处理 @ 前缀
+                        if clean_target.startswith('@'):
+                            clean_target = clean_target[1:]
+                    
+                    # 设置全局转发目标（Chat ID 保持为字符串格式，Telethon 会自动处理）
+                    final_target = str(chat_id_int) if is_chat_id else clean_target
                     settings_service.set_target_chat(final_target)
                     set_state(chat_id)
-                    await event.respond(f'✅ 转发目标已设置：{final_target}', buttons=main_keyboard())
+                    
+                    if is_chat_id:
+                        await event.respond(
+                            f'✅ **转发目标已设置**\n\n'
+                            f'Chat ID: `{final_target}`\n\n'
+                            f'💡 请确保机器人已加入该群组/频道',
+                            parse_mode='markdown',
+                            buttons=main_keyboard()
+                        )
+                    else:
+                        await event.respond(
+                            f'✅ **转发目标已设置**\n\n'
+                            f'目标: `@{final_target}`\n\n'
+                            f'💡 请确保机器人已加入该群组/频道或有访问权限',
+                            parse_mode='markdown',
+                            buttons=main_keyboard()
+                        )
                     return
 
                 elif mode == 'set_target_chat':
@@ -1716,12 +1768,22 @@ async def setup_handlers(manager: ClientManager):
                 f'📤 设置转发目标\n\n'
                 f'当前转发目标：{cur_target}\n\n'
                 f'────────────\n'
-                f'请输入转发目标（所有监听账号将发送到此目标）：\n'
-                f'• 用户名：@username\n'
-                f'• 群组/频道：@groupname 或 chat_id\n'
-                f'• 链接：https://t.me/username\n'
+                f'请输入转发目标（所有监听账号将发送到此目标）：\n\n'
+                f'**支持的格式：**\n'
+                f'• **公开群组/频道：** @groupname 或 groupname\n'
+                f'• **私有群组/频道：** Chat ID（如 -1001234567890）\n'
+                f'• **链接：** https://t.me/username\n\n'
+                f'**如何获取 Chat ID：**\n'
+                f'• 使用命令：`诊断群组 #账号ID`\n'
+                f'• 或使用第三方机器人（如 @userinfobot）\n'
+                f'• 确保机器人已加入目标群组/频道\n\n'
+                f'**注意：**\n'
+                f'• ❌ 不能使用邀请链接（t.me/+...）\n'
+                f'• ✅ 私有群组必须使用 Chat ID\n'
+                f'• ✅ 机器人必须在目标群组/频道中\n\n'
                 f'• 输入"清空"清除设置\n'
-                f'• 输入"取消"退出'
+                f'• 输入"取消"退出',
+                parse_mode='markdown'
             )
             return
 

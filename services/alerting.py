@@ -33,11 +33,31 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
         try:
             # 处理转发目标格式
             target_clean = target.strip()
-            # 如果目标不是以 @ 开头且不是数字（chat_id），尝试添加 @
-            if not target_clean.startswith('@') and not target_clean.lstrip('-').isdigit():
-                # 可能是用户名但没有 @，尝试添加
-                if not target_clean.startswith('http'):
-                    target_clean = '@' + target_clean.lstrip('@')
+            
+            # 检查是否是邀请链接（机器人无法解析邀请链接）
+            if target_clean.startswith('https://t.me/+') or target_clean.startswith('https://t.me/joinchat/') or target_clean.startswith('t.me/+') or target_clean.startswith('t.me/joinchat/'):
+                raise ValueError('转发目标不能是邀请链接。机器人无法解析邀请链接。请使用：\n• 群组/频道用户名（如 @groupname）\n• Chat ID（如 -1001234567890）\n• 机器人已加入的公开群组/频道')
+            
+            # 检查是否是 Chat ID（数字格式，包括负数）
+            is_chat_id = False
+            chat_id_int = None
+            try:
+                # 尝试解析为整数（支持负数）
+                # 移除可能的空格和特殊字符
+                test_value = target_clean.strip()
+                chat_id_int = int(test_value)
+                is_chat_id = True
+                print(f"[发送提醒] 检测到 Chat ID 格式: {chat_id_int}")
+            except (ValueError, AttributeError):
+                pass
+            
+            # 如果不是 Chat ID，处理用户名格式
+            if not is_chat_id:
+                # 如果目标不是以 @ 开头且不是数字（chat_id），尝试添加 @
+                if not target_clean.startswith('@'):
+                    # 可能是用户名但没有 @，尝试添加
+                    if not target_clean.startswith('http'):
+                        target_clean = '@' + target_clean.lstrip('@')
             
             # 构建消息内容（使用Markdown富文本格式，美观协调）
             account_id = account['id']
@@ -112,15 +132,66 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
             # 使用Markdown解析模式
             print(f"[发送提醒] 准备发送到: {target_clean}")
             print(f"[发送提醒] 消息长度: {len(message_text)} 字符")
-            await bot_client.send_message(
-                target_clean, 
-                message_text, 
-                parse_mode='markdown',
-                buttons=buttons if buttons else None
-            )
-            print(f"[发送提醒] ✅ 消息发送成功到 {target_clean}")
-            delivered = 'success'
-            error = None
+            
+            try:
+                # 如果是 Chat ID，直接使用整数；否则使用字符串（用户名）
+                if is_chat_id:
+                    target_entity = chat_id_int
+                    print(f"[发送提醒] 使用 Chat ID 发送: {target_entity}")
+                else:
+                    target_entity = target_clean
+                    print(f"[发送提醒] 使用用户名发送: {target_entity}")
+                
+                await bot_client.send_message(
+                    target_entity, 
+                    message_text, 
+                    parse_mode='markdown',
+                    buttons=buttons if buttons else None
+                )
+                print(f"[发送提醒] ✅ 消息发送成功到 {target_entity}")
+                delivered = 'success'
+                error = None
+            except Exception as send_error:
+                error_str = str(send_error)
+                error_type = type(send_error).__name__
+                
+                # 处理常见的错误类型
+                if 'BotMethodInvalidError' in error_type or 'CheckChatInviteRequest' in error_str:
+                    # 机器人无法解析邀请链接或访问某些实体
+                    if 'joinchat' in target_clean.lower() or '/+' in target_clean.lower():
+                        error_msg = '转发目标不能是邀请链接。请使用群组/频道用户名（@groupname）或 Chat ID'
+                    else:
+                        if is_chat_id:
+                            error_msg = '机器人无法访问该 Chat ID。请确保：\n• 机器人已加入该群组/频道\n• Chat ID 格式正确（如 -1001234567890）\n• 机器人有发送消息权限'
+                        else:
+                            error_msg = '机器人无法访问该目标。请确保：\n• 目标是一个公开的群组/频道（@username）\n• 或者机器人已加入该群组/频道\n• 或者使用 Chat ID（如 -1001234567890）'
+                elif 'CHAT_NOT_FOUND' in error_str or 'PEER_ID_INVALID' in error_str:
+                    if is_chat_id:
+                        error_msg = f'无法找到 Chat ID {chat_id_int}。请确保：\n• 机器人已加入该群组/频道\n• Chat ID 正确（可以通过"诊断群组 #账号ID"查看）'
+                    else:
+                        error_msg = '目标群组/频道不存在或无法访问。请检查转发目标设置'
+                elif 'USERNAME_INVALID' in error_str:
+                    error_msg = '用户名格式无效。请检查转发目标设置'
+                elif 'CHAT_WRITE_FORBIDDEN' in error_str or 'FORBIDDEN' in error_str:
+                    error_msg = '机器人没有权限在该群组/频道发送消息。请确保机器人是管理员或有发送消息权限'
+                elif 'CHANNEL_PRIVATE' in error_str:
+                    if is_chat_id:
+                        error_msg = f'Chat ID {chat_id_int} 对应的群组/频道是私有的，且机器人未加入。请确保机器人已加入该群组/频道'
+                    else:
+                        error_msg = '该群组/频道是私有的，且机器人未加入。请使用 Chat ID 或确保机器人已加入'
+                else:
+                    error_msg = f'发送失败：{error_str[:200]}'
+                
+                print(f"[发送提醒] ❌ 发送失败 ({error_type}): {error_msg}")
+                import traceback
+                traceback.print_exc()
+                delivered = 'error'
+                error = error_msg
+        except ValueError as ve:
+            # 处理我们主动抛出的错误（如邀请链接检测）
+            print(f"[发送提醒] ❌ 配置错误: {str(ve)}")
+            delivered = 'error'
+            error = str(ve)
         except Exception as e:
             print(f"[发送提醒] ❌ 发送失败: {str(e)}")
             import traceback
