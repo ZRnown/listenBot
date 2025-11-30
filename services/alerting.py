@@ -154,14 +154,26 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
                             except Exception as e:
                                 print(f"[发送提醒] ⚠️ 生成普通群组链接失败: {e}")
                         else:
-                            # 正数 chat_id（可能是普通群组或特殊类型）
-                            # 对于正数 Chat ID，尝试使用 tg:// 协议
+                            # 正数 chat_id（可能是频道或特殊类型）
+                            # 对于正数 Chat ID，优先尝试使用 https:// 链接（作为频道处理）
                             try:
-                                msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
-                                print(f"[发送提醒] ⚠️ 正数 Chat ID: {source_chat_id}，生成 tg:// 协议链接: {msg_link}")
-                                print(f"[发送提醒] 💡 提示：正数 Chat ID 的链接可能不可用")
+                                # 尝试 1: 直接使用正数作为频道 ID（https://t.me/c/{chat_id}/{message_id}）
+                                # 这适用于某些类型的频道
+                                msg_link = f"https://t.me/c/{source_chat_id}/{event.message.id}"
+                                print(f"[发送提醒] ✅ 正数 Chat ID: {source_chat_id}，尝试生成 https:// 链接: {msg_link}")
+                                
+                                # 尝试 2: 如果上面的格式不工作，也可以尝试转换为 -100 格式
+                                # 某些情况下，正数 Chat ID 可能需要转换为 -100{chat_id} 格式
+                                # 但先使用直接格式，如果不行再尝试转换
+                                
                             except Exception as e:
-                                print(f"[发送提醒] ⚠️ 生成正数 Chat ID 链接失败: {e}")
+                                print(f"[发送提醒] ⚠️ 生成正数 Chat ID https:// 链接失败: {e}")
+                                # 如果 https:// 链接生成失败，回退到 tg:// 协议
+                                try:
+                                    msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
+                                    print(f"[发送提醒] ⚠️ 回退到 tg:// 协议链接: {msg_link}")
+                                except Exception as e2:
+                                    print(f"[发送提醒] ⚠️ 生成 tg:// 协议链接也失败: {e2}")
                 except Exception as e:
                     print(f"[发送提醒] ❌ 生成消息链接时出错: {e}")
                     import traceback
