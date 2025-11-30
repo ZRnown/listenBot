@@ -18,6 +18,18 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
     source_chat_id = getattr(chat, 'id', None)
     sender_id = getattr(sender, 'id', None)
     
+    # 尝试获取更详细的 chat 信息（用于生成链接）
+    chat_entity = None
+    try:
+        # 尝试通过 client 获取实体信息（可能包含更多信息）
+        if hasattr(event, 'client') and event.client:
+            try:
+                chat_entity = await event.client.get_entity(chat)
+            except:
+                pass
+    except:
+        pass
+    
     print(f"[发送提醒] 发送者: {sender_name} ({sender_username_display})")
     print(f"[发送提醒] 来源群组: {source_title} (ID: {source_chat_id})")
     print(f"[发送提醒] 消息内容: {text[:100]}...")
@@ -97,16 +109,20 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
             
             # 构建按钮（添加emoji和合适的按钮）
             buttons = []
-            # 尝试构建消息链接（优化：支持所有类型的群组/频道）
+            # 尝试构建消息链接（优化：支持所有类型的群组/频道，确保链接可点击）
             msg_link = None
             if source_chat_id and event.message.id:
                 try:
                     # 优先尝试使用群组的 username（公开群组/频道）
                     chat_username = getattr(chat, 'username', None)
+                    # 如果从 chat 对象获取不到，尝试从 chat_entity 获取
+                    if not chat_username and chat_entity:
+                        chat_username = getattr(chat_entity, 'username', None)
+                    
                     if chat_username:
-                        # 公开群组/频道，使用 username 格式（最可靠）
+                        # 公开群组/频道，使用 username 格式（最可靠，所有客户端都支持）
                         msg_link = f"https://t.me/{chat_username}/{event.message.id}"
-                        print(f"[发送提醒] 生成公开链接: {msg_link}")
+                        print(f"[发送提醒] ✅ 生成公开链接: {msg_link} (username: {chat_username})")
                     else:
                         # 私有群组/频道，需要特殊处理
                         chat_id_str = str(source_chat_id)
@@ -120,45 +136,32 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
                             channel_id = chat_id_str[4:]  # 去掉 "-100" 前缀
                             # 确保是有效的数字
                             if channel_id.isdigit():
+                                # 尝试使用 https:// 链接（如果用户已加入频道，这个链接可以工作）
                                 msg_link = f"https://t.me/c/{channel_id}/{event.message.id}"
                                 print(f"[发送提醒] ✅ 生成私有频道链接: {msg_link} (原始 Chat ID: {source_chat_id}, 频道 ID: {channel_id})")
                             else:
                                 print(f"[发送提醒] ⚠️ 无法生成私有频道链接: channel_id={channel_id} 格式无效 (原始: {source_chat_id})")
                         elif chat_id_str.startswith('-'):
                             # 普通私有群组（负数但不是 -100 开头）
-                            # 对于普通群组，Telegram 不支持 https:// 链接，但可以尝试使用 tg:// 协议
-                            # 虽然 tg:// 协议在某些客户端可能不工作，但总比没有按钮好
+                            # 对于普通群组，Telegram 不支持 https:// 链接
+                            # 尝试使用 tg:// 协议，但格式需要正确
                             try:
-                                # 尝试使用 tg:// 协议（至少提供一个可点击的按钮）
-                                # 格式：tg://openmessage?chat_id={chat_id}&message_id={message_id}
-                                # 注意：chat_id 需要是负数格式
+                                # tg:// 协议的格式：tg://openmessage?chat_id={chat_id}&message_id={message_id}
+                                # 注意：chat_id 需要保持负数格式
                                 msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
-                                print(f"[发送提醒] ⚠️ 普通群组 (ID: {source_chat_id})，生成 tg:// 协议链接: {msg_link} (可能在某些客户端不可用)")
+                                print(f"[发送提醒] ⚠️ 普通群组 (ID: {source_chat_id})，生成 tg:// 协议链接: {msg_link}")
+                                print(f"[发送提醒] 💡 提示：tg:// 协议链接可能在某些客户端不可用，建议使用公开群组或超级群组")
                             except Exception as e:
                                 print(f"[发送提醒] ⚠️ 生成普通群组链接失败: {e}")
-                                # 即使失败，也尝试生成一个基本的链接
-                                try:
-                                    msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
-                                except:
-                                    pass
                         else:
                             # 正数 chat_id（可能是普通群组或特殊类型）
                             # 对于正数 Chat ID，尝试使用 tg:// 协议
                             try:
-                                # 尝试使用 tg:// 协议（至少提供一个可点击的按钮）
                                 msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
-                                print(f"[发送提醒] ⚠️ 正数 Chat ID: {source_chat_id}，生成 tg:// 协议链接: {msg_link} (可能在某些客户端不可用)")
-                                
-                                # 另外，尝试检查是否是某种特殊格式的群组
-                                # 某些情况下，正数 Chat ID 可能需要转换为负数格式
-                                # 但先尝试直接使用正数
+                                print(f"[发送提醒] ⚠️ 正数 Chat ID: {source_chat_id}，生成 tg:// 协议链接: {msg_link}")
+                                print(f"[发送提醒] 💡 提示：正数 Chat ID 的链接可能不可用")
                             except Exception as e:
                                 print(f"[发送提醒] ⚠️ 生成正数 Chat ID 链接失败: {e}")
-                                # 即使失败，也尝试生成一个基本的链接
-                                try:
-                                    msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
-                                except:
-                                    pass
                 except Exception as e:
                     print(f"[发送提醒] ❌ 生成消息链接时出错: {e}")
                     import traceback
@@ -167,8 +170,18 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
             # 构建按钮行 - 只添加"查看消息"按钮
             button_row = []
             if msg_link:
-                button_row.append(Button.url('👁️ 查看消息', msg_link))
-                print(f"[发送提醒] ✅ 已添加'查看消息'按钮，链接: {msg_link}")
+                # 验证链接格式是否正确
+                if msg_link.startswith('https://') or msg_link.startswith('tg://'):
+                    button_row.append(Button.url('👁️ 查看消息', msg_link))
+                    print(f"[发送提醒] ✅ 已添加'查看消息'按钮，链接: {msg_link}")
+                else:
+                    print(f"[发送提醒] ⚠️ 链接格式无效: {msg_link}")
+                    # 尝试生成备选链接
+                    msg_id = getattr(event.message, 'id', None) if hasattr(event, 'message') and event.message else None
+                    if source_chat_id and msg_id:
+                        fallback_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={msg_id}"
+                        button_row.append(Button.url('👁️ 查看消息', fallback_link))
+                        print(f"[发送提醒] ✅ 使用备选链接: {fallback_link}")
             else:
                 # 如果无法生成链接，尝试使用最基本的 tg:// 链接作为备选
                 msg_id = None
