@@ -243,7 +243,7 @@ class ClientManager:
             print(f"[客户端连接] 账号 #{account_id} 连接失败: {e}")
 
     def _register_handlers_for_account(self, client: TelegramClient, account_id: int, group_list: list = None):
-        """为账号注册事件处理器（支持多账号并发，事件监听优先于轮询）"""
+        """为账号注册事件处理器（支持多账号并发）"""
         if group_list:
             group_ids_set = {g['id'] for g in group_list}
             client._monitored_group_ids = group_ids_set
@@ -252,24 +252,20 @@ class ClientManager:
         
         @client.on(events.NewMessage(incoming=True))
         async def handle_new_message(event):
-            # 事件监听优先级最高，立即处理，不等待
             if group_list and hasattr(client, '_monitored_group_ids'):
                 if event.chat_id not in client._monitored_group_ids:
                     return
-            # 立即创建任务处理，不阻塞事件循环
-            asyncio.create_task(self._process_message(event, account_id, "NewMessage"))
+            await self._process_message(event, account_id, "NewMessage")
         
         @client.on(events.MessageEdited(incoming=True))
         async def handle_message_edited(event):
-            # 事件监听优先级最高，立即处理，不等待
             if group_list and hasattr(client, '_monitored_group_ids'):
                 if event.chat_id not in client._monitored_group_ids:
                     return
-            # 立即创建任务处理，不阻塞事件循环
-            asyncio.create_task(self._process_message(event, account_id, "MessageEdited"))
+            await self._process_message(event, account_id, "MessageEdited")
     
     async def _process_message(self, event, account_id: int, handler_name: str):
-        """处理收到的消息（极致优化：立即处理，不阻塞，事件监听优先）"""
+        """处理收到的消息（极致优化：立即处理，不阻塞）"""
         try:
             # 快速过滤：只处理群组消息
             if event.is_private or not event.is_group:
@@ -277,9 +273,9 @@ class ClientManager:
             
             account = dao_accounts.get(account_id)
             if account:
-                # 极致优化：直接调用，不等待完成
-                # on_new_message 内部会立即放入队列并返回，不阻塞
-                # 直接await即可，因为send_alert内部已经立即放入队列并返回
+                # 极致优化：直接调用，不等待完成，让关键词检测和推送立即进行
+                # 传递控制机器人的 ID，用于过滤自己的消息
+                # 注意：on_new_message 内部已经使用 create_task 来发送提醒，所以这里直接 await 不会阻塞
                 await on_new_message(event, account, self.bot, self.bot_id)
         except (GeneratorExit, asyncio.CancelledError):
             # 优雅处理协程取消
@@ -439,7 +435,7 @@ class ClientManager:
         print(f"[轮询优化] 账号 #{account_id}: 共 {total_groups} 个群组，每个群组独立协程，极致并发（最大500并发）")
         
         # 全速运行：不考虑封号，极致性能，榨干CPU和内存
-        poll_interval = 0.02  # 每个群组0.02秒轮询间隔（50次/秒），极致速度，200个群组4秒内全部检查一遍
+        poll_interval = 0.1  # 每个群组0.1秒轮询间隔，极致速度
         floodwait_count = 0
         last_floodwait_time = 0
         
@@ -461,8 +457,8 @@ class ClientManager:
                     # 信号量只用于 API 调用，不阻塞消息处理
                     try:
                         async with poll_semaphore:  # 只控制 API 调用的并发度
-                            # 极致优化：只获取最新1条消息，减少数据传输，最大化速度
-                            messages = await client.get_messages(entity, min_id=last_id, limit=1)
+                            # 极致优化：只获取最新3条消息，减少数据传输，提升速度
+                            messages = await client.get_messages(entity, min_id=last_id, limit=3)
                     except FloodWaitError as e:
                         wait_seconds = e.seconds
                         await self._notify_user_waiting(account_id, wait_seconds, f"检查群组 '{group_title}'")

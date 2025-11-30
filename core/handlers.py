@@ -34,18 +34,12 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
         if event.is_private or not event.is_group or event.message.out:
             return
         
-        # 获取消息文本（多种方式尝试，确保能立即获取）
+        # 获取消息文本
         text = event.message.message or ''
         if not text:
             text = getattr(event.message, 'raw_text', '') or ''
-        if not text:
-            text = str(event.message.text) if hasattr(event.message, 'text') else ''
-        if not text and hasattr(event.message, 'entities'):
-            # 尝试从entities中提取文本
-            try:
-                text = event.message.raw_text or ''
-            except:
-                pass
+            if not text:
+                text = str(event.message.text) if hasattr(event.message, 'text') else ''
         
         role = settings_service.get_account_role(account['id']) or 'both'
 
@@ -71,16 +65,59 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
                 print(f"[监听] [{timestamp}] 转发目标: {target if target else '未设置'}")
                 
                 if target and target.strip() and bot_client:
-                    # 极致优化：立即调用 send_alert，它会在内部立即放入队列并返回
-                    # send_alert 现在是非阻塞的，所有耗时操作都在工作协程中完成
-                    # 不需要创建额外的任务包装，直接调用即可
-                    try:
-                        # 立即调用，不等待（send_alert 内部会立即放入队列并返回）
-                        await send_alert(bot_client, account, event, matched, control_bot_id=control_bot_id)
-                    except Exception as e:
-                        # 只在真正出错时记录（放入队列失败等）
-                        error_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
-                        print(f"[监听] [{error_timestamp}] ❌ 放入发送队列失败 (账号 #{account['id']}): {str(e)}")
+                    # 极致优化：立即发送提醒，不等待任何检查，真正并发
+                    # 每个匹配的消息都立即创建独立任务，不受其他消息影响
+                    async def _send_alert_task():
+                        try:
+                            task_start_time = datetime.now()
+                            task_timestamp = task_start_time.strftime('%H:%M:%S.%f')[:-3]
+                            msg_id = getattr(event.message, 'id', '?')
+                            print(f"[监听] [{task_timestamp}] 🚀 立即创建发送任务（账号 #{account['id']}, 消息ID: {msg_id}）")
+                            
+                            # 立即发送提醒，不等待发送者检查（在 send_alert 内部会检查）
+                            # 这样可以确保消息立即发送，不被任何检查阻塞
+                            send_start_time = datetime.now()
+                            send_timestamp = send_start_time.strftime('%H:%M:%S.%f')[:-3]
+                            print(f"[监听] [{send_timestamp}] 📤 立即调用 send_alert（账号 #{account['id']}, 消息ID: {msg_id}）...")
+                            
+                            # 在后台检查发送者，但不阻塞发送
+                            async def _check_sender():
+                                try:
+                                    sender = await asyncio.wait_for(event.get_sender(), timeout=2.0)
+                                    sender_id = getattr(sender, 'id', None)
+                                    is_bot = getattr(sender, 'bot', False)
+                                    
+                                    # 只有当消息来自控制机器人本身时才跳过（但已经发送了，这里只是记录）
+                                    if is_bot and control_bot_id and sender_id == control_bot_id:
+                                        print(f"[监听] ⚠️ 消息来自控制机器人本身（ID: {sender_id}），但已发送提醒")
+                                    else:
+                                        if is_bot:
+                                            print(f"[监听] 消息来自其他机器人（ID: {sender_id}），允许发送提醒")
+                                        else:
+                                            print(f"[监听] 消息来自用户（ID: {sender_id}），允许发送提醒")
+                                except Exception:
+                                    pass  # 忽略检查错误，不影响发送
+                            
+                            # 后台检查发送者，不阻塞发送
+                            asyncio.create_task(_check_sender())
+                            
+                            # 立即发送提醒，不等待任何检查
+                            # 传递 control_bot_id 以便在 send_alert 内部快速检查
+                            await send_alert(bot_client, account, event, matched, control_bot_id=control_bot_id)
+                            send_end_time = datetime.now()
+                            send_duration = (send_end_time - send_start_time).total_seconds()
+                            end_timestamp = send_end_time.strftime('%H:%M:%S.%f')[:-3]
+                            print(f"[监听] [{end_timestamp}] ✅ 提醒发送成功 (耗时: {send_duration:.3f}秒, 账号 #{account['id']})")
+                        except Exception as e:
+                            error_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+                            print(f"[监听] [{error_timestamp}] ❌ 发送提醒失败 (账号 #{account['id']}): {str(e)}")
+                            import traceback
+                            traceback.print_exc()
+                    
+                    # 立即创建任务，不等待完成，充分利用CPU，真正并发
+                    # 每个消息匹配都立即创建独立任务，不受其他任务影响
+                    asyncio.create_task(_send_alert_task())
+                    # 不等待任务完成，立即返回，让其他消息也能立即处理
                 else:
                     if not target or not target.strip():
                         print(f"[监听] [{timestamp}] ⚠️ 转发目标未设置，跳过发送提醒")
