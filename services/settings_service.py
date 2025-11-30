@@ -1,4 +1,5 @@
 from typing import List, Optional, Tuple
+import json
 from storage import dao_settings
 from storage import dao_listen_sources
 
@@ -6,6 +7,7 @@ TARGET_CHAT_KEY = 'target_chat'  # global scope
 TARGET_BOT_KEY = 'target_bot'    # global scope: @username without '@'
 GLOBAL_TEMPLATE_KEY = 'global_template'  # global scope: 发送消息模板
 GLOBAL_SEND_DELAY_KEY = 'global_send_delay'  # global scope: 发送延迟
+GLOBAL_CLICK_KEYWORDS_KEY = 'global_click_keywords'  # global scope: 全局点击关键词（JSON格式）
 CLICK_DELAY_KEY = 'click_delay'
 SEND_DELAY_KEY = 'send_delay'
 CONCURRENCY_KEY = 'concurrency'
@@ -85,7 +87,78 @@ def set_account_keywords(account_id: int, keywords, kind: str = 'listen'):
 
 def get_account_keywords(account_id: int, kind: str = 'listen'):
     from storage import dao_keywords
+    # 对于点击关键词，优先使用全局关键词，如果没有则使用账号级别的
+    if kind == 'click':
+        global_keywords = get_global_click_keywords()
+        if global_keywords:
+            return global_keywords
     return dao_keywords.get_keywords(account_id, kind=kind)
+
+
+def set_global_click_keywords(keywords: List[str]):
+    """设置全局点击关键词（应用到所有点击账号）"""
+    keywords_json = json.dumps(keywords, ensure_ascii=False)
+    dao_settings.set_setting('global', GLOBAL_CLICK_KEYWORDS_KEY, keywords_json)
+
+
+def get_global_click_keywords() -> List[str]:
+    """获取全局点击关键词"""
+    keywords_json = dao_settings.get_setting_value('global', GLOBAL_CLICK_KEYWORDS_KEY)
+    if not keywords_json:
+        return []
+    try:
+        return json.loads(keywords_json)
+    except Exception:
+        return []
+
+
+def add_global_click_keyword(word: str):
+    """添加全局点击关键词"""
+    keywords = get_global_click_keywords()
+    word = (word or '').strip()
+    if word and word not in keywords:
+        keywords.append(word)
+        set_global_click_keywords(keywords)
+
+
+def delete_global_click_keyword(word: str):
+    """删除全局点击关键词"""
+    keywords = get_global_click_keywords()
+    word = (word or '').strip()
+    if word in keywords:
+        keywords.remove(word)
+        set_global_click_keywords(keywords)
+
+
+def apply_global_click_keywords_to_all_accounts():
+    """将全局点击关键词应用到所有点击账号"""
+    from storage import dao_accounts
+    from storage import dao_keywords
+    global_keywords = get_global_click_keywords()
+    if not global_keywords:
+        return
+    
+    # 获取所有点击账号
+    all_accounts = dao_accounts.list_all()
+    click_accounts = []
+    for acc in all_accounts:
+        role = get_account_role(acc['id'])
+        if role in ('click', 'both'):
+            click_accounts.append(acc['id'])
+    
+    # 应用到所有点击账号
+    for acc_id in click_accounts:
+        dao_keywords.set_keywords(acc_id, global_keywords, kind='click')
+
+
+def apply_global_click_keywords_to_account(account_id: int):
+    """将全局点击关键词应用到指定账号（如果该账号是点击账号）"""
+    role = get_account_role(account_id)
+    if role in ('click', 'both'):
+        global_keywords = get_global_click_keywords()
+        if global_keywords:
+            from storage import dao_keywords
+            dao_keywords.set_keywords(account_id, global_keywords, kind='click')
 
 
 def add_keyword(account_id: int, word: str, kind: str = 'listen'):

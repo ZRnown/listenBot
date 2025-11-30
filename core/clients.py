@@ -22,6 +22,7 @@ class ClientManager:
             raise RuntimeError('BOT_TOKEN, API_ID, API_HASH are required in environment')
         self.account_clients = {}  # account_id -> TelegramClient
         self._handlers_setup = False  # 标记处理器是否已设置
+        self.bot_id = None  # 控制机器人的 ID（用于过滤自己的消息）
 
     async def start_control_bot(self):
         # 如果 bot 已存在，先断开连接
@@ -32,11 +33,24 @@ class ClientManager:
                 pass
             self.bot = None
         
-        session_file = 'control_bot.session'
-        if os.path.exists(session_file):
-            os.remove(session_file)
-        self.bot = TelegramClient('control_bot', self.api_id, self.api_hash)
+        # 使用内存 session（不保存到文件），仅使用 BOT_TOKEN 登录
+        # Telethon 要求必须有 session 参数，但使用 StringSession() 创建空的内存 session
+        # 这样不会创建任何 session 文件，完全依赖 bot_token
+        from telethon.sessions import StringSession
+        memory_session = StringSession()  # 空的内存 session，不保存到文件
+        self.bot = TelegramClient(memory_session, self.api_id, self.api_hash)
         await self.bot.start(bot_token=self.bot_token)
+        
+        # 获取控制机器人的 ID
+        try:
+            bot_me = await self.bot.get_me()
+            self.bot_id = bot_me.id
+            print(f"[启动] 机器人已使用 BOT_TOKEN 登录（完全使用 token，无 session 文件）")
+            print(f"[启动] 控制机器人 ID: {self.bot_id}")
+        except Exception as e:
+            print(f"[启动] ⚠️ 无法获取控制机器人 ID: {str(e)}")
+            self.bot_id = None
+        
         self._handlers_setup = False  # 重置标志
         return self.bot
 
@@ -83,15 +97,25 @@ class ClientManager:
             }
         else:
             account_id = dao_accounts.create(phone, nickname.strip(), username, file_path, status='active')
-            self._register_handlers_for_account(client, account_id)
-            self.account_clients[account_id] = client
-            return {
-                'id': account_id,
-                'phone': phone,
-                'username': f"@{username}" if username else None,
-                'nickname': nickname.strip(),
-                'existing': False
-            }
+            # 复制已有账号的关键词到新账号
+            self._copy_keywords_to_new_account(account_id)
+        
+        # 注册处理器并启动客户端
+        self._register_handlers_for_account(client, account_id)
+        self.account_clients[account_id] = client
+        
+        # 启动账号客户端（异步执行，不阻塞）
+        account_row = dao_accounts.get(account_id)
+        if account_row:
+            asyncio.create_task(self.start_account_client(account_row))
+        
+        return {
+            'id': account_id,
+            'phone': phone,
+            'username': f"@{username}" if username else None,
+            'nickname': nickname.strip(),
+            'existing': False
+        }
 
     async def add_account_from_string_session(self, session_str: str):
         try:
@@ -135,16 +159,31 @@ class ClientManager:
             }
         else:
             account_id = dao_accounts.create(phone, nickname.strip(), username, session_str, status='active')
-            self._register_handlers_for_account(client, account_id)
-            self.account_clients[account_id] = client
-            return {
-                'id': account_id,
-                'phone': phone,
-                'username': f"@{username}" if username else None,
-                'nickname': nickname.strip(),
-                'existing': False
-            }
+            # 复制已有账号的关键词到新账号
+            self._copy_keywords_to_new_account(account_id)
+        
+        # 注册处理器并启动客户端
+        self._register_handlers_for_account(client, account_id)
+        self.account_clients[account_id] = client
+        
+        # 启动账号客户端（异步执行，不阻塞）
+        account_row = dao_accounts.get(account_id)
+        if account_row:
+            asyncio.create_task(self.start_account_client(account_row))
+        
+        return {
+            'id': account_id,
+            'phone': phone,
+            'username': f"@{username}" if username else None,
+            'nickname': nickname.strip(),
+            'existing': False
+        }
 
+    def _copy_keywords_to_new_account(self, account_id: int):
+        """复制全局点击关键词到新账号（如果该账号是点击账号）"""
+        from services import settings_service
+        settings_service.apply_global_click_keywords_to_account(account_id)
+    
     def _register_handlers_for_account(self, client: TelegramClient, account_id: int, group_list: list = None):
         """为账号注册事件处理器（支持多账号并发）"""
         if group_list:
@@ -177,7 +216,8 @@ class ClientManager:
             account = dao_accounts.get(account_id)
             if account:
                 # 异步处理，不阻塞事件循环
-                asyncio.create_task(on_new_message(event, account, self.bot))
+                # 传递控制机器人的 ID，用于过滤自己的消息
+                asyncio.create_task(on_new_message(event, account, self.bot, self.bot_id))
         except Exception as e:
             print(f"[处理消息] ❌ 账号 #{account_id} 错误: {str(e)}")
 
@@ -414,9 +454,29 @@ class ClientManager:
     async def load_active_accounts(self):
         """加载所有活跃账号（支持多账号并发启动）"""
         all_rows = dao_accounts.list_all()
-        rows = [r for r in all_rows if r.get('status') == 'active']
+        print(f"[启动] 数据库中共有 {len(all_rows)} 个账号")
+        
+        # 输出所有账号的状态信息（用于调试）
+        if all_rows:
+            print("[启动] 账号状态详情：")
+            for r in all_rows:
+                acc_id = r.get('id', '?')
+                status = r.get('status', 'NULL')
+                phone = r.get('phone', 'N/A')
+                nickname = r.get('nickname', 'N/A')
+                print(f"  - 账号 #{acc_id}: status={status}, phone={phone}, nickname={nickname}")
+        
+        # 筛选活跃账号（status='active' 或 status 为 None/空，默认视为 active）
+        rows = []
+        for r in all_rows:
+            status = r.get('status')
+            if status == 'active' or status is None or status == '':
+                rows.append(r)
+        
         if not rows:
-            print("[启动] 没有活跃账号")
+            print("[启动] ⚠️ 没有找到活跃账号（status='active' 或为空）")
+            if all_rows:
+                print("[启动] 💡 提示：如果账号状态不是 'active'，可以使用机器人命令查看账号列表")
             return
         
         print(f"[启动] 发现 {len(rows)} 个活跃账号，开始并发加载...")
@@ -427,6 +487,8 @@ class ClientManager:
         for i, result in enumerate(results):
             if isinstance(result, Exception):
                 print(f"[启动] ❌ 账号 #{rows[i]['id']} 加载失败: {str(result)}")
+                import traceback
+                traceback.print_exc()
             else:
                 success_count += 1
         

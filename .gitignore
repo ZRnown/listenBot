@@ -44,10 +44,9 @@ __pycache__/
 .pycache/
 
 # Telegram Session 文件（包含敏感信息，严格禁止上传）
+# 注意：控制机器人不使用 session 文件，仅使用 BOT_TOKEN
 *.session
 *.session-journal
-control_bot.session
-a.session
 sessions/
 **/*.session
 **/*.session-journal
