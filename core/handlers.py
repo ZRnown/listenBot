@@ -89,14 +89,20 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
                     should_alert = False
                 
                 if should_alert:
-                    print(f"[监听] 准备发送提醒...")
-                    try:
-                        await send_alert(bot_client, account, event, matched)
-                        print(f"[监听] ✅ 提醒发送成功")
-                    except Exception as e:
-                        print(f"[监听] ❌ 发送提醒失败: {str(e)}")
-                        import traceback
-                        traceback.print_exc()
+                    # 优化：立即发送提醒，不等待（使用 create_task 异步执行）
+                    # 这样不会阻塞消息处理，极大提升监听速度
+                    async def _send_alert_task():
+                        try:
+                            print(f"[监听] 准备发送提醒...")
+                            await send_alert(bot_client, account, event, matched)
+                            print(f"[监听] ✅ 提醒发送成功")
+                        except Exception as e:
+                            print(f"[监听] ❌ 发送提醒失败: {str(e)}")
+                            import traceback
+                            traceback.print_exc()
+                    
+                    # 立即创建任务，不等待完成
+                    asyncio.create_task(_send_alert_task())
                 else:
                     print(f"[监听] ⚠️ 跳过发送提醒（should_alert=False）")
                     
@@ -173,18 +179,6 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
                                         print(f"[点击] ❌ 账号 #{account['id']} 点击失败：{error_type}: {error_str}")
                                         import traceback
                                         traceback.print_exc()
-                                        
-                                        # 如果点击失败，退化为发送按钮文本（仅当是回复键盘按钮时）
-                                        # 对于内联按钮，不应该发送文本
-                                        if 'BUTTON_INVALID' not in error_str and 'INLINE' not in error_str:
-                                            try:
-                                                print(f"[点击] 尝试发送按钮文本作为备选方案...")
-                                                await event.client.send_message(event.chat_id, b_text)
-                                                print(f"[点击] ⚠️ 账号 #{account['id']} 点击失败，已转为发送文本 '{b_text}'")
-                                            except Exception as e2:
-                                                print(f"[点击] ❌ 账号 #{account['id']} 发送文本也失败：{str(e2)}")
-                                        else:
-                                            print(f"[点击] ⚠️ 账号 #{account['id']} 无法发送文本（内联按钮或按钮无效）")
 
                                 # 启动后台任务
                                 asyncio.create_task(_click_button(i, j, btn_text))

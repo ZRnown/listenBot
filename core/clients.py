@@ -68,9 +68,9 @@ class ClientManager:
         # 快速验证 session（不等待完全连接）
         try:
             await client.connect()
-            if not await client.is_user_authorized():
-                await client.disconnect()
-                raise RuntimeError('Session not authorized or requires login')
+        if not await client.is_user_authorized():
+            await client.disconnect()
+            raise RuntimeError('Session not authorized or requires login')
         except Exception as e:
             try:
                 await client.disconnect()
@@ -80,7 +80,7 @@ class ClientManager:
         
         # 获取用户信息（快速操作）
         try:
-            me = await client.get_me()
+        me = await client.get_me()
         except Exception as e:
             await client.disconnect()
             raise RuntimeError(f'Failed to get user info: {str(e)}')
@@ -241,7 +241,7 @@ class ClientManager:
             print(f"[客户端连接] 账号 #{account_id} 客户端已连接")
         except Exception as e:
             print(f"[客户端连接] 账号 #{account_id} 连接失败: {e}")
-    
+
     def _register_handlers_for_account(self, client: TelegramClient, account_id: int, group_list: list = None):
         """为账号注册事件处理器（支持多账号并发）"""
         if group_list:
@@ -470,6 +470,7 @@ class ClientManager:
                                                     is_broadcast = getattr(chat_entity, 'broadcast', False)
                                                     self.is_group = is_megagroup or (not is_broadcast and chat_id_val < 0)
                                                     self.is_channel = is_broadcast
+                                                    self.out = getattr(msg_obj, 'out', False)
                                                 
                                                 async def get_chat(self):
                                                     return self._chat_entity
@@ -481,6 +482,50 @@ class ClientManager:
                                                         except:
                                                             return None
                                                     return None
+                                                
+                                                async def click(self, row_idx, col_idx):
+                                                    """点击按钮（MockEvent 版本）"""
+                                                    try:
+                                                        # 获取消息的按钮
+                                                        buttons = getattr(self.message, 'buttons', None)
+                                                        if not buttons:
+                                                            raise ValueError("消息没有按钮")
+                                                        
+                                                        # 检查行和列索引是否有效
+                                                        if row_idx >= len(buttons):
+                                                            raise IndexError(f"行索引 {row_idx} 超出范围（共 {len(buttons)} 行）")
+                                                        
+                                                        row = buttons[row_idx]
+                                                        if col_idx >= len(row):
+                                                            raise IndexError(f"列索引 {col_idx} 超出范围（共 {len(row)} 列）")
+                                                        
+                                                        button = row[col_idx]
+                                                        
+                                                        # 检查按钮类型并执行点击
+                                                        from telethon.tl.types import KeyboardButtonCallback, KeyboardButtonUrl, KeyboardButton
+                                                        from telethon.tl.custom import MessageButton
+                                                        
+                                                        # 如果是回调按钮，发送回调
+                                                        if isinstance(button, (KeyboardButtonCallback, MessageButton)):
+                                                            if hasattr(button, 'data'):
+                                                                # 发送回调查询
+                                                                from telethon.tl.functions.messages import GetBotCallbackAnswerRequest
+                                                                result = await self.client(GetBotCallbackAnswerRequest(
+                                                                    peer=self._chat_entity,
+                                                                    msg_id=self.message.id,
+                                                                    data=button.data
+                                                                ))
+                                                                return result
+                                                            else:
+                                                                raise ValueError("按钮没有回调数据")
+                                                        # 如果是 URL 按钮，无法通过 API 点击，只能返回错误
+                                                        elif isinstance(button, KeyboardButtonUrl):
+                                                            raise ValueError("URL 按钮无法通过 API 点击")
+                                                        else:
+                                                            # 其他类型的按钮，尝试发送按钮文本
+                                                            raise ValueError(f"不支持的按钮类型: {type(button)}")
+                                                    except Exception as e:
+                                                        raise Exception(f"点击按钮失败: {str(e)}")
                                             
                                             mock_event = MockEvent(msg, entity, chat_id, client)
                                             
@@ -552,6 +597,7 @@ class ClientManager:
                                                         is_broadcast = getattr(chat_entity, 'broadcast', False)
                                                         self.is_group = is_megagroup or (not is_broadcast and chat_id_val < 0)
                                                         self.is_channel = is_broadcast
+                                                        self.out = getattr(msg_obj, 'out', False)
                                                     
                                                     async def get_chat(self):
                                                         return self._chat_entity
@@ -563,6 +609,50 @@ class ClientManager:
                                                             except:
                                                                 return None
                                                         return None
+                                                    
+                                                    async def click(self, row_idx, col_idx):
+                                                        """点击按钮（MockEvent 版本）"""
+                                                        try:
+                                                            # 获取消息的按钮
+                                                            buttons = getattr(self.message, 'buttons', None)
+                                                            if not buttons:
+                                                                raise ValueError("消息没有按钮")
+                                                            
+                                                            # 检查行和列索引是否有效
+                                                            if row_idx >= len(buttons):
+                                                                raise IndexError(f"行索引 {row_idx} 超出范围（共 {len(buttons)} 行）")
+                                                            
+                                                            row = buttons[row_idx]
+                                                            if col_idx >= len(row):
+                                                                raise IndexError(f"列索引 {col_idx} 超出范围（共 {len(row)} 列）")
+                                                            
+                                                            button = row[col_idx]
+                                                            
+                                                            # 检查按钮类型并执行点击
+                                                            from telethon.tl.types import KeyboardButtonCallback, KeyboardButtonUrl, KeyboardButton
+                                                            from telethon.tl.custom import MessageButton
+                                                            
+                                                            # 如果是回调按钮，发送回调
+                                                            if isinstance(button, (KeyboardButtonCallback, MessageButton)):
+                                                                if hasattr(button, 'data'):
+                                                                    # 发送回调查询
+                                                                    from telethon.tl.functions.messages import GetBotCallbackAnswerRequest
+                                                                    result = await self.client(GetBotCallbackAnswerRequest(
+                                                                        peer=self._chat_entity,
+                                                                        msg_id=self.message.id,
+                                                                        data=button.data
+                                                                    ))
+                                                                    return result
+                                                                else:
+                                                                    raise ValueError("按钮没有回调数据")
+                                                            # 如果是 URL 按钮，无法通过 API 点击，只能返回错误
+                                                            elif isinstance(button, KeyboardButtonUrl):
+                                                                raise ValueError("URL 按钮无法通过 API 点击")
+                                                            else:
+                                                                # 其他类型的按钮，尝试发送按钮文本
+                                                                raise ValueError(f"不支持的按钮类型: {type(button)}")
+                                                        except Exception as e:
+                                                            raise Exception(f"点击按钮失败: {str(e)}")
                                                 
                                                 mock_event = MockEvent(msg, entity, chat_id, client)
                                                 
@@ -595,8 +685,8 @@ class ClientManager:
                                 pass  # new_messages_count 已经在 check_group 中更新了
                         
                         # 只在还有更多批次时才延迟
-                        if batch_start + current_concurrent_limit < total_groups:
-                            await asyncio.sleep(batch_delay)
+                    if batch_start + current_concurrent_limit < total_groups:
+                        await asyncio.sleep(batch_delay)
                 
                 # 计算实际耗时，动态调整下次轮询间隔
                 elapsed = time.time() - start_time
