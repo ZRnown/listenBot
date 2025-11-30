@@ -56,28 +56,55 @@ class MessageContext:
         self.errors = []
     
     async def get_sender(self):
-        """获取发送者（带缓存）"""
+        """获取发送者（带缓存，改进：使用多种方式获取）"""
         if not self._sender_fetched:
             try:
+                # 首先尝试标准方式
                 self._sender = await asyncio.wait_for(
                     self.event.get_sender(),
-                    timeout=0.5
+                    timeout=1.0  # 增加超时时间
                 )
-            except Exception:
-                self._sender = None
+            except Exception as e:
+                # 如果标准方式失败，尝试其他方式
+                try:
+                    # 尝试从 event.sender 获取
+                    if hasattr(self.event, 'sender') and self.event.sender:
+                        self._sender = self.event.sender
+                    # 尝试从 event.message.sender 获取
+                    elif hasattr(self.event.message, 'sender') and self.event.message.sender:
+                        self._sender = self.event.message.sender
+                    # 尝试通过 sender_id 获取实体
+                    elif hasattr(self.event.message, 'sender_id') and self.event.message.sender_id:
+                        try:
+                            self._sender = await self.client.get_entity(self.event.message.sender_id)
+                        except Exception:
+                            self._sender = None
+                    else:
+                        self._sender = None
+                except Exception:
+                    self._sender = None
             self._sender_fetched = True
         return self._sender
     
     async def get_chat(self):
-        """获取聊天信息（带缓存）"""
+        """获取聊天信息（带缓存，改进：使用多种方式获取）"""
         if not self._chat_fetched:
             try:
+                # 首先尝试标准方式
                 self._chat = await asyncio.wait_for(
                     self.event.get_chat(),
-                    timeout=0.5
+                    timeout=1.0  # 增加超时时间
                 )
-            except Exception:
-                self._chat = None
+            except Exception as e:
+                # 如果标准方式失败，尝试其他方式
+                try:
+                    # 尝试从 event.chat 获取
+                    if hasattr(self.event, 'chat') and self.event.chat:
+                        self._chat = self.event.chat
+                    else:
+                        self._chat = None
+                except Exception:
+                    self._chat = None
             self._chat_fetched = True
         return self._chat
 

@@ -58,22 +58,57 @@ async def send_alert(bot_client, account, event, matched_keyword: str, control_b
     chat_id = getattr(event, 'chat_id', None)
     
     # 异步获取 sender 和 chat，不阻塞主流程
+    # 改进：增加超时时间，使用多种方式获取发送者信息
     async def _get_info():
         try:
+            # 增加超时时间到 1 秒，确保能获取到信息
             sender, chat = await asyncio.wait_for(
                 asyncio.gather(
                     event.get_sender(),
                     event.get_chat(),
                     return_exceptions=True
                 ),
-                timeout=0.2  # 0.2秒超时，快速失败
+                timeout=1.0  # 增加到 1 秒，确保能获取到信息
             )
             
             # 处理异常
             if isinstance(sender, Exception):
+                print(f"[发送提醒] 获取发送者信息失败: {sender}")
                 sender = None
             if isinstance(chat, Exception):
+                print(f"[发送提醒] 获取聊天信息失败: {chat}")
                 chat = None
+            
+            # 如果 sender 获取失败，尝试从 event 中获取
+            if sender is None:
+                try:
+                    # 尝试从 event.sender 获取
+                    if hasattr(event, 'sender') and event.sender:
+                        sender = event.sender
+                        print(f"[发送提醒] 从 event.sender 获取到发送者信息")
+                    # 尝试从 event.message 获取
+                    elif hasattr(event.message, 'sender') and event.message.sender:
+                        sender = event.message.sender
+                        print(f"[发送提醒] 从 event.message.sender 获取到发送者信息")
+                    # 尝试从 event.message.sender_id 获取实体
+                    elif hasattr(event.message, 'sender_id') and event.message.sender_id:
+                        try:
+                            sender = await event.client.get_entity(event.message.sender_id)
+                            print(f"[发送提醒] 通过 sender_id 获取到发送者信息")
+                        except Exception:
+                            pass
+                except Exception as e:
+                    print(f"[发送提醒] 尝试其他方式获取发送者信息失败: {e}")
+            
+            # 如果 chat 获取失败，尝试从 event 中获取
+            if chat is None:
+                try:
+                    # 尝试从 event.chat 获取
+                    if hasattr(event, 'chat') and event.chat:
+                        chat = event.chat
+                        print(f"[发送提醒] 从 event.chat 获取到聊天信息")
+                except Exception as e:
+                    print(f"[发送提醒] 尝试其他方式获取聊天信息失败: {e}")
             
             # 快速检查：如果消息来自控制机器人，跳过发送
             if sender:
@@ -84,8 +119,10 @@ async def send_alert(bot_client, account, event, matched_keyword: str, control_b
             
             return sender, chat, None
         except asyncio.TimeoutError:
+            print(f"[发送提醒] 获取信息超时")
             return None, None, None
-        except Exception:
+        except Exception as e:
+            print(f"[发送提醒] 获取信息出错: {e}")
             return None, None, None
     
     # 在后台获取信息，不阻塞
@@ -99,13 +136,14 @@ async def send_alert(bot_client, account, event, matched_keyword: str, control_b
     else:
         account_display = account.get('phone') or f"#{account_id}"
     
-    # 等待信息获取完成（但使用超时）
+    # 等待信息获取完成（增加超时时间）
     try:
-        sender, chat, skip = await asyncio.wait_for(info_task, timeout=0.1)
+        sender, chat, skip = await asyncio.wait_for(info_task, timeout=1.5)  # 增加到 1.5 秒
         if skip is not None:  # 跳过发送
             return
     except asyncio.TimeoutError:
         # 超时后使用默认值继续
+        print(f"[发送提醒] 等待信息获取超时，使用默认值继续")
         sender = None
         chat = None
     
@@ -114,9 +152,28 @@ async def send_alert(bot_client, account, event, matched_keyword: str, control_b
     sender_username = None
     sender_id = None
     if sender:
-        sender_name = f"{getattr(sender,'first_name', '') or ''} {getattr(sender,'last_name','') or ''}".strip() or 'Unknown'
+        # 尝试多种方式获取发送者名称
+        if hasattr(sender, 'title'):
+            sender_name = sender.title  # 频道/群组
+        elif hasattr(sender, 'first_name') or hasattr(sender, 'last_name'):
+            first = getattr(sender, 'first_name', '') or ''
+            last = getattr(sender, 'last_name', '') or ''
+            sender_name = f"{first} {last}".strip() or 'Unknown'
+        else:
+            sender_name = str(sender) if sender else 'Unknown'
+        
         sender_username = getattr(sender, 'username', None)
         sender_id = getattr(sender, 'id', None)
+        
+        print(f"[发送提醒] 获取到发送者信息: name={sender_name}, username={sender_username}, id={sender_id}")
+    else:
+        # 如果 sender 为 None，尝试从 event 中获取
+        try:
+            if hasattr(event, 'sender_id') and event.sender_id:
+                sender_id = event.sender_id
+                print(f"[发送提醒] 从 event.sender_id 获取到 ID: {sender_id}")
+        except Exception as e:
+            print(f"[发送提醒] 尝试从 event 获取发送者ID失败: {e}")
     
     sender_username_display = f"@{sender_username}" if sender_username else '无'
     source_title = (getattr(chat, 'title', '') or getattr(chat, 'username','') or 'Unknown') if chat else 'Unknown'

@@ -304,7 +304,8 @@ class ClientManager:
         # 只有监听账号才注册事件监听器
         if register_listeners:
             # 用户客户端监听器 - 使用过滤器，避免处理控制机器人消息（完全按照 TelegramForwarder 的方式）
-            @client.on(events.NewMessage(func=not_from_control_bot))
+            # 监听所有消息，包括被静音的群组（Telethon 默认会接收所有消息）
+            @client.on(events.NewMessage(func=not_from_control_bot, incoming=True))
             async def handle_new_message(event):
                 # 详细日志：记录收到消息
                 try:
@@ -320,7 +321,7 @@ class ClientManager:
                 # 所有群组消息都会进入处理流程，由后续逻辑决定是否处理
                 await self._process_message(event, account_id, "NewMessage")
             
-            @client.on(events.MessageEdited(func=not_from_control_bot))
+            @client.on(events.MessageEdited(func=not_from_control_bot, incoming=True))
             async def handle_message_edited(event):
                 # 完全按照 TelegramForwarder 的方式：不限制群组列表，监听所有群组
                 await self._process_message(event, account_id, "MessageEdited")
