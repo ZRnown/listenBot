@@ -68,9 +68,9 @@ class ClientManager:
         # 快速验证 session（不等待完全连接）
         try:
             await client.connect()
-            if not await client.is_user_authorized():
-                await client.disconnect()
-                raise RuntimeError('Session not authorized or requires login')
+        if not await client.is_user_authorized():
+            await client.disconnect()
+            raise RuntimeError('Session not authorized or requires login')
         except Exception as e:
             try:
                 await client.disconnect()
@@ -80,7 +80,7 @@ class ClientManager:
         
         # 获取用户信息（快速操作）
         try:
-            me = await client.get_me()
+        me = await client.get_me()
         except Exception as e:
             await client.disconnect()
             raise RuntimeError(f'Failed to get user info: {str(e)}')
@@ -276,6 +276,9 @@ class ClientManager:
                 # 异步处理，不阻塞事件循环
                 # 传递控制机器人的 ID，用于过滤自己的消息
                 asyncio.create_task(on_new_message(event, account, self.bot, self.bot_id))
+        except (GeneratorExit, asyncio.CancelledError):
+            # 优雅处理协程取消
+            pass
         except Exception as e:
             print(f"[处理消息] ❌ 账号 #{account_id} 错误: {str(e)}")
 
@@ -438,6 +441,10 @@ class ClientManager:
                     async def check_group(group_info):
                         nonlocal floodwait_count, last_floodwait_time, new_messages_count
                         try:
+                            # 检查客户端连接状态
+                            if not client.is_connected():
+                                return 0
+                            
                             entity = group_info['entity']
                             chat_id = group_info['id']
                             last_id = last_message_ids.get(chat_id, 0)
@@ -450,7 +457,16 @@ class ClientManager:
                                 last_floodwait_time = time.time()
                                 await self._notify_user_waiting(account_id, wait_seconds, f"检查群组 '{group_info['title']}'")
                                 await asyncio.sleep(wait_seconds)
+                                # 等待后再次检查连接状态
+                                if not client.is_connected():
+                                    return 0
                                 messages = await client.get_messages(entity, min_id=last_id, limit=50)
+                            except (ConnectionError, RuntimeError) as e:
+                                # 捕获断开连接错误
+                                if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
+                                    print(f"[轮询] 账号 #{account_id} 客户端已断开连接，停止轮询")
+                                    return 0
+                                raise
                             
                             group_new_count = 0
                             if messages:
@@ -545,6 +561,16 @@ class ClientManager:
                                 last_message_ids[chat_id] = max(msg.id for msg in messages)
                             
                             return group_new_count
+                        except (ConnectionError, RuntimeError) as e:
+                            # 捕获断开连接错误，优雅退出
+                            if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
+                                print(f"[轮询] 账号 #{account_id} 客户端已断开连接，停止检查群组")
+                                return 0
+                            print(f"[轮询] 账号 #{account_id} 检查群组失败: {e}")
+                            return 0
+                        except (GeneratorExit, asyncio.CancelledError):
+                            # 优雅处理协程取消
+                            return 0
                         except Exception as e:
                             print(f"[轮询] 账号 #{account_id} 检查群组失败: {e}")
                             return 0
@@ -565,6 +591,10 @@ class ClientManager:
                         async def check_group(group_info):
                             nonlocal floodwait_count, last_floodwait_time, new_messages_count
                             try:
+                                # 检查客户端连接状态
+                                if not client.is_connected():
+                                    return 0
+                                
                                 entity = group_info['entity']
                                 chat_id = group_info['id']
                                 last_id = last_message_ids.get(chat_id, 0)
@@ -577,7 +607,16 @@ class ClientManager:
                                     last_floodwait_time = time.time()
                                     await self._notify_user_waiting(account_id, wait_seconds, f"检查群组 '{group_info['title']}'")
                                     await asyncio.sleep(wait_seconds)
+                                    # 等待后再次检查连接状态
+                                    if not client.is_connected():
+                                        return 0
                                     messages = await client.get_messages(entity, min_id=last_id, limit=50)
+                                except (ConnectionError, RuntimeError) as e:
+                                    # 捕获断开连接错误
+                                    if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
+                                        print(f"[轮询] 账号 #{account_id} 客户端已断开连接，停止轮询")
+                                        return 0
+                                    raise
                                 
                                 group_new_count = 0
                                 if messages:
@@ -664,17 +703,31 @@ class ClientManager:
                                                     new_messages_count += 1
                                                 
                                                 last_message_ids[chat_id] = msg.id
+                                            except (GeneratorExit, asyncio.CancelledError):
+                                                # 优雅处理协程取消
+                                                last_message_ids[chat_id] = msg.id
+                                                return 0
                                             except Exception as e:
                                                 last_message_ids[chat_id] = msg.id
                                                 print(f"[轮询] 账号 #{account_id} 处理消息失败: {e}")
-                                
-                                if messages:
-                                    last_message_ids[chat_id] = max(msg.id for msg in messages)
-                                
-                                return group_new_count
-                            except Exception as e:
-                                print(f"[轮询] 账号 #{account_id} 检查群组失败: {e}")
+                            
+                            if messages:
+                                last_message_ids[chat_id] = max(msg.id for msg in messages)
+                            
+                            return group_new_count
+                        except (ConnectionError, RuntimeError) as e:
+                            # 捕获断开连接错误，优雅退出
+                            if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
+                                print(f"[轮询] 账号 #{account_id} 客户端已断开连接，停止检查群组")
                                 return 0
+                            print(f"[轮询] 账号 #{account_id} 检查群组失败: {e}")
+                            return 0
+                        except (GeneratorExit, asyncio.CancelledError):
+                            # 优雅处理协程取消
+                            return 0
+                        except Exception as e:
+                            print(f"[轮询] 账号 #{account_id} 检查群组失败: {e}")
+                            return 0
                         
                         tasks = [check_group(g) for g in batch]
                         results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -710,7 +763,15 @@ class ClientManager:
                 if new_messages_count > 0:
                     print(f"[轮询] 账号 #{account_id}: 发现 {new_messages_count} 条新消息")
                     
-            except asyncio.CancelledError:
+            except (ConnectionError, RuntimeError) as e:
+                # 捕获断开连接错误，优雅退出
+                if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
+                    print(f"[轮询] 账号 #{account_id} 客户端已断开连接，停止轮询任务")
+                    break
+                print(f"[轮询] 账号 #{account_id} 轮询出错: {e}")
+            except (GeneratorExit, asyncio.CancelledError):
+                # 优雅处理协程取消
+                print(f"[轮询] 账号 #{account_id} 轮询任务被取消")
                 break
             except Exception as e:
                 print(f"[轮询] 账号 #{account_id} 错误: {str(e)}")
