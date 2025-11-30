@@ -49,6 +49,11 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
         if not text:
             return
         
+        # 添加调试日志（确认消息被处理）
+        msg_id = getattr(event.message, 'id', None)
+        chat_id = getattr(event, 'chat_id', None)
+        print(f"[消息处理] 账号 #{account['id']} 处理消息 (消息ID: {msg_id}, Chat ID: {chat_id}, 文本长度: {len(text)})")
+        
         # ✅ 零IO获取基本信息（本地属性）
         msg_id = getattr(event.message, 'id', None)
         chat_id = getattr(event, 'chat_id', None)
@@ -61,6 +66,12 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
         if role in ('listen', 'both'):
             # ✅ 使用预编译正则表达式，O(1)匹配，微秒级速度
             matched = match_keywords_fast(account['id'], text, kind='listen')
+            
+            # 添加调试日志（即使没有匹配也记录，确认匹配逻辑执行）
+            if not matched:
+                # 只在调试模式下打印（避免日志过多）
+                # print(f"[关键词匹配] 账号 #{account['id']} 未匹配到关键词")
+                pass
             
             if matched:
                 timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]

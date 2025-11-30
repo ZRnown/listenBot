@@ -71,8 +71,15 @@ def quick_enqueue_alert(bot_client, account, event, matched_keyword: str, contro
         
         # 确保worker已启动
         _ensure_alert_workers(bot_client)
+        
+        # 添加调试日志
+        account_id = account.get('id', '?')
+        msg_id = getattr(event.message, 'id', None)
+        print(f"[入队] ✅ 账号 #{account_id} 匹配关键词 '{matched_keyword}' 已入队 (消息ID: {msg_id})")
     except Exception as e:
         print(f"[入队] ❌ 入队失败: {e}")
+        import traceback
+        traceback.print_exc()
 
 
 async def _alert_worker(worker_id: int):
@@ -112,7 +119,7 @@ def _ensure_alert_workers(bot_client):
         num_workers = 200  # 200个并发worker
         _alert_workers = [asyncio.create_task(_alert_worker(i)) for i in range(num_workers)]
         _alert_workers_started = True
-        print(f"[Alert队列] 启动 {num_workers} 个alert工作协程")
+        print(f"[Alert队列] ✅ 启动 {num_workers} 个alert工作协程")
 
 
 async def _process_and_send_alert(bot_client, account, event, matched_keyword: str, control_bot_id=None):

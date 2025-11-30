@@ -88,6 +88,7 @@ def match_keywords_fast(account_id: int, text: str, kind: str = 'listen') -> Opt
     
     pattern = get_compiled_pattern(account_id, kind)
     if not pattern:
+        # 如果没有关键词，返回None（这是正常的）
         return None
     
     # 使用 search 进行匹配（找到第一个匹配即可）
@@ -101,6 +102,7 @@ def match_keywords_fast(account_id: int, text: str, kind: str = 'listen') -> Opt
             kw = (kw or '').strip()
             if kw and kw in matched_text:
                 return kw
+        # 如果找不到对应的关键词，返回匹配的文本本身
         return matched_text
     
     return None

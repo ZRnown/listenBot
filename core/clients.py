@@ -247,21 +247,27 @@ class ClientManager:
         if group_list:
             group_ids_set = {g['id'] for g in group_list}
             client._monitored_group_ids = group_ids_set
+            print(f"[事件注册] 账号 #{account_id} 注册事件处理器，监控 {len(group_ids_set)} 个群组")
         else:
             client._monitored_group_ids = None
+            print(f"[事件注册] 账号 #{account_id} 注册事件处理器，监控所有群组（无限制）")
         
         @client.on(events.NewMessage(incoming=True))
         async def handle_new_message(event):
-            if group_list and hasattr(client, '_monitored_group_ids'):
+            # 如果指定了群组列表，只处理这些群组的消息
+            if group_list and hasattr(client, '_monitored_group_ids') and client._monitored_group_ids is not None:
                 if event.chat_id not in client._monitored_group_ids:
                     return
+            # 如果没有指定群组列表，处理所有群组消息
             await self._process_message(event, account_id, "NewMessage")
         
         @client.on(events.MessageEdited(incoming=True))
         async def handle_message_edited(event):
-            if group_list and hasattr(client, '_monitored_group_ids'):
+            # 如果指定了群组列表，只处理这些群组的消息
+            if group_list and hasattr(client, '_monitored_group_ids') and client._monitored_group_ids is not None:
                 if event.chat_id not in client._monitored_group_ids:
                     return
+            # 如果没有指定群组列表，处理所有群组消息
             await self._process_message(event, account_id, "MessageEdited")
     
     async def _process_message(self, event, account_id: int, handler_name: str):
@@ -271,17 +277,27 @@ class ClientManager:
             if event.is_private or not event.is_group:
                 return
             
+            # 添加调试日志（仅在收到消息时打印，确认事件被触发）
+            msg_id = getattr(event.message, 'id', None)
+            chat_id = getattr(event, 'chat_id', None)
+            text_preview = (getattr(event.message, 'raw_text', '') or event.message.message or '')[:50]
+            print(f"[事件触发] 账号 #{account_id} 收到消息 (Handler: {handler_name}, 消息ID: {msg_id}, Chat ID: {chat_id}, 文本预览: {text_preview}...)")
+            
             account = dao_accounts.get(account_id)
             if account:
                 # 极致优化：直接调用，不等待完成，让关键词检测和推送立即进行
                 # 传递控制机器人的 ID，用于过滤自己的消息
                 # 注意：on_new_message 内部已经使用 create_task 来发送提醒，所以这里直接 await 不会阻塞
                 await on_new_message(event, account, self.bot, self.bot_id)
+            else:
+                print(f"[处理消息] ⚠️ 账号 #{account_id} 不存在于数据库中")
         except (GeneratorExit, asyncio.CancelledError):
             # 优雅处理协程取消
             pass
         except Exception as e:
             print(f"[处理消息] ❌ 账号 #{account_id} 错误: {str(e)}")
+            import traceback
+            traceback.print_exc()
 
     async def start_account_client(self, account_row):
         account_id = account_row['id']
