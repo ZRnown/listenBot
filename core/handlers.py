@@ -101,13 +101,11 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
                             # 后台检查发送者，不阻塞发送
                             asyncio.create_task(_check_sender())
                             
-                            # 立即发送提醒，不等待任何检查
+                            # 立即发送提醒，不等待任何检查，完全异步
                             # 传递 control_bot_id 以便在 send_alert 内部快速检查
-                            await send_alert(bot_client, account, event, matched, control_bot_id=control_bot_id)
-                            send_end_time = datetime.now()
-                            send_duration = (send_end_time - send_start_time).total_seconds()
-                            end_timestamp = send_end_time.strftime('%H:%M:%S.%f')[:-3]
-                            print(f"[监听] [{end_timestamp}] ✅ 提醒发送成功 (耗时: {send_duration:.3f}秒, 账号 #{account['id']})")
+                            # 不等待 send_alert 完成，立即返回
+                            asyncio.create_task(send_alert(bot_client, account, event, matched, control_bot_id=control_bot_id))
+                            # 立即返回，不等待发送完成
                         except Exception as e:
                             error_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
                             print(f"[监听] [{error_timestamp}] ❌ 发送提醒失败 (账号 #{account['id']}): {str(e)}")

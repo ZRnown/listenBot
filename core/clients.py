@@ -435,7 +435,7 @@ class ClientManager:
         print(f"[轮询优化] 账号 #{account_id}: 共 {total_groups} 个群组，每个群组独立协程，极致并发（最大500并发）")
         
         # 全速运行：不考虑封号，极致性能，榨干CPU和内存
-        poll_interval = 0.1  # 每个群组0.1秒轮询间隔，极致速度
+        poll_interval = 0.01  # 每个群组0.01秒轮询间隔，极致速度（10倍提升）
         floodwait_count = 0
         last_floodwait_time = 0
         
