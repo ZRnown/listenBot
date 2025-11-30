@@ -64,11 +64,27 @@ class ClientManager:
     async def add_account_from_session_file(self, file_path: str):
         session_name = os.path.splitext(file_path)[0]
         client = TelegramClient(session_name, self.api_id, self.api_hash)
-        await client.start(phone=lambda: None, password=lambda: None, code_callback=lambda: None)
-        if not await client.is_user_authorized():
+        
+        # 快速验证 session（不等待完全连接）
+        try:
+            await client.connect()
+            if not await client.is_user_authorized():
+                await client.disconnect()
+                raise RuntimeError('Session not authorized or requires login')
+        except Exception as e:
+            try:
+                await client.disconnect()
+            except:
+                pass
+            raise RuntimeError(f'Session validation failed: {str(e)}')
+        
+        # 获取用户信息（快速操作）
+        try:
+            me = await client.get_me()
+        except Exception as e:
             await client.disconnect()
-            raise RuntimeError('Session not authorized or requires login')
-        me = await client.get_me()
+            raise RuntimeError(f'Failed to get user info: {str(e)}')
+        
         phone = getattr(me, 'phone', None)
         username = getattr(me, 'username', None)
         nickname = (getattr(me, 'first_name', '') or '') + ' ' + (getattr(me, 'last_name', '') or '')
@@ -88,6 +104,10 @@ class ClientManager:
                 await self.account_clients[account_id].disconnect()
             self._register_handlers_for_account(client, account_id)
             self.account_clients[account_id] = client
+            
+            # 异步启动客户端（不阻塞返回）
+            asyncio.create_task(self._ensure_client_connected(client, account_id))
+            
             return {
                 'id': account_id,
                 'phone': phone,
@@ -100,14 +120,17 @@ class ClientManager:
             # 复制已有账号的关键词到新账号
             self._copy_keywords_to_new_account(account_id)
         
-        # 注册处理器并启动客户端
+        # 注册处理器并保存客户端
         self._register_handlers_for_account(client, account_id)
         self.account_clients[account_id] = client
         
-        # 启动账号客户端（异步执行，不阻塞）
+        # 异步启动账号客户端（不阻塞返回）
         account_row = dao_accounts.get(account_id)
         if account_row:
             asyncio.create_task(self.start_account_client(account_row))
+        else:
+            # 如果获取不到账号信息，至少确保客户端连接
+            asyncio.create_task(self._ensure_client_connected(client, account_id))
         
         return {
             'id': account_id,
@@ -123,14 +146,29 @@ class ClientManager:
         except Exception:
             raise RuntimeError('无效的 StringSession 文本，请检查后重新发送')
         client = TelegramClient(sess, self.api_id, self.api_hash)
-        await client.start(phone=lambda: None, password=lambda: None, code_callback=lambda: None)
+        
+        # 快速验证 session（不等待完全连接）
         try:
+            await client.connect()
             if not await client.is_user_authorized():
+                await client.disconnect()
                 raise RuntimeError('Session 未授权或需要登录')
-        except Exception:
+        except Exception as e:
+            try:
+                await client.disconnect()
+            except:
+                pass
+            if isinstance(e, RuntimeError):
+                raise
+            raise RuntimeError(f'Session validation failed: {str(e)}')
+        
+        # 获取用户信息（快速操作）
+        try:
+            me = await client.get_me()
+        except Exception as e:
             await client.disconnect()
-            raise
-        me = await client.get_me()
+            raise RuntimeError(f'Failed to get user info: {str(e)}')
+        
         phone = getattr(me, 'phone', None)
         username = getattr(me, 'username', None)
         nickname = (getattr(me, 'first_name', '') or '') + ' ' + (getattr(me, 'last_name', '') or '')
@@ -150,6 +188,10 @@ class ClientManager:
                 await self.account_clients[account_id].disconnect()
             self._register_handlers_for_account(client, account_id)
             self.account_clients[account_id] = client
+            
+            # 异步启动客户端（不阻塞返回）
+            asyncio.create_task(self._ensure_client_connected(client, account_id))
+            
             return {
                 'id': account_id,
                 'phone': phone,
@@ -162,14 +204,17 @@ class ClientManager:
             # 复制已有账号的关键词到新账号
             self._copy_keywords_to_new_account(account_id)
         
-        # 注册处理器并启动客户端
+        # 注册处理器并保存客户端
         self._register_handlers_for_account(client, account_id)
         self.account_clients[account_id] = client
         
-        # 启动账号客户端（异步执行，不阻塞）
+        # 异步启动账号客户端（不阻塞返回）
         account_row = dao_accounts.get(account_id)
         if account_row:
             asyncio.create_task(self.start_account_client(account_row))
+        else:
+            # 如果获取不到账号信息，至少确保客户端连接
+            asyncio.create_task(self._ensure_client_connected(client, account_id))
         
         return {
             'id': account_id,
@@ -183,6 +228,19 @@ class ClientManager:
         """复制全局点击关键词到新账号（如果该账号是点击账号）"""
         from services import settings_service
         settings_service.apply_global_click_keywords_to_account(account_id)
+    
+    async def _ensure_client_connected(self, client: TelegramClient, account_id: int):
+        """确保客户端在后台完全连接（异步执行，不阻塞）"""
+        try:
+            if not client.is_connected():
+                await client.connect()
+            # 确保客户端已启动
+            if not await client.is_user_authorized():
+                print(f"[客户端连接] 账号 #{account_id} 未授权，跳过启动")
+                return
+            print(f"[客户端连接] 账号 #{account_id} 客户端已连接")
+        except Exception as e:
+            print(f"[客户端连接] 账号 #{account_id} 连接失败: {e}")
     
     def _register_handlers_for_account(self, client: TelegramClient, account_id: int, group_list: list = None):
         """为账号注册事件处理器（支持多账号并发）"""
@@ -339,17 +397,25 @@ class ClientManager:
             except Exception:
                 last_message_ids[group_info['id']] = 0
         
-        poll_interval = 3
-        concurrent_limit = 35
-        min_concurrent_limit = 15
-        max_concurrent_limit = 40
-        batch_delay = 0.03
+        # 优化轮询参数：更快的轮询和更高的并发
+        poll_interval = 1.5  # 从 3 秒减少到 1.5 秒，加快轮询频率
+        concurrent_limit = 80  # 从 35 增加到 80，提高并发度
+        min_concurrent_limit = 30
+        max_concurrent_limit = 100
+        batch_delay = 0.01  # 从 0.03 减少到 0.01，减少批次间延迟
         floodwait_count = 0
         last_floodwait_time = 0
         
+        # 为不同账号错开轮询时间，避免所有账号同时轮询
+        # 使用账号ID作为随机种子，确保每个账号的初始延迟不同但稳定
+        import random
+        random.seed(account_id)
+        initial_delay = random.uniform(0, poll_interval * 0.5)  # 随机延迟 0-0.75 秒
+        await asyncio.sleep(initial_delay)
+        
         while True:
             try:
-                await asyncio.sleep(poll_interval)
+                start_time = time.time()
                 
                 if not client.is_connected():
                     break
@@ -357,6 +423,7 @@ class ClientManager:
                 new_messages_count = 0
                 total_groups = len(group_list)
                 
+                # 动态调整并发限制
                 current_concurrent_limit = concurrent_limit
                 if floodwait_count > 0:
                     time_since_floodwait = time.time() - last_floodwait_time if last_floodwait_time > 0 else 999
@@ -366,9 +433,8 @@ class ClientManager:
                         floodwait_count = 0
                         current_concurrent_limit = concurrent_limit
                 
-                for batch_start in range(0, total_groups, current_concurrent_limit):
-                    batch = group_list[batch_start:batch_start + current_concurrent_limit]
-                    
+                # 如果群组数量不多，直接全部并发处理
+                if total_groups <= current_concurrent_limit:
                     async def check_group(group_info):
                         nonlocal floodwait_count, last_floodwait_time
                         try:
@@ -433,15 +499,101 @@ class ClientManager:
                         except Exception:
                             return 0
                     
-                    tasks = [check_group(g) for g in batch]
+                    # 所有群组并发处理
+                    tasks = [check_group(g) for g in group_list]
                     results = await asyncio.gather(*tasks, return_exceptions=True)
                     
                     for result in results:
                         if isinstance(result, int):
                             new_messages_count += result
-                    
-                    if batch_start + current_concurrent_limit < total_groups:
-                        await asyncio.sleep(batch_delay)
+                else:
+                    # 分批处理，但批次间延迟更短
+                    for batch_start in range(0, total_groups, current_concurrent_limit):
+                        batch = group_list[batch_start:batch_start + current_concurrent_limit]
+                        
+                        async def check_group(group_info):
+                            nonlocal floodwait_count, last_floodwait_time
+                            try:
+                                entity = group_info['entity']
+                                chat_id = group_info['id']
+                                last_id = last_message_ids.get(chat_id, 0)
+                                
+                                try:
+                                    messages = await client.get_messages(entity, min_id=last_id, limit=50)
+                                except FloodWaitError as e:
+                                    wait_seconds = e.seconds
+                                    floodwait_count += 1
+                                    last_floodwait_time = time.time()
+                                    await self._notify_user_waiting(account_id, wait_seconds, f"检查群组 '{group_info['title']}'")
+                                    await asyncio.sleep(wait_seconds)
+                                    messages = await client.get_messages(entity, min_id=last_id, limit=50)
+                                
+                                group_new_count = 0
+                                if messages:
+                                    for msg in reversed(messages):
+                                        if msg.id > last_id and not msg.out:
+                                            try:
+                                                class MockEvent:
+                                                    def __init__(self, msg_obj, chat_entity, chat_id_val, client_obj):
+                                                        self.message = msg_obj
+                                                        self.chat_id = chat_id_val
+                                                        self.client = client_obj
+                                                        self._chat_entity = chat_entity
+                                                        self._msg_obj = msg_obj
+                                                        self.is_private = False
+                                                        is_megagroup = getattr(chat_entity, 'megagroup', False)
+                                                        is_broadcast = getattr(chat_entity, 'broadcast', False)
+                                                        self.is_group = is_megagroup or (not is_broadcast and chat_id_val < 0)
+                                                        self.is_channel = is_broadcast
+                                                    
+                                                    async def get_chat(self):
+                                                        return self._chat_entity
+                                                    
+                                                    async def get_sender(self):
+                                                        if hasattr(self._msg_obj, 'from_id') and self._msg_obj.from_id:
+                                                            try:
+                                                                return await self.client.get_entity(self._msg_obj.from_id)
+                                                            except:
+                                                                return None
+                                                        return None
+                                                
+                                                mock_event = MockEvent(msg, entity, chat_id, client)
+                                                
+                                                if mock_event.is_group:
+                                                    await self._process_message(mock_event, account_id, "ActivePolling")
+                                                    group_new_count += 1
+                                                
+                                                last_message_ids[chat_id] = msg.id
+                                            except Exception:
+                                                last_message_ids[chat_id] = msg.id
+                                                pass
+                                
+                                if messages:
+                                    last_message_ids[chat_id] = max(msg.id for msg in messages)
+                                
+                                return group_new_count
+                            except Exception:
+                                return 0
+                        
+                        tasks = [check_group(g) for g in batch]
+                        results = await asyncio.gather(*tasks, return_exceptions=True)
+                        
+                        for result in results:
+                            if isinstance(result, int):
+                                new_messages_count += result
+                        
+                        # 只在还有更多批次时才延迟
+                        if batch_start + current_concurrent_limit < total_groups:
+                            await asyncio.sleep(batch_delay)
+                
+                # 计算实际耗时，动态调整下次轮询间隔
+                elapsed = time.time() - start_time
+                if new_messages_count > 0:
+                    print(f"[轮询] 账号 #{account_id}: 发现 {new_messages_count} 条新消息 (耗时 {elapsed:.2f}秒)")
+                
+                # 如果轮询很快完成，可以稍微提前开始下次轮询
+                sleep_time = max(0.1, poll_interval - elapsed * 0.5)
+                await asyncio.sleep(sleep_time)
                 
                 if new_messages_count > 0:
                     print(f"[轮询] 账号 #{account_id}: 发现 {new_messages_count} 条新消息")

@@ -153,6 +153,95 @@ def list_accounts(role_filter: Optional[str] = None):
     return rows
 
 
+async def parse_and_execute_click(manager: ClientManager, link_text: str, report_chat_id: int):
+    """解析链接并执行点击任务（自动识别链接）"""
+    try:
+        # 解析消息链接
+        chat_id_from_link = None
+        msg_id_from_link = None
+        
+        print(f"[自动点击] 开始解析链接: {link_text}")
+        
+        # 解析 t.me/c/xxx/123 格式（超级群组/频道）
+        try:
+            match1 = re.search(r't\.me/c/(\d+)/(\d+)', link_text)
+            if match1:
+                channel_id = match1.group(1)
+                msg_id_from_link = int(match1.group(2))
+                chat_id_from_link = int(f'-100{channel_id}')
+                print(f"[自动点击] 解析成功（频道格式）: Chat ID={chat_id_from_link}, Message ID={msg_id_from_link}")
+            else:
+                # 解析 t.me/username/123 格式
+                match2 = re.search(r't\.me/([a-zA-Z0-9_]+)/(\d+)', link_text)
+                if match2:
+                    username = match2.group(1)
+                    msg_id_from_link = int(match2.group(2))
+                    chat_id_from_link = username
+                    print(f"[自动点击] 解析成功（用户名格式）: Chat ID={chat_id_from_link}, Message ID={msg_id_from_link}")
+        except Exception as parse_error:
+            print(f"[自动点击] ❌ 解析链接时出错: {parse_error}")
+            return False, f'解析链接时出错：{parse_error}'
+        
+        # 验证链接格式
+        if not chat_id_from_link or not msg_id_from_link:
+            print(f"[自动点击] ❌ 链接解析失败 - chat_id或msg_id为空")
+            return False, '消息链接格式无效'
+        
+        # 获取所有点击账号
+        try:
+            click_accounts = list_accounts('click')
+            print(f"[自动点击] 找到 {len(click_accounts)} 个点击账号")
+        except Exception as list_error:
+            print(f"[自动点击] ❌ 获取账号列表失败: {list_error}")
+            return False, f'获取账号列表失败：{list_error}'
+        
+        if not click_accounts:
+            print(f"[自动点击] ⚠️ 没有可用的点击账号")
+            return False, '没有可用的点击账号'
+        
+        # 异步执行点击任务（不阻塞）
+        print(f"[自动点击] 🚀 创建异步任务: Chat ID={chat_id_from_link}, Message ID={msg_id_from_link}, 账号数={len(click_accounts)}")
+        
+        async def safe_start_click_job():
+            """安全包装的点击任务，确保所有异常都被捕获并反馈"""
+            try:
+                await start_click_job(
+                    manager, chat_id_from_link, msg_id_from_link, click_accounts, report_chat_id
+                )
+            except Exception as e:
+                print(f"[自动点击] ❌ 任务执行异常: {e}")
+                import traceback
+                traceback.print_exc()
+                try:
+                    error_msg = (
+                        f'❌ **点击任务执行失败**\n'
+                        f'━━━━━━━━━━━━━━━━\n'
+                        f'错误信息：`{str(e)}`\n\n'
+                        f'请检查：\n'
+                        f'• 账号是否在线\n'
+                        f'• 消息链接是否正确\n'
+                        f'• 账号是否已加入目标群组'
+                    )
+                    await manager.bot.send_message(
+                        report_chat_id, 
+                        error_msg, 
+                        parse_mode='markdown',
+                        buttons=main_keyboard()
+                    )
+                except Exception as send_error:
+                    print(f"[自动点击] ❌ 发送错误消息失败: {send_error}")
+        
+        # 创建并立即调度任务
+        asyncio.create_task(safe_start_click_job())
+        return True, None
+    
+    except Exception as e:
+        print(f"[自动点击] ❌ 处理过程中出现未捕获的异常: {e}")
+        import traceback
+        traceback.print_exc()
+        return False, f'处理失败：{e}'
+
+
 async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id, accounts: List[dict], report_chat_id: int):
     """开始点击任务：获取消息、匹配关键词并并发点击（控制并发数避免封号）"""
     bot = manager.bot
@@ -902,6 +991,31 @@ async def setup_handlers(manager: ClientManager):
             return
         
         st = get_state(chat_id)
+        
+        # 如果没有状态，检查是否是链接，如果是就自动执行点击
+        if not st:
+            # 检查是否是消息链接格式
+            link_patterns = [
+                r't\.me/c/(\d+)/(\d+)',  # t.me/c/xxx/123
+                r't\.me/([a-zA-Z0-9_]+)/(\d+)',  # t.me/username/123
+                r'https?://t\.me/c/(\d+)/(\d+)',  # https://t.me/c/xxx/123
+                r'https?://t\.me/([a-zA-Z0-9_]+)/(\d+)',  # https://t.me/username/123
+            ]
+            
+            is_link = False
+            for pattern in link_patterns:
+                if re.search(pattern, text):
+                    is_link = True
+                    break
+            
+            if is_link:
+                print(f"[自动点击] 检测到链接，自动执行点击: {text}")
+                success, error_msg = await parse_and_execute_click(manager, text, chat_id)
+                if success:
+                    await event.respond('🚀 **已自动识别链接，开始点击任务**', parse_mode='markdown', buttons=main_keyboard())
+                else:
+                    await event.respond(f'⚠️ **自动点击失败**\n\n{error_msg}', parse_mode='markdown', buttons=main_keyboard())
+                return
 
         # 如果在 set_target_bot 模式下且输入包含 emoji，直接拒绝（可能是按钮点击）
         if st and st.get('mode') == 'set_target_bot':
@@ -1261,125 +1375,14 @@ async def setup_handlers(manager: ClientManager):
                             await event.respond('✅ 已取消', buttons=main_keyboard())
                             return
                         
-                        # 解析消息链接
-                        chat_id_from_link = None
-                        msg_id_from_link = None
-                        
-                        print(f"[开始点击] 开始解析链接: {t}")
-                        
-                        # 解析 t.me/c/xxx/123 格式（超级群组/频道）
-                        try:
-                            match1 = re.search(r't\.me/c/(\d+)/(\d+)', t)
-                            print(f"[开始点击] 频道格式匹配结果: {match1}")
-                            if match1:
-                                channel_id = match1.group(1)
-                                msg_id_from_link = int(match1.group(2))
-                                chat_id_from_link = int(f'-100{channel_id}')
-                                print(f"[开始点击] 解析成功（频道格式）: Chat ID={chat_id_from_link}, Message ID={msg_id_from_link}")
-                            else:
-                                # 解析 t.me/username/123 格式
-                                match2 = re.search(r't\.me/([a-zA-Z0-9_]+)/(\d+)', t)
-                                print(f"[开始点击] 用户名格式匹配结果: {match2}")
-                                if match2:
-                                    username = match2.group(1)
-                                    msg_id_from_link = int(match2.group(2))
-                                    chat_id_from_link = username
-                                    print(f"[开始点击] 解析成功（用户名格式）: Chat ID={chat_id_from_link}, Message ID={msg_id_from_link}")
-                                else:
-                                    print(f"[开始点击] ❌ 链接格式无法解析: {t}")
-                                    print(f"[开始点击] 尝试的匹配模式: t.me/c/xxx/123 和 t.me/username/123")
-                        except Exception as parse_error:
-                            print(f"[开始点击] ❌ 解析链接时出错: {parse_error}")
-                            import traceback
-                            traceback.print_exc()
-                            await event.respond(f'❌ 解析链接时出错：{parse_error}', buttons=main_keyboard())
-                            return
-                        
-                        # 验证链接格式
-                        print(f"[开始点击] 验证结果: chat_id_from_link={chat_id_from_link}, msg_id_from_link={msg_id_from_link}")
-                        if not chat_id_from_link or not msg_id_from_link:
-                            print(f"[开始点击] ❌ 链接解析失败 - chat_id或msg_id为空")
+                        # 使用统一的解析和执行函数
+                        success, error_msg = await parse_and_execute_click(manager, t, event.chat_id)
+                        if not success:
                             await event.respond(
-                                '⚠️ **消息链接格式无效**\n\n'
-                                '支持的格式：\n'
-                                '• `https://t.me/c/xxx/123` （超级群组/频道）\n'
-                                '• `https://t.me/username/123` （公开群组/频道）',
+                                f'❌ **点击失败**\n\n{error_msg}',
                                 parse_mode='markdown',
                                 buttons=main_keyboard()
                             )
-                            return
-                    
-                        # 获取所有点击账号
-                        print(f"[开始点击] 开始获取点击账号列表...")
-                        try:
-                            click_accounts = list_accounts('click')
-                            print(f"[开始点击] 找到 {len(click_accounts)} 个点击账号")
-                            if click_accounts:
-                                for acc in click_accounts:
-                                    print(f"[开始点击]   - 账号 #{acc['id']}: {acc.get('username') or acc.get('phone') or 'N/A'}")
-                        except Exception as list_error:
-                            print(f"[开始点击] ❌ 获取账号列表失败: {list_error}")
-                            import traceback
-                            traceback.print_exc()
-                            await event.respond(f'❌ 获取账号列表失败：{list_error}', buttons=main_keyboard())
-                            return
-                        
-                        if not click_accounts:
-                            print(f"[开始点击] ⚠️ 没有可用的点击账号")
-                            await event.respond('⚠️ 没有可用的点击账号', buttons=main_keyboard())
-                            return
-                        
-                        # 不发送确认消息，直接启动任务
-                        print(f"[开始点击] 准备启动任务: Chat ID={chat_id_from_link}, Message ID={msg_id_from_link}, 账号数={len(click_accounts)}")
-                        
-                        # 异步执行点击任务（不阻塞）
-                        print(f"[开始点击] 🚀 创建异步任务")
-                        print(f"[开始点击] 参数: chat_id={chat_id_from_link}, msg_id={msg_id_from_link}, accounts={len(click_accounts)}, report_chat={event.chat_id}")
-                        
-                        async def safe_start_click_job():
-                            """安全包装的点击任务，确保所有异常都被捕获并反馈"""
-                            print(f"[开始点击] ✅ 异步任务开始执行")
-                            try:
-                                print(f"[开始点击] 调用 start_click_job...")
-                                await start_click_job(
-                                    manager, chat_id_from_link, msg_id_from_link, click_accounts, event.chat_id
-                                )
-                                print(f"[开始点击] ✅ start_click_job 执行完成")
-                            except Exception as e:
-                                print(f"[开始点击] ❌ 任务执行异常: {e}")
-                                import traceback
-                                traceback.print_exc()
-                                try:
-                                    error_msg = (
-                                        f'❌ **点击任务执行失败**\n'
-                                        f'━━━━━━━━━━━━━━━━\n'
-                                        f'错误信息：`{str(e)}`\n\n'
-                                        f'请检查：\n'
-                                        f'• 账号是否在线\n'
-                                        f'• 消息链接是否正确\n'
-                                        f'• 账号是否已加入目标群组'
-                                    )
-                                    await manager.bot.send_message(
-                                        event.chat_id, 
-                                        error_msg, 
-                                        parse_mode='markdown',
-                                        buttons=main_keyboard()
-                                    )
-                                except Exception as send_error:
-                                    print(f"[开始点击] ❌ 发送错误消息失败: {send_error}")
-                        
-                        # 创建并立即调度任务
-                        try:
-                            task = asyncio.create_task(safe_start_click_job())
-                            print(f"[开始点击] ✅ 异步任务已创建: {task}")
-                            # 给任务一个立即执行的机会
-                            await asyncio.sleep(0.1)
-                            print(f"[开始点击] ✅ 异步任务已调度，函数返回")
-                        except Exception as task_error:
-                            print(f"[开始点击] ❌ 创建异步任务失败: {task_error}")
-                            import traceback
-                            traceback.print_exc()
-                            await event.respond(f'❌ 创建任务失败：{task_error}', buttons=main_keyboard())
                         return
                     except Exception as e:
                         print(f"[开始点击] ❌ 处理过程中出现未捕获的异常: {e}")
