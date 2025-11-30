@@ -397,12 +397,12 @@ class ClientManager:
             except Exception:
                 last_message_ids[group_info['id']] = 0
         
-        # 优化轮询参数：更快的轮询和更高的并发
-        poll_interval = 1.5  # 从 3 秒减少到 1.5 秒，加快轮询频率
-        concurrent_limit = 80  # 从 35 增加到 80，提高并发度
-        min_concurrent_limit = 30
-        max_concurrent_limit = 100
-        batch_delay = 0.01  # 从 0.03 减少到 0.01，减少批次间延迟
+        # 优化轮询参数：极致性能优化（在防封前提下）
+        poll_interval = 0.8  # 从 1.5 秒减少到 0.8 秒，极致轮询频率
+        concurrent_limit = 120  # 从 80 增加到 120，最大化并发度
+        min_concurrent_limit = 50
+        max_concurrent_limit = 150
+        batch_delay = 0.005  # 从 0.01 减少到 0.005，最小批次延迟
         floodwait_count = 0
         last_floodwait_time = 0
         
@@ -589,10 +589,20 @@ class ClientManager:
                 # 计算实际耗时，动态调整下次轮询间隔
                 elapsed = time.time() - start_time
                 if new_messages_count > 0:
-                    print(f"[轮询] 账号 #{account_id}: 发现 {new_messages_count} 条新消息 (耗时 {elapsed:.2f}秒)")
+                    print(f"[轮询] 账号 #{account_id}: 发现 {new_messages_count} 条新消息 (耗时 {elapsed:.3f}秒)")
                 
-                # 如果轮询很快完成，可以稍微提前开始下次轮询
-                sleep_time = max(0.1, poll_interval - elapsed * 0.5)
+                # 智能调整：如果轮询很快完成，可以提前开始下次轮询（但保持最小间隔）
+                # 如果耗时较长，适当延长间隔（防止过载）
+                min_sleep = 0.05  # 最小间隔 50ms，防止过于频繁
+                if elapsed < poll_interval * 0.3:
+                    # 轮询很快完成，可以提前开始（但保持最小间隔）
+                    sleep_time = max(min_sleep, poll_interval - elapsed * 0.7)
+                elif elapsed > poll_interval * 2:
+                    # 轮询耗时过长，适当延长间隔
+                    sleep_time = poll_interval * 1.2
+                else:
+                    sleep_time = max(min_sleep, poll_interval - elapsed * 0.3)
+                
                 await asyncio.sleep(sleep_time)
                 
                 if new_messages_count > 0:

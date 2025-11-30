@@ -100,18 +100,24 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
                 else:
                     print(f"[监听] ⚠️ 跳过发送提醒（should_alert=False）")
                     
-                # 自动发送模板消息（异步执行，不阻塞）
+                # 自动发送模板消息（异步执行，不阻塞，优化性能）
                 if settings_service.get_start_sending(account['id']):
                     tpl = settings_service.get_template_message(account['id'])
                     if tpl:
                         async def _send_template():
                             try:
-                                # 获取延迟配置
-                                delay = settings_service.get_send_delay(account['id'])
-                                jitter = settings_service.get_send_jitter()
+                                # 获取延迟配置（优化：最小化延迟）
+                                delay = settings_service.get_send_delay(account['id']) or 0
+                                jitter = settings_service.get_send_jitter() or 0.3
+                                
                                 if delay > 0:
                                     # 延迟必须在 Task 内部等待，否则会阻塞主消息循环
-                                    await asyncio.sleep(max(0.0, delay + random.uniform(-jitter, jitter)))
+                                    # 优化：使用更小的抖动范围
+                                    actual_delay = max(0.1, delay + random.uniform(-jitter * 0.5, jitter * 0.5))
+                                    await asyncio.sleep(actual_delay)
+                                else:
+                                    # 即使没有配置延迟，也添加最小随机延迟（防封）
+                                    await asyncio.sleep(random.uniform(0.1, 0.3))
                                 
                                 sem = _get_semaphore(account['id'])
                                 async with sem:
@@ -119,7 +125,7 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
                             except Exception:
                                 pass
                         
-                        # 创建后台任务执行发送
+                        # 创建后台任务执行发送（立即调度，不等待）
                         asyncio.create_task(_send_template())
 
         # =================================================================
@@ -137,17 +143,23 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
                             if any(k for k in keywords if k and k in btn_text):
                                 print(f"[点击] ✅ 账号 #{account['id']} 匹配按钮: '{btn_text}'")
                                 
-                                # 定义点击任务
+                                # 定义点击任务（优化：减少延迟，提高响应速度）
                                 async def _click_button(row_idx, col_idx, b_text):
                                     try:
-                                        # 获取延迟配置
-                                        delay = settings_service.get_click_delay(account['id'])
-                                        jitter = settings_service.get_click_jitter()
+                                        # 获取延迟配置（优化：最小化延迟，但保持防封）
+                                        delay = settings_service.get_click_delay(account['id']) or 0
+                                        jitter = settings_service.get_click_jitter() or 0.3
+                                        
+                                        # 优化：如果延迟很小，使用更小的抖动
                                         if delay > 0:
                                             # 延迟必须在 Task 内部等待
-                                            await asyncio.sleep(max(0.0, delay + random.uniform(-jitter, jitter)))
+                                            actual_delay = max(0.1, delay + random.uniform(-jitter * 0.5, jitter * 0.5))
+                                            await asyncio.sleep(actual_delay)
+                                        else:
+                                            # 即使没有配置延迟，也添加最小随机延迟（防封）
+                                            await asyncio.sleep(random.uniform(0.1, 0.3))
                                         
-                                        # 尝试点击（使用信号量控制并发）
+                                        # 尝试点击（使用信号量控制并发，但提高并发度）
                                         sem = _get_semaphore(account['id'])
                                         async with sem:
                                             print(f"[点击] 账号 #{account['id']} 准备点击按钮 [{row_idx},{col_idx}] '{b_text}'")

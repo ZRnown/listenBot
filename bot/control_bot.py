@@ -420,8 +420,9 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
         all_btn_texts = [bt[2] for bt in button_positions]
         print(f"[点击任务] 开始执行点击，匹配账号数：{len(matched_accounts)}，按钮文本：{', '.join(all_btn_texts[:3])}")
         
-        # 并发控制：同时最多3个账号点击（避免封号）
-        click_semaphore = asyncio.Semaphore(3)
+        # 并发控制：同时最多8个账号点击（在防封前提下最大化性能）
+        # 通过延迟和抖动来分散请求，避免同时触发
+        click_semaphore = asyncio.Semaphore(8)
         success_count = 0
         fail_count = 0
         success_accounts = []  # 记录成功的账号
@@ -461,11 +462,16 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
                 print(f"[点击任务] ✅ 账号 {acc_name} 客户端已连接")
                 
                 try:
-                    # 应用延迟（每个账号之间随机延迟1-3秒，避免同时点击）
+                    # 优化延迟策略：在防封前提下最小化延迟
                     delay = settings_service.get_click_delay(acc_id) or 0
-                    jitter = random.uniform(0.5, 1.5)
-                    total_delay = delay + jitter + index * 0.5
-                    print(f"[点击任务] 账号 {acc_name} 等待延迟: {total_delay:.2f} 秒 (基础延迟: {delay}, 抖动: {jitter:.2f}, 索引延迟: {index * 0.5})")
+                    # 减少抖动范围，提高响应速度
+                    jitter = random.uniform(0.2, 0.6)  # 从 0.5-1.5 减少到 0.2-0.6
+                    # 减少索引延迟，提高并发度
+                    index_delay = index * 0.2  # 从 0.5 减少到 0.2
+                    total_delay = delay + jitter + index_delay
+                    # 确保最小延迟（防封）
+                    total_delay = max(0.1, total_delay)
+                    print(f"[点击任务] 账号 {acc_name} 等待延迟: {total_delay:.2f} 秒 (基础延迟: {delay}, 抖动: {jitter:.2f}, 索引延迟: {index_delay:.2f})")
                     await asyncio.sleep(total_delay)
                     
                     # 获取消息
@@ -1026,7 +1032,7 @@ async def setup_handlers(manager: ClientManager):
         # 主菜单按钮文本
         MAIN_MENU_COMMANDS = {
             '🧩 监听关键词', '🧩 点击关键词',
-            '📒 账号列表', '▶️ 开始点击',
+            '📒 账号列表',
             '➕ 添加监听账号', '➕ 添加点击账号',
             '📤 设置转发目标',
             '📝 设置发送消息', '🐢 设置发送延迟',
@@ -1048,7 +1054,7 @@ async def setup_handlers(manager: ClientManager):
             mode = st['mode']
             
             # 如果用户在添加账号状态下发送主菜单命令，清除状态并允许命令执行
-            if is_main_menu_cmd and mode in ('add_listen_account_wait_string', 'add_click_account_wait_file', 'start_click_wait_link'):
+            if is_main_menu_cmd and mode in ('add_listen_account_wait_string', 'add_click_account_wait_file'):
                 set_state(chat_id, None)
                 st = None
                 # 继续执行，让命令处理器处理（不在这里 return）
@@ -1357,42 +1363,6 @@ async def setup_handlers(manager: ClientManager):
                     await event.respond('已设置提醒目标', buttons=main_keyboard())
                     return
 
-                elif mode == 'start_click_wait_link':
-                    print(f"[开始点击] 收到输入: '{text[:100]}'")
-                    print(f"[开始点击] 当前状态: mode={mode}, chat_id={chat_id}")
-                    
-                    try:
-                        # 立即清除状态，避免阻塞后续命令
-                        set_state(chat_id, None)
-                        print(f"[开始点击] 状态已清除")
-                        
-                        t = (text or '').strip()
-                        print(f"[开始点击] 清理后的文本: '{t}'")
-                        
-                        # 支持取消操作
-                        if t in ('取消', '退出', 'cancel', 'exit', '返回'):
-                            print(f"[开始点击] 用户取消操作")
-                            await event.respond('✅ 已取消', buttons=main_keyboard())
-                            return
-                        
-                        # 使用统一的解析和执行函数
-                        success, error_msg = await parse_and_execute_click(manager, t, event.chat_id)
-                        if not success:
-                            await event.respond(
-                                f'❌ **点击失败**\n\n{error_msg}',
-                                parse_mode='markdown',
-                                buttons=main_keyboard()
-                            )
-                        return
-                    except Exception as e:
-                        print(f"[开始点击] ❌ 处理过程中出现未捕获的异常: {e}")
-                        import traceback
-                        traceback.print_exc()
-                        try:
-                            await event.respond(f'❌ 处理失败：{e}', buttons=main_keyboard())
-                        except:
-                            pass
-                        return
 
                 elif mode == 'set_target_bot':
                     t = (text or '').strip()
@@ -1859,25 +1829,6 @@ async def setup_handlers(manager: ClientManager):
             await event.respond(summary)
             return
 
-        if is_cmd(text, '▶️ 开始点击'):
-            # 检查是否有点击账号
-            click_accounts = list_accounts('click')
-            if not click_accounts:
-                await event.respond('⚠️ 没有可用的点击账号，请先添加点击账号', buttons=main_keyboard())
-                return
-            
-            # 设置状态并提示用户发送链接
-            set_state(chat_id, 'start_click_wait_link')
-            await event.respond(
-                '🚀 **开始点击**\n\n'
-                '请发送要点击的消息链接：\n'
-                '• `https://t.me/c/xxx/123` （超级群组/频道）\n'
-                '• `https://t.me/username/123` （公开群组/频道）\n\n'
-                '💡 发送"取消"可退出',
-                parse_mode='markdown',
-                buttons=None
-            )
-            return
 
         # 诊断功能：列出账号加入的所有群组
         if text.startswith('诊断群组') or text.startswith('诊断 #'):
