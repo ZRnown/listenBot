@@ -301,7 +301,16 @@ class ClientManager:
         self._register_handlers_for_account(client, account_id, group_list)
         self.account_clients[account_id] = client
         await client.catch_up()
-        asyncio.create_task(self._active_polling_task(client, account_id, group_list))
+        
+        # 只有监听账号（listen 或 both）才需要轮询
+        # 点击账号（click）不需要轮询，只需要在收到链接时点击
+        from services import settings_service
+        role = settings_service.get_account_role(account_id) or 'both'
+        if role in ('listen', 'both'):
+            print(f"[启动] 账号 #{account_id} 是监听账号，启动轮询任务")
+            asyncio.create_task(self._active_polling_task(client, account_id, group_list))
+        else:
+            print(f"[启动] 账号 #{account_id} 是点击账号，不启动轮询任务（仅在收到链接时点击）")
     
     async def _list_account_groups(self, client: TelegramClient, account_id: int):
         """列出账号加入的所有群组"""
@@ -445,7 +454,8 @@ class ClientManager:
                             last_id = last_message_ids.get(chat_id, 0)
                             
                             try:
-                                messages = await client.get_messages(entity, min_id=last_id, limit=50)
+                                # 全速运行：只获取最新消息，减少数据传输
+                                messages = await client.get_messages(entity, min_id=last_id, limit=10)
                             except FloodWaitError as e:
                                 wait_seconds = e.seconds
                                 floodwait_count += 1
@@ -455,7 +465,7 @@ class ClientManager:
                                 # 等待后再次检查连接状态
                                 if not client.is_connected():
                                     return 0
-                                messages = await client.get_messages(entity, min_id=last_id, limit=50)
+                                messages = await client.get_messages(entity, min_id=last_id, limit=10)
                             except (ConnectionError, RuntimeError) as e:
                                 # 捕获断开连接错误
                                 if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
@@ -595,7 +605,8 @@ class ClientManager:
                                 last_id = last_message_ids.get(chat_id, 0)
                                 
                                 try:
-                                    messages = await client.get_messages(entity, min_id=last_id, limit=50)
+                                    # 全速运行：只获取最新消息，减少数据传输，提升速度
+                                    messages = await client.get_messages(entity, min_id=last_id, limit=10)
                                 except FloodWaitError as e:
                                     wait_seconds = e.seconds
                                     floodwait_count += 1
@@ -605,7 +616,7 @@ class ClientManager:
                                     # 等待后再次检查连接状态
                                     if not client.is_connected():
                                         return 0
-                                    messages = await client.get_messages(entity, min_id=last_id, limit=50)
+                                    messages = await client.get_messages(entity, min_id=last_id, limit=10)
                                 except (ConnectionError, RuntimeError) as e:
                                     # 捕获断开连接错误
                                     if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
