@@ -254,12 +254,18 @@ class ClientManager:
         
         @client.on(events.NewMessage(incoming=True))
         async def handle_new_message(event):
-            # 如果指定了群组列表，只处理这些群组的消息
-            if group_list and hasattr(client, '_monitored_group_ids') and client._monitored_group_ids is not None:
-                if event.chat_id not in client._monitored_group_ids:
-                    return
-            # 如果没有指定群组列表，处理所有群组消息
-            await self._process_message(event, account_id, "NewMessage")
+            # 添加调试日志（确认事件被触发）
+            try:
+                # 如果指定了群组列表，只处理这些群组的消息
+                if group_list and hasattr(client, '_monitored_group_ids') and client._monitored_group_ids is not None:
+                    if event.chat_id not in client._monitored_group_ids:
+                        return
+                # 如果没有指定群组列表，处理所有群组消息
+                await self._process_message(event, account_id, "NewMessage")
+            except Exception as e:
+                print(f"[事件处理器] ❌ 账号 #{account_id} 处理消息时出错: {e}")
+                import traceback
+                traceback.print_exc()
         
         @client.on(events.MessageEdited(incoming=True))
         async def handle_message_edited(event):
@@ -313,11 +319,32 @@ class ClientManager:
             client = TelegramClient(sess, self.api_id, self.api_hash)
         
         await client.start(phone=lambda: None, password=lambda: None, code_callback=lambda: None)
+        
+        # 验证客户端已连接
+        if not client.is_connected():
+            raise RuntimeError(f'账号 #{account_id} 客户端启动后未连接')
+        
+        # 验证客户端已授权
+        if not await client.is_user_authorized():
+            raise RuntimeError(f'账号 #{account_id} 客户端未授权')
+        
+        print(f"[启动] 账号 #{account_id} 客户端已连接并授权")
+        
         group_list = await self._list_account_groups(client, account_id)
         await self._sync_all_groups(client, account_id, group_list)
         self._register_handlers_for_account(client, account_id, group_list)
         self.account_clients[account_id] = client
+        
+        # 同步历史消息（catch_up 会同步未读消息）
+        print(f"[启动] 账号 #{account_id} 正在同步消息...")
         await client.catch_up()
+        print(f"[启动] 账号 #{account_id} 消息同步完成")
+        
+        # 验证客户端仍然连接
+        if not client.is_connected():
+            print(f"[启动] ⚠️ 账号 #{account_id} 客户端在同步后断开连接")
+        else:
+            print(f"[启动] ✅ 账号 #{account_id} 客户端保持连接")
         
         # ❌ 移除主动轮询：Telethon 的 events.NewMessage 已经通过 TCP 长连接实时推送消息
         # 主动轮询会导致：
