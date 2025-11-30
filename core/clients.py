@@ -395,110 +395,84 @@ class ClientManager:
         每个账号的群组数/10=协程数，每个协程处理约10个群组
         """
         last_message_ids = {}
-        # 极致优化：快速初始化，并发获取每个群组的最新消息ID
-        # 将初始化也分成多个块，最大化并发度
-        init_groups_per_chunk = 20  # 初始化时每块20个群组
-        init_chunks = []
-        for i in range(0, len(group_list), init_groups_per_chunk):
-            init_chunks.append(group_list[i:i + init_groups_per_chunk])
+        # 极致优化：快速初始化，所有群组并发初始化，不等待完成
+        # 使用信号量控制并发度，但最大化并发数
+        init_semaphore = asyncio.Semaphore(200)  # 允许200个并发初始化
         
-        async def init_chunk(chunk):
-            """初始化一个块的群组"""
-            tasks = []
-            for group_info in chunk:
-                async def init_group(g):
+        async def init_group(g):
+            async with init_semaphore:
+                try:
+                    entity = g['entity']
+                    messages = await client.get_messages(entity, limit=1)
+                    if messages:
+                        last_message_ids[g['id']] = messages[0].id
+                    else:
+                        last_message_ids[g['id']] = 0
+                except FloodWaitError as e:
+                    await self._notify_user_waiting(account_id, e.seconds, f"初始化群组 '{g['title']}'")
+                    await asyncio.sleep(e.seconds)
                     try:
-                        entity = g['entity']
                         messages = await client.get_messages(entity, limit=1)
                         if messages:
                             last_message_ids[g['id']] = messages[0].id
                         else:
                             last_message_ids[g['id']] = 0
-                    except FloodWaitError as e:
-                        await self._notify_user_waiting(account_id, e.seconds, f"初始化群组 '{g['title']}'")
-                        await asyncio.sleep(e.seconds)
-                        try:
-                            messages = await client.get_messages(entity, limit=1)
-                            if messages:
-                                last_message_ids[g['id']] = messages[0].id
-                            else:
-                                last_message_ids[g['id']] = 0
-                        except Exception:
-                            last_message_ids[g['id']] = 0
                     except Exception:
                         last_message_ids[g['id']] = 0
-                tasks.append(init_group(group_info))
-            await asyncio.gather(*tasks, return_exceptions=True)
+                except Exception:
+                    last_message_ids[g['id']] = 0
         
-        # 所有初始化块并发执行
-        if init_chunks:
-            await asyncio.gather(*[init_chunk(chunk) for chunk in init_chunks], return_exceptions=True)
+        # 所有群组并发初始化，不等待完成，立即开始轮询
+        # 使用 create_task 让初始化在后台进行
+        init_tasks = [asyncio.create_task(init_group(g)) for g in group_list]
+        print(f"[轮询优化] 账号 #{account_id}: 启动 {len(init_tasks)} 个群组的后台初始化，立即开始轮询...")
         
-        # 极致优化：减少每个块的群组数，增加块数，最大化并发度
+        # 极致优化：每个群组独立协程，不分组，真正并发
+        # 使用信号量控制并发度，但最大化并发数
         total_groups = len(group_list)
-        # 每个块3个群组，最大化并发度（146个群组 = 49个块，极致并发）
-        groups_per_chunk = 3  # 从10减少到3，大幅增加并发度
-        num_chunks = max(1, (total_groups + groups_per_chunk - 1) // groups_per_chunk)  # 向上取整
+        poll_semaphore = asyncio.Semaphore(500)  # 允许500个并发轮询任务
         
-        print(f"[轮询优化] 账号 #{account_id}: 共 {total_groups} 个群组，分成 {num_chunks} 个协程块（每块 {groups_per_chunk} 个群组，极致并发）")
-        
-        # 将群组列表分成多个块
-        group_chunks = []
-        for i in range(0, total_groups, groups_per_chunk):
-            chunk = group_list[i:i + groups_per_chunk]
-            group_chunks.append(chunk)
+        print(f"[轮询优化] 账号 #{account_id}: 共 {total_groups} 个群组，每个群组独立协程，极致并发（最大500并发）")
         
         # 全速运行：不考虑封号，极致性能，榨干CPU和内存
-        poll_interval = 0  # 0秒轮询间隔，极致速度
+        poll_interval = 0.1  # 每个群组0.1秒轮询间隔，极致速度
         floodwait_count = 0
         last_floodwait_time = 0
         
-        # 移除初始延迟，立即开始轮询
-        
-        while True:
-            try:
-                start_time = time.time()
-                
-                if not client.is_connected():
-                    break
-                
-                new_messages_count = 0
-                
-                # 定义检查单个群组的函数
-                async def check_group(group_info):
-                    nonlocal floodwait_count, last_floodwait_time, new_messages_count
-                    try:
-                        # 检查客户端连接状态
-                        if not client.is_connected():
-                            return 0
-                        
+        # 定义检查单个群组的持续运行函数（每个群组独立协程）
+        async def check_group_loop(group_info):
+            """每个群组独立的持续运行协程"""
+            chat_id = group_info['id']
+            group_title = group_info.get('title', f'Group#{chat_id}')
+            
+            while True:
+                try:
+                    if not client.is_connected():
+                        break
+                    
+                    async with poll_semaphore:  # 使用信号量控制并发度
                         entity = group_info['entity']
-                        chat_id = group_info['id']
+                        # 如果还没初始化完成，使用0作为last_id
                         last_id = last_message_ids.get(chat_id, 0)
                         
                         try:
-                            # 极致优化：只获取最新5条消息，减少数据传输，提升速度
-                            messages = await client.get_messages(entity, min_id=last_id, limit=5)
+                            # 极致优化：只获取最新3条消息，减少数据传输，提升速度
+                            messages = await client.get_messages(entity, min_id=last_id, limit=3)
                         except FloodWaitError as e:
                             wait_seconds = e.seconds
-                            floodwait_count += 1
-                            last_floodwait_time = time.time()
-                            await self._notify_user_waiting(account_id, wait_seconds, f"检查群组 '{group_info['title']}'")
+                            await self._notify_user_waiting(account_id, wait_seconds, f"检查群组 '{group_title}'")
                             await asyncio.sleep(wait_seconds)
-                            # 等待后再次检查连接状态
                             if not client.is_connected():
-                                return 0
-                            messages = await client.get_messages(entity, min_id=last_id, limit=5)
+                                break
+                            messages = await client.get_messages(entity, min_id=last_id, limit=3)
                         except (ConnectionError, RuntimeError) as e:
-                            # 捕获断开连接错误
                             if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
-                                print(f"[轮询] 账号 #{account_id} 客户端已断开连接，停止轮询")
-                                return 0
-                            raise
+                                break
+                            await asyncio.sleep(1)  # 出错后等待1秒再继续
+                            continue
                         
-                        group_new_count = 0
                         if messages:
-                            # 优化：立即处理每条消息，不等待所有消息处理完
+                            # 极致优化：立即处理每条消息，不等待，不阻塞
                             for msg in reversed(messages):
                                 if msg.id > last_id and not msg.out:
                                     try:
@@ -530,29 +504,19 @@ class ClientManager:
                                             async def click(self, row_idx, col_idx):
                                                 """点击按钮（MockEvent 版本）"""
                                                 try:
-                                                    # 获取消息的按钮
                                                     buttons = getattr(self.message, 'buttons', None)
                                                     if not buttons:
                                                         raise ValueError("消息没有按钮")
-                                                    
-                                                    # 检查行和列索引是否有效
                                                     if row_idx >= len(buttons):
-                                                        raise IndexError(f"行索引 {row_idx} 超出范围（共 {len(buttons)} 行）")
-                                                    
+                                                        raise IndexError(f"行索引 {row_idx} 超出范围")
                                                     row = buttons[row_idx]
                                                     if col_idx >= len(row):
-                                                        raise IndexError(f"列索引 {col_idx} 超出范围（共 {len(row)} 列）")
-                                                    
+                                                        raise IndexError(f"列索引 {col_idx} 超出范围")
                                                     button = row[col_idx]
-                                                    
-                                                    # 检查按钮类型并执行点击
                                                     from telethon.tl.types import KeyboardButtonCallback, KeyboardButtonUrl, KeyboardButton
                                                     from telethon.tl.custom import MessageButton
-                                                    
-                                                    # 如果是回调按钮，发送回调
                                                     if isinstance(button, (KeyboardButtonCallback, MessageButton)):
                                                         if hasattr(button, 'data'):
-                                                            # 发送回调查询
                                                             from telethon.tl.functions.messages import GetBotCallbackAnswerRequest
                                                             result = await self.client(GetBotCallbackAnswerRequest(
                                                                 peer=self._chat_entity,
@@ -562,11 +526,9 @@ class ClientManager:
                                                             return result
                                                         else:
                                                             raise ValueError("按钮没有回调数据")
-                                                    # 如果是 URL 按钮，无法通过 API 点击，只能返回错误
                                                     elif isinstance(button, KeyboardButtonUrl):
                                                         raise ValueError("URL 按钮无法通过 API 点击")
                                                     else:
-                                                        # 其他类型的按钮，尝试发送按钮文本
                                                         raise ValueError(f"不支持的按钮类型: {type(button)}")
                                                 except Exception as e:
                                                     raise Exception(f"点击按钮失败: {str(e)}")
@@ -575,88 +537,45 @@ class ClientManager:
                                         
                                         if mock_event.is_group:
                                             # 极致优化：立即处理消息，不等待，不阻塞
-                                            # 使用 create_task 异步执行，立即调度，不阻塞其他群组和块的检查
-                                            # 这样每个块检测到关键词后立即推送，不等待整个轮询周期
+                                            # 使用 create_task 异步执行，立即调度，不阻塞其他群组
+                                            # 检测到关键词后立即推送，不等待整个轮询周期
                                             asyncio.create_task(self._process_message(mock_event, account_id, "ActivePolling"))
-                                            group_new_count += 1
-                                            new_messages_count += 1
-                                            # 不等待处理完成，立即继续检查下一条消息
                                         
                                         last_message_ids[chat_id] = msg.id
                                     except Exception as e:
                                         last_message_ids[chat_id] = msg.id
-                                        print(f"[轮询] 账号 #{account_id} 处理消息失败: {e}")
-                        
-                        if messages:
-                            last_message_ids[chat_id] = max(msg.id for msg in messages)
-                        
-                        return group_new_count
-                    except (ConnectionError, RuntimeError) as e:
-                        # 捕获断开连接错误，优雅退出
-                        if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
-                            print(f"[轮询] 账号 #{account_id} 客户端已断开连接，停止检查群组")
-                            return 0
-                        print(f"[轮询] 账号 #{account_id} 检查群组失败: {e}")
-                        return 0
-                    except (GeneratorExit, asyncio.CancelledError):
-                        # 优雅处理协程取消
-                        return 0
-                    except Exception as e:
-                        print(f"[轮询] 账号 #{account_id} 检查群组失败: {e}")
-                        return 0
-                
-                # 定义检查一个群组块的函数（每个块3个群组，极致并发）
-                async def check_group_chunk(chunk_groups, chunk_index):
-                    """检查一个群组块中的所有群组（并发，检测到关键词立即推送）"""
-                    try:
-                        if not client.is_connected():
-                            return 0
-                        
-                        # 该块内的所有群组并发检查（不等待完成，立即返回）
-                        # 每个群组的检查都是独立的，检测到关键词后立即推送，不等待其他群组
-                        tasks = [check_group(g) for g in chunk_groups]
-                        # 不等待所有任务完成，立即返回，让消息处理在后台进行
-                        # 这样每个块检测到关键词后立即推送，不阻塞
-                        results = await asyncio.gather(*tasks, return_exceptions=True)
-                        
-                        chunk_new_count = 0
-                        for result in results:
-                            if isinstance(result, int):
-                                chunk_new_count += result
-                            elif isinstance(result, Exception):
-                                print(f"[轮询块 #{chunk_index}] 检查群组块时出错: {result}")
-                        
-                        return chunk_new_count
-                    except Exception as e:
-                        print(f"[轮询块 #{chunk_index}] 检查群组块失败: {e}")
-                        return 0
-                
-                # 所有群组块并发处理（每个块内部也是并发的）
-                # 不等待所有块完成，让消息处理在后台立即进行
-                chunk_tasks = [check_group_chunk(chunk, idx) for idx, chunk in enumerate(group_chunks)]
-                # 使用 gather 但消息处理已经在 check_group 中通过 create_task 立即调度
-                chunk_results = await asyncio.gather(*chunk_tasks, return_exceptions=True)
-                
-                # 统计总的新消息数（new_messages_count 已经在 check_group 中更新了）
-                total_new = sum(r for r in chunk_results if isinstance(r, int))
-                
-                if total_new > 0:
-                    elapsed = time.time() - start_time
-                    print(f"[轮询] 账号 #{account_id}: 发现 {total_new} 条新消息 (耗时 {elapsed:.3f}秒, {num_chunks} 个协程块并发)")
-                
-                # 轮询间隔（0秒，全速运行）
-                if poll_interval > 0:
+                            
+                            if messages:
+                                last_message_ids[chat_id] = max(msg.id for msg in messages)
+                    
+                    # 每个群组独立轮询间隔
                     await asyncio.sleep(poll_interval)
-            except (GeneratorExit, asyncio.CancelledError):
-                # 优雅处理协程取消
-                print(f"[轮询] 账号 #{account_id} 轮询任务被取消")
-                break
-            except Exception as e:
-                print(f"[轮询] 账号 #{account_id} 轮询任务出错: {e}")
-                import traceback
-                traceback.print_exc()
-                # 出错后短暂等待再继续
-                await asyncio.sleep(1)
+                    
+                except (ConnectionError, RuntimeError) as e:
+                    if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
+                        break
+                    await asyncio.sleep(1)
+                except (GeneratorExit, asyncio.CancelledError):
+                    break
+                except Exception as e:
+                    await asyncio.sleep(1)
+        
+        # 启动所有群组的独立协程（每个群组一个持续运行的协程）
+        print(f"[轮询优化] 账号 #{account_id}: 启动 {total_groups} 个群组的独立持续运行协程...")
+        group_tasks = [asyncio.create_task(check_group_loop(g)) for g in group_list]
+        
+        # 等待所有任务完成（实际上它们会持续运行直到客户端断开）
+        try:
+            await asyncio.gather(*group_tasks, return_exceptions=True)
+        except (GeneratorExit, asyncio.CancelledError):
+            # 取消所有任务
+            for task in group_tasks:
+                task.cancel()
+            await asyncio.gather(*group_tasks, return_exceptions=True)
+        except Exception as e:
+            print(f"[轮询] 账号 #{account_id} 轮询任务出错: {e}")
+            import traceback
+            traceback.print_exc()
     
     async def load_active_accounts(self):
         """加载所有活跃账号（支持多账号并发启动）"""
