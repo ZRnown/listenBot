@@ -1827,21 +1827,6 @@ async def setup_handlers(manager: ClientManager):
             if not rows:
                 await event.respond('📭 暂无账号')
                 return
-            
-            # 检查是否包含账号ID（用于修改角色）
-            acc_hint = extract_account_id(text)
-            if acc_hint:
-                target_row = dao_accounts.get(acc_hint)
-                if target_row:
-                    set_state(chat_id, 'change_account_role', account_id=acc_hint)
-                    current_role = get_account_role(acc_hint)
-                    await event.respond(
-                        f'🔄 修改账号 #{acc_hint} 的角色\n'
-                        f'当前角色：{format_role_label(current_role)}\n\n'
-                        '请选择新角色：',
-                        buttons=roles_keyboard()
-                    )
-                    return
 
             listen_rows = list_accounts('listen')
             click_rows = list_accounts('click')
@@ -1858,8 +1843,7 @@ async def setup_handlers(manager: ClientManager):
             summary = (
                 f"📒 账号列表（共 {len(rows)} 个）\n\n"
                 f"监听账号（{len(listen_rows)}）：\n{format_rows(listen_rows)}\n\n"
-                f"点击账号（{len(click_rows)}）：\n{format_rows(click_rows)}\n\n"
-                f"💡 提示：发送「账号列表 #账号ID」可修改账号角色"
+                f"点击账号（{len(click_rows)}）：\n{format_rows(click_rows)}"
             )
             await event.respond(summary)
             return

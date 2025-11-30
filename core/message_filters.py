@@ -30,30 +30,40 @@ class KeywordFilter(BaseFilter):
             bool: 若消息应继续处理则返回True，否则返回False
         """
         account_id = context.account['id']
+        msg_text = context.message_text
+        msg_id = getattr(context.event.message, 'id', None)
+        chat_id = getattr(context.event, 'chat_id', None)
+        
+        print(f"[KeywordFilter] 账号 #{account_id} 开始检查关键词: Chat ID={chat_id}, Msg ID={msg_id}, 文本长度={len(msg_text)}")
+        
         role = settings_service.get_account_role(account_id) or 'both'
         
         # 只处理监听账号
         if role not in ('listen', 'both'):
+            print(f"[KeywordFilter] 账号 #{account_id} 不是监听账号，跳过")
             return False
         
         # 快速匹配关键词
         keywords = settings_service.get_account_keywords(account_id, kind='listen') or []
+        print(f"[KeywordFilter] 账号 #{account_id} 关键词数量: {len(keywords)}")
         if not keywords:
+            print(f"[KeywordFilter] 账号 #{account_id} 没有关键词，跳过")
             return False
         
-        matched = match_keywords(account_id, context.message_text, kind='listen')
+        matched = match_keywords(account_id, msg_text, kind='listen')
+        print(f"[KeywordFilter] 账号 #{account_id} 关键词匹配结果: {matched}")
         
         if matched:
             context.matched_keyword = matched
             context.should_forward = True
             
             # 快速日志
-            msg_id = getattr(context.event.message, 'id', None)
-            chat_id = getattr(context.event, 'chat_id', None)
             timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
             logger.info(f"[监听] [{timestamp}] ✅ 账号 #{account_id} 匹配关键词: '{matched}' (消息ID: {msg_id}, Chat ID: {chat_id})")
+            print(f"[KeywordFilter] ✅ 账号 #{account_id} 匹配关键词: '{matched}'")
             return True
         
+        print(f"[KeywordFilter] 账号 #{account_id} 未匹配到关键词")
         return False
 
 

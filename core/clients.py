@@ -253,31 +253,62 @@ class ClientManager:
         # 过滤器：排除控制机器人自己的消息（完全按照 TelegramForwarder 的方式）
         async def not_from_control_bot(event):
             """过滤函数：排除控制机器人自己的消息"""
-            if self.bot_id is None:
-                return True  # 如果未获取到机器人ID，不进行过滤
-            
-            # 快速检查：跳过私聊、非群组、自己发送的消息
-            if event.is_private or not event.is_group or event.message.out:
-                return False
-            
-            # 检查发送者是否是控制机器人
             try:
-                sender_id = event.sender_id
+                # 详细日志：记录过滤器检查
+                chat_id = getattr(event, 'chat_id', None)
+                is_private = getattr(event, 'is_private', False)
+                is_group = getattr(event, 'is_group', False)
+                is_out = getattr(event.message, 'out', False)
+                sender_id = getattr(event, 'sender_id', None)
+                
+                # 快速检查：跳过私聊、非群组、自己发送的消息
+                if is_private:
+                    print(f"[过滤器] 账号 #{account_id} 跳过私聊消息: Chat ID={chat_id}")
+                    return False
+                if not is_group:
+                    print(f"[过滤器] 账号 #{account_id} 跳过非群组消息: Chat ID={chat_id}")
+                    return False
+                if is_out:
+                    print(f"[过滤器] 账号 #{account_id} 跳过自己发送的消息: Chat ID={chat_id}")
+                    return False
+                
+                # 检查发送者是否是控制机器人
+                if self.bot_id is None:
+                    print(f"[过滤器] 账号 #{account_id} 控制机器人ID未设置，允许通过")
+                    return True
+                
                 if sender_id is not None:
-                    sender_id_int = int(sender_id) if sender_id is not None else None
-                    is_not_bot = sender_id_int != self.bot_id
-                    return is_not_bot
-            except (ValueError, TypeError):
-                pass  # 转换失败时不过滤
-            
-            return True
+                    try:
+                        sender_id_int = int(sender_id)
+                        is_not_bot = sender_id_int != self.bot_id
+                        if not is_not_bot:
+                            print(f"[过滤器] 账号 #{account_id} 跳过控制机器人消息: Sender ID={sender_id_int}, Bot ID={self.bot_id}")
+                        return is_not_bot
+                    except (ValueError, TypeError):
+                        pass  # 转换失败时不过滤
+                
+                return True
+            except Exception as e:
+                print(f"[过滤器] 账号 #{account_id} 过滤器检查出错: {e}")
+                return True  # 出错时允许通过
         
         # 用户客户端监听器 - 使用过滤器，避免处理控制机器人消息（完全按照 TelegramForwarder 的方式）
         @client.on(events.NewMessage(func=not_from_control_bot))
         async def handle_new_message(event):
+            # 详细日志：记录收到消息
+            try:
+                chat_id = getattr(event, 'chat_id', None)
+                msg_id = getattr(event.message, 'id', None)
+                msg_text = getattr(event.message, 'message', '') or getattr(event.message, 'text', '') or ''
+                msg_text_preview = msg_text[:50] if msg_text else '(无文本)'
+                print(f"[事件监听] 账号 #{account_id} 收到新消息: Chat ID={chat_id}, Msg ID={msg_id}, 内容预览={msg_text_preview}")
+            except Exception as e:
+                print(f"[事件监听] 账号 #{account_id} 记录消息日志失败: {e}")
+            
             # 如果指定了群组列表，只处理这些群组
             if group_list and hasattr(client, '_monitored_group_ids'):
                 if event.chat_id not in client._monitored_group_ids:
+                    print(f"[事件监听] 账号 #{account_id} 消息来自未监控的群组: {event.chat_id}")
                     return
             await self._process_message(event, account_id, "NewMessage")
         
@@ -292,18 +323,29 @@ class ClientManager:
     async def _process_message(self, event, account_id: int, handler_name: str):
         """处理收到的消息（完全按照 TelegramForwarder 的方式：被动接收，立即处理）"""
         try:
+            chat_id = getattr(event, 'chat_id', None)
+            msg_id = getattr(event.message, 'id', None)
+            print(f"[处理消息] 账号 #{account_id} 开始处理消息: Chat ID={chat_id}, Msg ID={msg_id}, Handler={handler_name}")
+            
             # 过滤器已经处理了基本过滤（私聊、非群组、控制机器人消息等），这里直接处理
             account = dao_accounts.get(account_id)
             if account:
+                print(f"[处理消息] 账号 #{account_id} 获取账号信息成功，调用 on_new_message")
                 # 完全按照 TelegramForwarder 的方式：立即处理，不阻塞
                 # 传递控制机器人的 ID，用于过滤自己的消息
                 # 注意：on_new_message 内部已经使用 create_task 来发送提醒，所以这里直接 await 不会阻塞
                 await on_new_message(event, account, self.bot, self.bot_id)
+                print(f"[处理消息] 账号 #{account_id} on_new_message 处理完成")
+            else:
+                print(f"[处理消息] ⚠️ 账号 #{account_id} 未找到账号信息")
         except (GeneratorExit, asyncio.CancelledError):
             # 优雅处理协程取消
+            print(f"[处理消息] 账号 #{account_id} 协程被取消")
             pass
         except Exception as e:
             print(f"[处理消息] ❌ 账号 #{account_id} 错误: {str(e)}")
+            import traceback
+            traceback.print_exc()
 
     async def start_account_client(self, account_row):
         account_id = account_row['id']
@@ -319,19 +361,33 @@ class ClientManager:
             client = TelegramClient(sess, self.api_id, self.api_hash)
         
         await client.start(phone=lambda: None, password=lambda: None, code_callback=lambda: None)
+        print(f"[启动] 账号 #{account_id} 客户端已启动")
+        
         group_list = await self._list_account_groups(client, account_id)
+        print(f"[启动] 账号 #{account_id} 找到 {len(group_list)} 个群组")
+        
         await self._sync_all_groups(client, account_id, group_list)
+        print(f"[启动] 账号 #{account_id} 群组同步完成")
+        
+        # 注册事件监听器（完全按照 TelegramForwarder 的方式）
         self._register_handlers_for_account(client, account_id, group_list)
+        print(f"[启动] 账号 #{account_id} 事件监听器已注册（NewMessage, MessageEdited）")
+        
         self.account_clients[account_id] = client
         await client.catch_up()
+        print(f"[启动] 账号 #{account_id} 已同步历史消息")
         
         # 完全按照 TelegramForwarder 的方式：只使用被动事件监听，不进行轮询
         # 事件监听器已经在 _register_handlers_for_account 中注册
         # TelegramForwarder 使用 run_until_disconnected() 保持连接，等待消息推送
         from services import settings_service
         role = settings_service.get_account_role(account_id) or 'both'
+        keywords_count = len(settings_service.get_account_keywords(account_id, kind='listen') or [])
         if role in ('listen', 'both'):
-            print(f"[启动] 账号 #{account_id} 是监听账号，使用被动事件监听（完全按照 TelegramForwarder 方式，无轮询）")
+            print(f"[启动] ✅ 账号 #{account_id} 是监听账号，使用被动事件监听（完全按照 TelegramForwarder 方式，无轮询）")
+            print(f"[启动] 账号 #{account_id} 监听关键词数量: {keywords_count}")
+            if keywords_count == 0:
+                print(f"[启动] ⚠️ 账号 #{account_id} 没有设置监听关键词，将不会触发提醒")
         else:
             print(f"[启动] 账号 #{account_id} 是点击账号，使用被动事件监听（仅在收到链接时点击）")
     

@@ -35,17 +35,32 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
         bot_client: 控制机器人客户端
         control_bot_id: 控制机器人的 ID（用于过滤自己的消息）
     """
+    account_id = account['id']
     try:
+        chat_id = getattr(event, 'chat_id', None)
+        msg_id = getattr(event.message, 'id', None)
+        msg_text = getattr(event.message, 'message', '') or getattr(event.message, 'text', '') or ''
+        print(f"[on_new_message] 账号 #{account_id} 开始处理: Chat ID={chat_id}, Msg ID={msg_id}, 文本长度={len(msg_text)}")
+        
         # 快速过滤：跳过私聊、非群组、自己发送的消息
-        if event.is_private or not event.is_group or event.message.out:
+        if event.is_private:
+            print(f"[on_new_message] 账号 #{account_id} 跳过私聊消息")
+            return
+        if not event.is_group:
+            print(f"[on_new_message] 账号 #{account_id} 跳过非群组消息")
+            return
+        if event.message.out:
+            print(f"[on_new_message] 账号 #{account_id} 跳过自己发送的消息")
             return
         
-        role = settings_service.get_account_role(account['id']) or 'both'
+        role = settings_service.get_account_role(account_id) or 'both'
+        print(f"[on_new_message] 账号 #{account_id} 角色: {role}")
         
         # =================================================================
         # 1) 关键词监听（仅当角色包含 listen）- 使用过滤器链
         # =================================================================
         if role in ('listen', 'both'):
+            print(f"[on_new_message] 账号 #{account_id} 是监听账号，创建过滤器链")
             # 创建消息上下文
             context = MessageContext(
                 client=event.client,
@@ -65,7 +80,10 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
             
             # 执行过滤器链（完全异步，不阻塞）
             # 立即创建任务，不等待完成，真正并发
+            print(f"[on_new_message] 账号 #{account_id} 启动过滤器链处理任务")
             asyncio.create_task(filter_chain.process(context))
+        else:
+            print(f"[on_new_message] 账号 #{account_id} 不是监听账号，跳过关键词监听")
 
         # =================================================================
         # 2) 按钮点击（仅当角色包含 click）- 保持原有逻辑
