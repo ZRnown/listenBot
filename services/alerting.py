@@ -97,25 +97,58 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
             
             # 构建按钮（添加emoji和合适的按钮）
             buttons = []
-            # 尝试构建消息链接
+            # 尝试构建消息链接（优化：支持所有类型的群组/频道）
             msg_link = None
             if source_chat_id and event.message.id:
                 try:
                     # 优先尝试使用群组的 username（公开群组/频道）
                     chat_username = getattr(chat, 'username', None)
                     if chat_username:
-                        # 公开群组/频道，使用 username 格式
+                        # 公开群组/频道，使用 username 格式（最可靠）
                         msg_link = f"https://t.me/{chat_username}/{event.message.id}"
-                    elif str(source_chat_id).startswith('-100'):
-                        # 私有超级群组/频道，chat_id 格式为 -100xxxxxxxxxx
-                        # 提取频道ID（去掉 -100 前缀）
-                        channel_id = str(source_chat_id)[4:]
-                        msg_link = f"https://t.me/c/{channel_id}/{event.message.id}"
+                        print(f"[发送提醒] 生成公开链接: {msg_link}")
                     else:
-                        # 普通群组，使用 tg:// 协议（可能不太可靠，但作为备选）
-                        msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
-                except Exception:
-                    pass
+                        # 私有群组/频道，需要特殊处理
+                        chat_id_str = str(source_chat_id)
+                        
+                        # 检查是否是超级群组/频道（-100 开头）
+                        if chat_id_str.startswith('-100'):
+                            # 私有超级群组/频道
+                            # Telegram 的私有频道链接格式：https://t.me/c/{channel_id}/{message_id}
+                            # channel_id 需要是正数，从 -100xxxxxxxxxx 中提取
+                            # 注意：需要去掉负号和 -100 前缀
+                            channel_id = chat_id_str[4:]  # 去掉 "-100" 前缀
+                            # 确保是有效的数字
+                            if channel_id.isdigit():
+                                msg_link = f"https://t.me/c/{channel_id}/{event.message.id}"
+                                print(f"[发送提醒] ✅ 生成私有频道链接: {msg_link} (原始 Chat ID: {source_chat_id}, 频道 ID: {channel_id})")
+                            else:
+                                print(f"[发送提醒] ⚠️ 无法生成私有频道链接: channel_id={channel_id} 格式无效 (原始: {source_chat_id})")
+                        elif chat_id_str.startswith('-'):
+                            # 普通私有群组（负数但不是 -100 开头）
+                            # 对于普通群组，Telegram 不支持直接链接，但可以尝试使用 tg:// 协议
+                            # 注意：tg:// 协议在某些客户端可能不工作
+                            # 更好的方法是尝试获取群组的访问哈希（access_hash）
+                            try:
+                                # 尝试从 chat 对象获取更多信息
+                                if hasattr(chat, 'access_hash') and chat.access_hash:
+                                    # 如果有 access_hash，可以尝试构建链接
+                                    # 但普通群组通常不支持直接链接
+                                    print(f"[发送提醒] ⚠️ 普通群组 (ID: {source_chat_id}) 不支持直接消息链接")
+                                    # 不生成链接，因为普通群组无法通过链接访问
+                                else:
+                                    # 尝试使用 tg:// 协议（可能不工作，但作为备选）
+                                    msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
+                                    print(f"[发送提醒] 生成 tg:// 协议链接: {msg_link} (可能不可用)")
+                            except Exception as e:
+                                print(f"[发送提醒] ⚠️ 生成普通群组链接失败: {e}")
+                        else:
+                            # 正数 chat_id（理论上不应该出现，但处理一下）
+                            print(f"[发送提醒] ⚠️ 意外的正数 Chat ID: {source_chat_id}")
+                except Exception as e:
+                    print(f"[发送提醒] ❌ 生成消息链接时出错: {e}")
+                    import traceback
+                    traceback.print_exc()
             
             # 构建按钮行 - 只添加"查看消息"按钮
             button_row = []
