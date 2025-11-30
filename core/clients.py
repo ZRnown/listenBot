@@ -399,8 +399,9 @@ class ClientManager:
             self._register_handlers_for_account(client, account_id, None, register_listeners=False)
         
         self.account_clients[account_id] = client
-        await client.catch_up()
-        print(f"[启动] 账号 #{account_id} 已同步历史消息")
+        # 完全按照 TelegramForwarder 的方式：不处理历史消息，只监听新消息
+        # TelegramForwarder 不使用 catch_up()，只监听实时新消息
+        print(f"[启动] 账号 #{account_id} 已启动，只监听新消息（不处理历史消息）")
     
     async def _list_account_groups(self, client: TelegramClient, account_id: int):
         """列出账号加入的所有群组"""

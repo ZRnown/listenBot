@@ -50,8 +50,21 @@ class KeywordFilter(BaseFilter):
             print(f"[KeywordFilter] 账号 #{account_id} 没有关键词，跳过")
             return False
         
+        # 详细日志：打印关键词列表和消息文本
+        print(f"[KeywordFilter] 账号 #{account_id} 关键词列表: {keywords}")
+        print(f"[KeywordFilter] 账号 #{account_id} 消息文本: '{msg_text}'")
+        
         matched = match_keywords(account_id, msg_text, kind='listen')
         print(f"[KeywordFilter] 账号 #{account_id} 关键词匹配结果: {matched}")
+        
+        # 如果没有匹配，尝试详细匹配每个关键词
+        if not matched:
+            print(f"[KeywordFilter] 账号 #{account_id} 开始逐个检查关键词:")
+            for kw in keywords:
+                if kw and kw.strip():
+                    keyword = kw.strip()
+                    is_match = keyword in msg_text
+                    print(f"[KeywordFilter]   关键词 '{keyword}' 在文本 '{msg_text}' 中: {is_match}")
         
         if matched:
             context.matched_keyword = matched
