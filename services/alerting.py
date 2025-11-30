@@ -5,32 +5,98 @@ from telethon.tl.custom import Button
 from storage import dao_alerts
 from services import settings_service
 
+# 全局发送队列，确保所有发送任务真正并发
+_send_queue = asyncio.Queue()
+_send_workers_started = False
+_send_workers = []
+
+async def _send_worker(worker_id: int):
+    """发送工作协程：从队列中取出任务并发送，确保真正并发"""
+    while True:
+        try:
+            # 从队列中获取发送任务
+            task_data = await _send_queue.get()
+            if task_data is None:  # 停止信号
+                break
+            
+            bot_client, target_entity, message_text, buttons, parse_mode = task_data
+            
+            # 立即发送，不等待
+            try:
+                send_start = datetime.now()
+                await bot_client.send_message(
+                    target_entity,
+                    message_text,
+                    parse_mode=parse_mode,
+                    buttons=buttons
+                )
+                send_end = datetime.now()
+                send_duration = (send_end - send_start).total_seconds()
+                print(f"[发送工作协程 #{worker_id}] ✅ 消息发送成功 (耗时: {send_duration:.3f}秒)")
+            except Exception as e:
+                print(f"[发送工作协程 #{worker_id}] ❌ 发送失败: {e}")
+            
+            _send_queue.task_done()
+        except Exception as e:
+            print(f"[发送工作协程 #{worker_id}] ❌ 错误: {e}")
+
+def _ensure_send_workers(bot_client):
+    """确保发送工作协程已启动（全局共享，所有 bot_client 使用同一个协程池）"""
+    global _send_workers_started, _send_workers
+    if not _send_workers_started:
+        # 启动多个工作协程，确保并发发送
+        num_workers = 50  # 50个并发工作协程，确保真正并发
+        _send_workers = [asyncio.create_task(_send_worker(i)) for i in range(num_workers)]
+        _send_workers_started = True
+        print(f"[发送队列] 启动 {num_workers} 个发送工作协程，确保真正并发")
+
 async def send_alert(bot_client, account, event, matched_keyword: str, control_bot_id=None):
     from datetime import datetime
     start_time = datetime.now()
     timestamp = start_time.strftime('%H:%M:%S.%f')[:-3]  # 毫秒精度
     print(f"[发送提醒] [{timestamp}] 开始构建提醒消息...")
     
-    # 极致优化：并发获取 sender 和 chat，不串行等待
-    sender_task = asyncio.create_task(event.get_sender())
-    chat_task = asyncio.create_task(event.get_chat())
-    sender = await sender_task
-    chat = await chat_task
+    # 极致优化：并发获取 sender 和 chat，使用 gather 真正并发
+    try:
+        sender, chat = await asyncio.gather(
+            event.get_sender(),
+            event.get_chat(),
+            return_exceptions=True
+        )
+        
+        # 处理异常
+        if isinstance(sender, Exception):
+            print(f"[发送提醒] [{timestamp}] ⚠️ 获取发送者失败: {sender}，使用默认值")
+            sender = None
+        if isinstance(chat, Exception):
+            print(f"[发送提醒] [{timestamp}] ⚠️ 获取聊天失败: {chat}，使用默认值")
+            chat = None
+        
+        # 快速检查：如果消息来自控制机器人，跳过发送
+        if sender:
+            sender_id = getattr(sender, 'id', None)
+            is_bot = getattr(sender, 'bot', False)
+            if is_bot and control_bot_id and sender_id == control_bot_id:
+                print(f"[发送提醒] [{timestamp}] ⚠️ 消息来自控制机器人本身（ID: {sender_id}），跳过发送提醒")
+                return
+    except Exception as e:
+        print(f"[发送提醒] [{timestamp}] ⚠️ 获取信息失败: {e}，继续发送")
+        sender = None
+        chat = None
     
-    # 快速检查：如果消息来自控制机器人，跳过发送
+    # 安全获取信息，处理 None 情况
+    sender_name = 'Unknown'
+    sender_username = None
+    sender_id = None
     if sender:
+        sender_name = f"{getattr(sender,'first_name', '') or ''} {getattr(sender,'last_name','') or ''}".strip() or 'Unknown'
+        sender_username = getattr(sender, 'username', None)
         sender_id = getattr(sender, 'id', None)
-        is_bot = getattr(sender, 'bot', False)
-        if is_bot and control_bot_id and sender_id == control_bot_id:
-            print(f"[发送提醒] [{timestamp}] ⚠️ 消息来自控制机器人本身（ID: {sender_id}），跳过发送提醒")
-            return
-    sender_name = f"{getattr(sender,'first_name', '') or ''} {getattr(sender,'last_name','') or ''}".strip() or 'Unknown'
-    sender_username = getattr(sender, 'username', None)
+    
     sender_username_display = f"@{sender_username}" if sender_username else '无'
-    source_title = getattr(chat, 'title', '') or getattr(chat, 'username','') or 'Unknown'
+    source_title = (getattr(chat, 'title', '') or getattr(chat, 'username','') or 'Unknown') if chat else 'Unknown'
     text = event.message.message or ''
-    source_chat_id = getattr(chat, 'id', None)
-    sender_id = getattr(sender, 'id', None)
+    source_chat_id = getattr(chat, 'id', None) if chat else None
     
     # 尝试获取更详细的 chat 信息（用于生成链接）
     chat_entity = None
@@ -261,17 +327,24 @@ async def send_alert(bot_client, account, event, matched_keyword: str, control_b
                 send_start_timestamp = send_start_time.strftime('%H:%M:%S.%f')[:-3]
                 print(f"[发送提醒] [{send_start_timestamp}] 开始发送消息...")
                 
-                await bot_client.send_message(
-                    target_entity, 
-                    message_text, 
-                    parse_mode='markdown',
-                    buttons=buttons if buttons else None
-                )
+                # 确保发送工作协程已启动
+                _ensure_send_workers(bot_client)
                 
+                # 将发送任务放入队列，立即返回，不等待发送完成
+                # 这样多个消息可以真正并发发送
+                await _send_queue.put((
+                    bot_client,
+                    target_entity,
+                    message_text,
+                    buttons if buttons else None,
+                    'markdown'
+                ))
+                
+                # 立即返回，不等待发送完成（由工作协程处理）
                 send_end_time = datetime.now()
                 send_end_timestamp = send_end_time.strftime('%H:%M:%S.%f')[:-3]
                 send_duration = (send_end_time - send_start_time).total_seconds()
-                print(f"[发送提醒] [{send_end_timestamp}] ✅ 消息发送成功到 {target_entity} (耗时: {send_duration:.3f}秒)")
+                print(f"[发送提醒] [{send_end_timestamp}] ✅ 消息已加入发送队列 (耗时: {send_duration:.3f}秒，将由工作协程并发发送)")
                 delivered = 'success'
                 error = None
             except Exception as send_error:
