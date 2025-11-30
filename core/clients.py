@@ -243,49 +243,30 @@ class ClientManager:
             print(f"[客户端连接] 账号 #{account_id} 连接失败: {e}")
 
     def _register_handlers_for_account(self, client: TelegramClient, account_id: int, group_list: list = None):
-        """
-        为账号注册事件处理器
+        """为账号注册事件处理器（支持多账号并发）"""
+        if group_list:
+            group_ids_set = {g['id'] for g in group_list}
+            client._monitored_group_ids = group_ids_set
+        else:
+            client._monitored_group_ids = None
         
-        ⚠️ 移除手动 ID 过滤列表，不再限制 specific group IDs
-        这样能确保只要是账号收到的群消息，都能触发，避免漏消息
-        """
         @client.on(events.NewMessage(incoming=True))
         async def handle_new_message(event):
-            try:
-                # 仅保留最基础的类型判断
-                if event.is_private:
-                    return  # 忽略私聊
-                
-                # 直接处理，不要再比对 chat_id 是否在列表里
-                # Telethon 的事件推送非常快，多余的判断反而容易出错
-                await self._process_message(event, account_id, "NewMessage")
-                
-            except Exception as e:
-                print(f"[事件处理器] ❌ 账号 #{account_id} 处理消息时出错: {e}")
-                import traceback
-                traceback.print_exc()
+            if group_list and hasattr(client, '_monitored_group_ids'):
+                if event.chat_id not in client._monitored_group_ids:
+                    return
+            await self._process_message(event, account_id, "NewMessage")
         
         @client.on(events.MessageEdited(incoming=True))
         async def handle_message_edited(event):
-            try:
-                if event.is_private:
+            if group_list and hasattr(client, '_monitored_group_ids'):
+                if event.chat_id not in client._monitored_group_ids:
                     return
-                await self._process_message(event, account_id, "MessageEdited")
-            except Exception as e:
-                print(f"[事件处理器] ❌ 账号 #{account_id} 处理编辑消息时出错: {e}")
-                import traceback
-                traceback.print_exc()
-        
-        print(f"[事件注册] ✅ 账号 #{account_id} 事件处理器已注册（接收所有群组消息）")
+            await self._process_message(event, account_id, "MessageEdited")
     
     async def _process_message(self, event, account_id: int, handler_name: str):
         """处理收到的消息（极致优化：立即处理，不阻塞）"""
         try:
-            # 📢 最顶层调试日志：证明 TCP 事件已到达
-            msg_id = getattr(event.message, 'id', None)
-            chat_id = getattr(event, 'chat_id', None)
-            print(f"[TCP事件] 账号 #{account_id} 收到 {handler_name} (消息ID: {msg_id}, Chat ID: {chat_id})")
-            
             # 快速过滤：只处理群组消息
             if event.is_private or not event.is_group:
                 return
@@ -296,15 +277,11 @@ class ClientManager:
                 # 传递控制机器人的 ID，用于过滤自己的消息
                 # 注意：on_new_message 内部已经使用 create_task 来发送提醒，所以这里直接 await 不会阻塞
                 await on_new_message(event, account, self.bot, self.bot_id)
-            else:
-                print(f"[处理消息] ⚠️ 账号 #{account_id} 不存在于数据库中")
         except (GeneratorExit, asyncio.CancelledError):
             # 优雅处理协程取消
             pass
         except Exception as e:
             print(f"[处理消息] ❌ 账号 #{account_id} 错误: {str(e)}")
-            import traceback
-            traceback.print_exc()
 
     async def start_account_client(self, account_row):
         account_id = account_row['id']
@@ -320,44 +297,82 @@ class ClientManager:
             client = TelegramClient(sess, self.api_id, self.api_hash)
         
         await client.start(phone=lambda: None, password=lambda: None, code_callback=lambda: None)
-        
-        # 验证客户端已连接
-        if not client.is_connected():
-            raise RuntimeError(f'账号 #{account_id} 客户端启动后未连接')
-        
-        # 验证客户端已授权
-        if not await client.is_user_authorized():
-            raise RuntimeError(f'账号 #{account_id} 客户端未授权')
-        
-        print(f"[启动] 账号 #{account_id} 客户端已连接并授权")
-        
-        # ✅ 获取一次 Dialogs 以建立本地缓存 (Entity Cache)
-        # 这步是必须的，否则 Telethon 不知道 Chat ID 对应的群名，但不要阻塞太久
-        # 我们只获取最近的对话，不获取全部，速度极快
-        try:
-            print(f"[启动] 账号 #{account_id} 正在建立 Entity 缓存...")
-            await client.get_dialogs(limit=50)
-            print(f"[启动] 账号 #{account_id} Entity 缓存建立完成")
-        except Exception as e:
-            print(f"[启动] ⚠️ 账号 #{account_id} 建立 Entity 缓存时出错: {e}")
-            # 继续执行，不阻塞
-        
-        # 注册事件处理器（不再传递 group_list，移除过滤）
-        self._register_handlers_for_account(client, account_id)
+        group_list = await self._list_account_groups(client, account_id)
+        await self._sync_all_groups(client, account_id, group_list)
+        self._register_handlers_for_account(client, account_id, group_list)
         self.account_clients[account_id] = client
+        await client.catch_up()
         
-        # ❌ 删除 await client.catch_up()
-        # catch_up 会尝试处理历史消息，导致启动极其缓慢，甚至让人以为程序挂了
-        # 我们只关心"现在开始"的新消息
-        
-        print(f"[启动] ✅ 账号 #{account_id} 监听就绪 (TCP Mode)")
+        # 极速优化：完全移除主动轮询，完全依赖事件推送（Socket推送）
+        # 原因：主动轮询有网络延迟（RTT），且极易触发 Telegram 的 FloodWait（API 限流）
+        # Telethon 维持着 TCP 长连接，当有新消息时，Telegram 服务端会主动推送到客户端
+        # events.NewMessage 的响应速度永远比主动 get_messages 要快，而且没有限流风险
+        print(f"[启动] 账号 #{account_id} 已注册事件处理器，完全依赖事件推送（极速模式）")
+        # 不再启动 _active_polling_task，完全依赖 events.NewMessage 和 events.MessageEdited
     
-    # ❌ 移除 _list_account_groups 和 _sync_all_groups 方法
-    # 不再需要手动列出和同步群组，Telethon 会自动处理
-    # 移除这些方法可以避免：
-    # 1. 启动时的长时间阻塞
-    # 2. 群组ID过滤导致的漏消息问题
-    # 3. 网络波动导致的列表不完整问题
+    async def _list_account_groups(self, client: TelegramClient, account_id: int):
+        """列出账号加入的所有群组"""
+        try:
+            groups = []
+            async for dialog in client.iter_dialogs():
+                if not dialog.is_user:
+                    chat = dialog.entity
+                    chat_id = chat.id
+                    chat_title = getattr(chat, 'title', '') or getattr(chat, 'username', '') or f"Chat#{chat_id}"
+                    is_megagroup = getattr(chat, 'megagroup', False)
+                    is_broadcast = getattr(chat, 'broadcast', False)
+                    if is_megagroup or (not is_broadcast and chat_id < 0):
+                        groups.append({
+                            'id': chat_id,
+                            'title': chat_title,
+                            'entity': chat
+                        })
+            print(f"[启动] 账号 #{account_id} 加入 {len(groups)} 个群组")
+            return groups
+        except Exception as e:
+            print(f"[启动] ❌ 账号 #{account_id} 获取群组列表失败: {str(e)}")
+            return []
+    
+    async def _sync_all_groups(self, client: TelegramClient, account_id: int, group_list: list):
+        """同步所有群组，确保能接收到消息更新"""
+        if not group_list:
+            return
+        
+        # 极致优化：增大批次，减少延迟
+        batch_size = 50  # 从10增加到50，减少批次数量
+        for i in range(0, len(group_list), batch_size):
+            batch = group_list[i:i+batch_size]
+            tasks = []
+            
+            for group_info in batch:
+                async def sync_group(g):
+                    try:
+                        entity = g['entity']
+                        await client.get_entity(entity)
+                        try:
+                            await client.get_messages(entity, limit=1)
+                        except FloodWaitError as e:
+                            await asyncio.sleep(e.seconds)
+                            await client.get_messages(entity, limit=1)
+                        except Exception:
+                            pass
+                        return True
+                    except FloodWaitError as e:
+                        await asyncio.sleep(e.seconds)
+                        try:
+                            await client.get_entity(g['entity'])
+                            return True
+                        except Exception:
+                            return False
+                    except Exception:
+                        return False
+                
+                tasks.append(sync_group(group_info))
+            
+            await asyncio.gather(*tasks, return_exceptions=True)
+            # 移除批次间延迟，全速运行
+            # if i + batch_size < len(group_list):
+            #     await asyncio.sleep(0.5)
     
     async def _notify_user_waiting(self, account_id: int, wait_seconds: int, reason: str = "加载中"):
         """通知用户需要等待"""

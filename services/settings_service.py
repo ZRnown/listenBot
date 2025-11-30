@@ -83,9 +83,6 @@ def get_account_role(account_id: int) -> Optional[str]:
 def set_account_keywords(account_id: int, keywords, kind: str = 'listen'):
     from storage import dao_keywords
     dao_keywords.set_keywords(account_id, keywords, kind=kind)
-    # 清除关键词缓存，强制重新编译
-    from core.keyword_cache import clear_cache
-    clear_cache(account_id)
 
 
 def get_account_keywords(account_id: int, kind: str = 'listen'):
@@ -167,17 +164,11 @@ def apply_global_click_keywords_to_account(account_id: int):
 def add_keyword(account_id: int, word: str, kind: str = 'listen'):
     from storage import dao_keywords
     dao_keywords.add_keyword(account_id, word, kind=kind)
-    # 清除关键词缓存，强制重新编译
-    from core.keyword_cache import clear_cache
-    clear_cache(account_id)
 
 
 def delete_keyword(account_id: int, word: str, kind: str = 'listen'):
     from storage import dao_keywords
     dao_keywords.delete_keyword(account_id, word, kind=kind)
-    # 清除关键词缓存，强制重新编译
-    from core.keyword_cache import clear_cache
-    clear_cache(account_id)
 
 
 # ---- delays and concurrency helpers ----

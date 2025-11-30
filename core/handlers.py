@@ -1,9 +1,9 @@
 import asyncio
 import random
 from datetime import datetime
-from core.filters import match_keywords_normalized
+from core.filters import match_keywords, match_keywords_normalized
 from core.keyword_cache import match_keywords_fast
-from services.alerting import quick_enqueue_alert
+from services.alerting import send_alert
 from services import settings_service
 
 # 每个账号的并发控制（防止封号）
@@ -22,14 +22,7 @@ def _get_semaphore(account_id: int) -> asyncio.Semaphore:
 
 
 async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
-    """
-    极速消息处理：零IO匹配，毫秒级响应
-    
-    核心优化：
-    1. 零IO匹配：仅使用 event.raw_text 和 event.chat_id（本地属性，0ms延迟）
-    2. 预编译正则：使用预编译的关键词正则表达式，O(1)匹配
-    3. 立即入队：匹配成功后立即入队，不等待任何网络请求
-    4. 完全异步：所有耗时操作都在后台worker中执行
+    """处理新消息：监听关键词和点击按钮（支持多账号并发）
     
     Args:
         event: Telethon 消息事件
@@ -38,24 +31,21 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
         control_bot_id: 控制机器人的 ID（用于过滤自己的消息）
     """
     try:
-        # ✅ 零IO过滤：使用本地属性，不调用任何网络请求
+        # 极速优化：零IO匹配 - 只使用 event 对象中已经存在的原始数据
+        # 不调用任何需要网络请求的方法（get_chat, get_sender 等）
+        
+        # 快速过滤：跳过私聊、非群组、自己发送的消息
         if event.is_private or not event.is_group or event.message.out:
             return
         
-        # ✅ 零IO获取文本：使用 raw_text（本地属性，0ms延迟）
+        # 极速获取消息文本：直接使用 raw_text（本地缓存，0ms）
         text = getattr(event.message, 'raw_text', '') or ''
         if not text:
             text = event.message.message or ''
         if not text:
-            return
+            text = str(event.message.text) if hasattr(event.message, 'text') else ''
         
-        # 添加调试日志（确认消息被处理）
-        msg_id = getattr(event.message, 'id', None)
-        chat_id = getattr(event, 'chat_id', None)
-        print(f"[消息处理] 账号 #{account['id']} 处理消息 (消息ID: {msg_id}, Chat ID: {chat_id}, 文本长度: {len(text)})")
-        
-        # ✅ 零IO获取基本信息（本地属性）
-        msg_id = getattr(event.message, 'id', None)
+        # 极速获取 chat_id（本地缓存，0ms）
         chat_id = getattr(event, 'chat_id', None)
         
         role = settings_service.get_account_role(account['id']) or 'both'
@@ -64,29 +54,29 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
         # 1) 关键词监听（仅当角色包含 listen）- 极速匹配
         # =================================================================
         if role in ('listen', 'both'):
-            # ✅ 使用预编译正则表达式，O(1)匹配，微秒级速度
+            # 极速匹配：使用预编译正则表达式（纯CPU计算，微秒级）
             matched = match_keywords_fast(account['id'], text, kind='listen')
             
-            # 添加调试日志（即使没有匹配也记录，确认匹配逻辑执行）
-            if not matched:
-                # 只在调试模式下打印（避免日志过多）
-                # print(f"[关键词匹配] 账号 #{account['id']} 未匹配到关键词")
-                pass
-            
             if matched:
-                timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+                # 极速获取消息ID（本地缓存，0ms）
+                msg_id = getattr(event.message, 'id', None)
+                timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]  # 毫秒精度
                 print(f"[监听] [{timestamp}] ✅ 账号 #{account['id']} 匹配关键词: '{matched}' (消息ID: {msg_id}, Chat ID: {chat_id})")
                 
+                # 极速检查转发目标（本地缓存，0ms）
                 target = settings_service.get_target_chat()
+                
                 if target and target.strip() and bot_client:
-                    # ✅ 立即入队，不等待任何网络请求，不阻塞
-                    # 所有耗时操作（get_sender, get_chat, send_message）都在worker中执行
-                    quick_enqueue_alert(bot_client, account, event, matched, control_bot_id)
+                    # 极速入队：立即将消息放入发送队列，不等待任何网络请求
+                    # 生产者-消费者模型：监听端立即入队，worker后台处理
+                    from services.alerting import quick_enqueue
+                    quick_enqueue(bot_client, account, event, matched, control_bot_id)
+                    # 立即返回，不等待发送完成，让其他消息也能立即处理
                 else:
                     if not target or not target.strip():
-                        print(f"[监听] [{timestamp}] ⚠️ 转发目标未设置")
+                        print(f"[监听] [{timestamp}] ⚠️ 转发目标未设置，跳过发送提醒")
                     if not bot_client:
-                        print(f"[监听] [{timestamp}] ⚠️ bot_client 为空")
+                        print(f"[监听] [{timestamp}] ⚠️ bot_client 为空，跳过发送提醒")
                     
                 # 自动发送模板消息（全速运行：立即发送，无延迟）
                 if settings_service.get_start_sending(account['id']):
@@ -94,12 +84,14 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
                     if tpl:
                         async def _send_template():
                             try:
+                                # 全速运行：移除所有延迟，立即发送
                                 sem = _get_semaphore(account['id'])
                                 async with sem:
                                     await event.client.send_message(event.chat_id, tpl)
                             except Exception:
                                 pass
                         
+                        # 创建后台任务执行发送（立即调度，不等待）
                         asyncio.create_task(_send_template())
 
         # =================================================================

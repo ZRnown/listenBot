@@ -32,22 +32,8 @@ async def main():
         await manager.load_active_accounts()
         print(f"[启动日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ✅ 系统启动完成，开始监听消息...")
         
-        # 验证所有客户端连接状态
-        print(f"[启动日志] 验证客户端连接状态...")
-        connected_count = 0
-        for acc_id, client in manager.account_clients.items():
-            if client.is_connected():
-                connected_count += 1
-            else:
-                print(f"[启动日志] ⚠️ 账号 #{acc_id} 客户端未连接")
-        print(f"[启动日志] ✅ {connected_count}/{len(manager.account_clients)} 个客户端保持连接")
-        
         # 主循环：保持程序运行（使用更可靠的方式）
         print(f"[启动日志] 程序正在运行，按 Ctrl+C 退出...")
-        print(f"[启动日志] 💡 提示：如果长时间没有收到消息，请检查：")
-        print(f"[启动日志]   1. 账号是否已加入目标群组")
-        print(f"[启动日志]   2. 是否已设置关键词")
-        print(f"[启动日志]   3. 是否已设置转发目标")
         try:
             # 创建一个永远不会被设置的 Event，保持程序运行
             stop_event = asyncio.Event()
