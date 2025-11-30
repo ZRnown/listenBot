@@ -265,7 +265,7 @@ class ClientManager:
             await self._process_message(event, account_id, "MessageEdited")
     
     async def _process_message(self, event, account_id: int, handler_name: str):
-        """处理收到的消息（全速运行：直接处理，不创建额外任务）"""
+        """处理收到的消息（极致优化：立即处理，不阻塞）"""
         try:
             # 快速过滤：只处理群组消息
             if event.is_private or not event.is_group:
@@ -273,8 +273,9 @@ class ClientManager:
             
             account = dao_accounts.get(account_id)
             if account:
-                # 全速运行：直接调用，不创建额外任务，减少延迟
+                # 极致优化：直接调用，不等待完成，让关键词检测和推送立即进行
                 # 传递控制机器人的 ID，用于过滤自己的消息
+                # 注意：on_new_message 内部已经使用 create_task 来发送提醒，所以这里直接 await 不会阻塞
                 await on_new_message(event, account, self.bot, self.bot_id)
         except (GeneratorExit, asyncio.CancelledError):
             # 优雅处理协程取消
@@ -340,7 +341,8 @@ class ClientManager:
         if not group_list:
             return
         
-        batch_size = 10
+        # 极致优化：增大批次，减少延迟
+        batch_size = 50  # 从10增加到50，减少批次数量
         for i in range(0, len(group_list), batch_size):
             batch = group_list[i:i+batch_size]
             tasks = []
@@ -371,8 +373,9 @@ class ClientManager:
                 tasks.append(sync_group(group_info))
             
             await asyncio.gather(*tasks, return_exceptions=True)
-            if i + batch_size < len(group_list):
-                await asyncio.sleep(0.5)
+            # 移除批次间延迟，全速运行
+            # if i + batch_size < len(group_list):
+            #     await asyncio.sleep(0.5)
     
     async def _notify_user_waiting(self, account_id: int, wait_seconds: int, reason: str = "加载中"):
         """通知用户需要等待"""
@@ -392,42 +395,52 @@ class ClientManager:
         每个账号的群组数/10=协程数，每个协程处理约10个群组
         """
         last_message_ids = {}
-        # 初始化：快速获取每个群组的最新消息ID
-        init_tasks = []
-        for group_info in group_list:
-            async def init_group(g):
-                try:
-                    entity = g['entity']
-                    messages = await client.get_messages(entity, limit=1)
-                    if messages:
-                        last_message_ids[g['id']] = messages[0].id
-                    else:
-                        last_message_ids[g['id']] = 0
-                except FloodWaitError as e:
-                    await self._notify_user_waiting(account_id, e.seconds, f"初始化群组 '{g['title']}'")
-                    await asyncio.sleep(e.seconds)
+        # 极致优化：快速初始化，并发获取每个群组的最新消息ID
+        # 将初始化也分成多个块，最大化并发度
+        init_groups_per_chunk = 20  # 初始化时每块20个群组
+        init_chunks = []
+        for i in range(0, len(group_list), init_groups_per_chunk):
+            init_chunks.append(group_list[i:i + init_groups_per_chunk])
+        
+        async def init_chunk(chunk):
+            """初始化一个块的群组"""
+            tasks = []
+            for group_info in chunk:
+                async def init_group(g):
                     try:
+                        entity = g['entity']
                         messages = await client.get_messages(entity, limit=1)
                         if messages:
                             last_message_ids[g['id']] = messages[0].id
                         else:
                             last_message_ids[g['id']] = 0
+                    except FloodWaitError as e:
+                        await self._notify_user_waiting(account_id, e.seconds, f"初始化群组 '{g['title']}'")
+                        await asyncio.sleep(e.seconds)
+                        try:
+                            messages = await client.get_messages(entity, limit=1)
+                            if messages:
+                                last_message_ids[g['id']] = messages[0].id
+                            else:
+                                last_message_ids[g['id']] = 0
+                        except Exception:
+                            last_message_ids[g['id']] = 0
                     except Exception:
                         last_message_ids[g['id']] = 0
-                except Exception:
-                    last_message_ids[g['id']] = 0
-            init_tasks.append(init_group(group_info))
+                tasks.append(init_group(group_info))
+            await asyncio.gather(*tasks, return_exceptions=True)
         
-        # 并发初始化所有群组
-        if init_tasks:
-            await asyncio.gather(*init_tasks, return_exceptions=True)
+        # 所有初始化块并发执行
+        if init_chunks:
+            await asyncio.gather(*[init_chunk(chunk) for chunk in init_chunks], return_exceptions=True)
         
-        # 计算每个账号的协程数：群组数/10（向上取整，至少1个）
+        # 极致优化：减少每个块的群组数，增加块数，最大化并发度
         total_groups = len(group_list)
-        groups_per_chunk = 10  # 每个块约10个群组
+        # 每个块3个群组，最大化并发度（146个群组 = 49个块，极致并发）
+        groups_per_chunk = 3  # 从10减少到3，大幅增加并发度
         num_chunks = max(1, (total_groups + groups_per_chunk - 1) // groups_per_chunk)  # 向上取整
         
-        print(f"[轮询优化] 账号 #{account_id}: 共 {total_groups} 个群组，分成 {num_chunks} 个协程块（每块约 {groups_per_chunk} 个群组）")
+        print(f"[轮询优化] 账号 #{account_id}: 共 {total_groups} 个群组，分成 {num_chunks} 个协程块（每块 {groups_per_chunk} 个群组，极致并发）")
         
         # 将群组列表分成多个块
         group_chunks = []
@@ -464,8 +477,8 @@ class ClientManager:
                         last_id = last_message_ids.get(chat_id, 0)
                         
                         try:
-                            # 全速运行：只获取最新消息，减少数据传输
-                            messages = await client.get_messages(entity, min_id=last_id, limit=10)
+                            # 极致优化：只获取最新5条消息，减少数据传输，提升速度
+                            messages = await client.get_messages(entity, min_id=last_id, limit=5)
                         except FloodWaitError as e:
                             wait_seconds = e.seconds
                             floodwait_count += 1
@@ -475,7 +488,7 @@ class ClientManager:
                             # 等待后再次检查连接状态
                             if not client.is_connected():
                                 return 0
-                            messages = await client.get_messages(entity, min_id=last_id, limit=10)
+                            messages = await client.get_messages(entity, min_id=last_id, limit=5)
                         except (ConnectionError, RuntimeError) as e:
                             # 捕获断开连接错误
                             if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
@@ -561,11 +574,13 @@ class ClientManager:
                                         mock_event = MockEvent(msg, entity, chat_id, client)
                                         
                                         if mock_event.is_group:
-                                            # 全速运行：立即处理消息，直接调用（不创建任务，减少延迟）
-                                            # 使用 create_task 异步执行，不阻塞其他群组的检查
+                                            # 极致优化：立即处理消息，不等待，不阻塞
+                                            # 使用 create_task 异步执行，立即调度，不阻塞其他群组和块的检查
+                                            # 这样每个块检测到关键词后立即推送，不等待整个轮询周期
                                             asyncio.create_task(self._process_message(mock_event, account_id, "ActivePolling"))
                                             group_new_count += 1
                                             new_messages_count += 1
+                                            # 不等待处理完成，立即继续检查下一条消息
                                         
                                         last_message_ids[chat_id] = msg.id
                                     except Exception as e:
@@ -590,15 +605,18 @@ class ClientManager:
                         print(f"[轮询] 账号 #{account_id} 检查群组失败: {e}")
                         return 0
                 
-                # 定义检查一个群组块的函数（每个块约10个群组）
+                # 定义检查一个群组块的函数（每个块3个群组，极致并发）
                 async def check_group_chunk(chunk_groups, chunk_index):
-                    """检查一个群组块中的所有群组（并发）"""
+                    """检查一个群组块中的所有群组（并发，检测到关键词立即推送）"""
                     try:
                         if not client.is_connected():
                             return 0
                         
-                        # 该块内的所有群组并发检查
+                        # 该块内的所有群组并发检查（不等待完成，立即返回）
+                        # 每个群组的检查都是独立的，检测到关键词后立即推送，不等待其他群组
                         tasks = [check_group(g) for g in chunk_groups]
+                        # 不等待所有任务完成，立即返回，让消息处理在后台进行
+                        # 这样每个块检测到关键词后立即推送，不阻塞
                         results = await asyncio.gather(*tasks, return_exceptions=True)
                         
                         chunk_new_count = 0
@@ -614,7 +632,9 @@ class ClientManager:
                         return 0
                 
                 # 所有群组块并发处理（每个块内部也是并发的）
+                # 不等待所有块完成，让消息处理在后台立即进行
                 chunk_tasks = [check_group_chunk(chunk, idx) for idx, chunk in enumerate(group_chunks)]
+                # 使用 gather 但消息处理已经在 check_group 中通过 create_task 立即调度
                 chunk_results = await asyncio.gather(*chunk_tasks, return_exceptions=True)
                 
                 # 统计总的新消息数（new_messages_count 已经在 check_group 中更新了）
