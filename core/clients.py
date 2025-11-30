@@ -68,9 +68,9 @@ class ClientManager:
         # 快速验证 session（不等待完全连接）
         try:
             await client.connect()
-        if not await client.is_user_authorized():
-            await client.disconnect()
-            raise RuntimeError('Session not authorized or requires login')
+            if not await client.is_user_authorized():
+                await client.disconnect()
+                raise RuntimeError('Session not authorized or requires login')
         except Exception as e:
             try:
                 await client.disconnect()
@@ -80,7 +80,7 @@ class ClientManager:
         
         # 获取用户信息（快速操作）
         try:
-        me = await client.get_me()
+            me = await client.get_me()
         except Exception as e:
             await client.disconnect()
             raise RuntimeError(f'Failed to get user info: {str(e)}')
