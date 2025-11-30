@@ -42,11 +42,12 @@ def _ensure_send_workers(bot_client):
     """确保发送工作协程已启动（全局共享，所有 bot_client 使用同一个协程池）"""
     global _send_workers_started, _send_workers
     if not _send_workers_started:
-        # 启动多个工作协程，确保并发发送（增加工作协程数量以提升并发度）
-        num_workers = 200  # 200个并发工作协程，确保极致并发
+        # 启动多个工作协程，确保并发发送
+        # 根据实际需求调整：如果消息量不大，可以减少工作协程数量
+        num_workers = 200  # 50个并发工作协程，足够处理大部分场景
         _send_workers = [asyncio.create_task(_send_worker(i)) for i in range(num_workers)]
         _send_workers_started = True
-        print(f"[发送队列] 启动 {num_workers} 个发送工作协程，确保真正并发")
+        print(f"[发送队列] 启动 {num_workers} 个发送工作协程")
 
 async def send_alert(bot_client, account, event, matched_keyword: str, control_bot_id=None):
     """发送提醒：完全异步，不阻塞，立即入队"""

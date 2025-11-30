@@ -304,8 +304,8 @@ class ClientManager:
         # 只有监听账号才注册事件监听器
         if register_listeners:
             # 用户客户端监听器 - 使用过滤器，避免处理控制机器人消息（完全按照 TelegramForwarder 的方式）
-            # 监听所有消息，包括被静音的群组（Telethon 默认会接收所有消息）
-            @client.on(events.NewMessage(func=not_from_control_bot, incoming=True))
+            # 完全按照 TelegramForwarder：不使用 incoming=True，监听所有消息
+            @client.on(events.NewMessage(func=not_from_control_bot))
             async def handle_new_message(event):
                 # 详细日志：记录收到消息
                 try:
@@ -317,14 +317,14 @@ class ClientManager:
                 except Exception as e:
                     print(f"[事件监听] 账号 #{account_id} 记录消息日志失败: {e}")
                 
-                # 完全按照 TelegramForwarder 的方式：不限制群组列表，监听所有群组
+                # 完全按照 TelegramForwarder 的方式：不阻塞事件监听器，使用 create_task
                 # 所有群组消息都会进入处理流程，由后续逻辑决定是否处理
-                await self._process_message(event, account_id, "NewMessage")
+                asyncio.create_task(self._process_message(event, account_id, "NewMessage"))
             
-            @client.on(events.MessageEdited(func=not_from_control_bot, incoming=True))
+            @client.on(events.MessageEdited(func=not_from_control_bot))
             async def handle_message_edited(event):
-                # 完全按照 TelegramForwarder 的方式：不限制群组列表，监听所有群组
-                await self._process_message(event, account_id, "MessageEdited")
+                # 完全按照 TelegramForwarder 的方式：不阻塞事件监听器，使用 create_task
+                asyncio.create_task(self._process_message(event, account_id, "MessageEdited"))
         else:
             print(f"[注册处理器] 账号 #{account_id} 是点击账号，不注册事件监听器")
     
