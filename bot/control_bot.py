@@ -634,7 +634,7 @@ async def setup_handlers(manager: ClientManager):
             '• ➕ 添加账号（支持 StringSession 文本 或 .session 文件）\n'
             '• 🎯 设置目标机器人（所有账号批量 /start）\n'
             '• 📝 模板消息、🐢 发送延迟、⚙️ 并发数、▶️ 开始发送\n'
-            '• 🚪 自动进群\n\n'
+            '• 🚪 自动进群、🗑️ 移除账号\n\n'
             '👇 请选择功能：',
             buttons=main_keyboard()
         )
@@ -741,36 +741,60 @@ async def setup_handlers(manager: ClientManager):
 
     @bot.on(events.CallbackQuery(pattern=b'remove_all_role:(listen|click|all|cancel)'))
     async def _(event):
-        action = event.pattern_match.group(1).decode()
-        if action == 'cancel':
-            await event.answer('已取消')
-            try:
-                await event.edit('✅ 已取消移除操作', buttons=None)
-            except Exception:
-                pass
-            return
-        if action == 'listen':
-            targets = list_accounts('listen')
-            label = '监听'
-        elif action == 'click':
-            targets = list_accounts('click')
-            label = '点击'
-        else:
-            targets = dao_accounts.list_all()
-            label = '全部'
-        if not targets:
-            await event.answer('暂无可移除账号', alert=True)
-            return
-        await event.answer('⏳ 正在移除…')
-        count = 0
-        for r in targets:
-            await remove_account(r['id'])
-            count += 1
-        msg = f"🗑️ 已移除 {label} 账号 {count} 个。"
+        print(f"[移除账号] 收到回调: {event.data}")
         try:
-            await event.edit(msg, buttons=None)
-        except Exception:
-            await bot.send_message(event.chat_id, msg)
+            action = event.pattern_match.group(1).decode()
+            print(f"[移除账号] 操作类型: {action}")
+            
+            if action == 'cancel':
+                await event.answer('已取消')
+                try:
+                    await event.edit('✅ 已取消移除操作', buttons=None)
+                except Exception:
+                    pass
+                return
+            
+            if action == 'listen':
+                targets = list_accounts('listen')
+                label = '监听'
+            elif action == 'click':
+                targets = list_accounts('click')
+                label = '点击'
+            else:
+                targets = dao_accounts.list_all()
+                label = '全部'
+            
+            print(f"[移除账号] 找到 {len(targets)} 个目标账号")
+            
+            if not targets:
+                await event.answer('暂无可移除账号', alert=True)
+                try:
+                    await event.edit('⚠️ 暂无可移除账号', buttons=None)
+                except Exception:
+                    pass
+                return
+            
+            await event.answer('⏳ 正在移除…')
+            count = 0
+            for r in targets:
+                print(f"[移除账号] 正在移除账号 #{r['id']}")
+                await remove_account(r['id'])
+                count += 1
+            
+            msg = f"🗑️ 已移除 {label} 账号 {count} 个。"
+            print(f"[移除账号] 移除完成: {msg}")
+            try:
+                await event.edit(msg, buttons=None)
+            except Exception:
+                await bot.send_message(event.chat_id, msg)
+        except Exception as e:
+            print(f"[移除账号] ❌ 处理回调时出错: {e}")
+            import traceback
+            traceback.print_exc()
+            try:
+                await event.answer(f'❌ 移除失败：{e}', alert=True)
+            except:
+                pass
 
     @bot.on(events.CallbackQuery(pattern=b'acc\\|'))
     async def _(event):
@@ -868,47 +892,6 @@ async def setup_handlers(manager: ClientManager):
             await event.answer('已删除')
             return
 
-    @bot.on(events.CallbackQuery(pattern=b'test_click:redpacket'))
-    async def _(event):
-        """处理测试点击内联按钮的回调"""
-        chat_id = event.chat_id
-        
-        # 初始化计数（如果不存在）
-        if not hasattr(bot, '_test_click_count'):
-            bot._test_click_count = {}
-        
-        if chat_id not in bot._test_click_count:
-            bot._test_click_count[chat_id] = 0
-        
-        # 增加计数
-        bot._test_click_count[chat_id] += 1
-        count = bot._test_click_count[chat_id]
-        
-        # 创建新的按钮
-        buttons = [[Button.inline('红包', data='test_click:redpacket')]]
-        
-        # 编辑消息，更新计数
-        try:
-            await event.edit(
-                f'🧪 **测试点击成功！**\n\n'
-                f'当前点击次数：{count}\n\n'
-                f'继续点击"红包"按钮可以继续计数。',
-                buttons=buttons,
-                parse_mode='markdown'
-            )
-            await event.answer(f'✅ 点击成功！当前计数：{count}')
-        except Exception as e:
-            # 如果编辑失败（例如消息太旧），发送新消息
-            await event.answer('⚠️ 无法更新消息，发送新消息')
-            await bot.send_message(
-                chat_id,
-                f'🧪 **测试点击成功！**\n\n'
-                f'当前点击次数：{count}\n\n'
-                f'继续点击"红包"按钮可以继续计数。',
-                buttons=buttons,
-                parse_mode='markdown'
-            )
-
     @bot.on(events.NewMessage(incoming=True))
     async def _(event):
         chat_id = event.chat_id
@@ -936,7 +919,7 @@ async def setup_handlers(manager: ClientManager):
             '⏱️ 设置点击延迟',
             '▶️ 开始发送',
             '🎯 设置目标机器人', '🚪 自动进群',
-            '🗑️ 移除所有账号', '🧪 测试点击'
+            '🗑️ 移除所有账号'
         }
         
         # 检查是否为主菜单命令
@@ -1831,32 +1814,6 @@ async def setup_handlers(manager: ClientManager):
             )
             return
 
-        if is_cmd(text, '🧪 测试点击'):
-            # 测试点击功能：发送一个带"红包"内联按钮的消息，每次点击计数
-            from telethon.tl.custom import Button
-            
-            # 使用全局变量存储点击计数（实际应用中应该使用数据库）
-            if not hasattr(bot, '_test_click_count'):
-                bot._test_click_count = {}
-            
-            # 初始化当前用户的计数
-            if chat_id not in bot._test_click_count:
-                bot._test_click_count[chat_id] = 0
-            
-            # 创建带内联按钮的消息
-            buttons = [[Button.inline('红包', data='test_click:redpacket')]]
-            bot._test_click_count[chat_id] += 1
-            count = bot._test_click_count[chat_id]
-            
-            await event.respond(
-                f'🧪 **测试点击功能**\n\n'
-                f'点击次数：{count}\n\n'
-                f'请点击下面的"红包"内联按钮进行测试。每次点击都会增加计数。',
-                buttons=buttons,
-                parse_mode='markdown'
-            )
-            return
-
         # 诊断功能：列出账号加入的所有群组
         if text.startswith('诊断群组') or text.startswith('诊断 #'):
             match = re.search(r'#(\d+)', text)
@@ -1919,16 +1876,24 @@ async def setup_handlers(manager: ClientManager):
             return
 
         if is_cmd(text, '移除所有账号'):
-            buttons = [
-                [Button.inline('移除监听账号', data='remove_all_role:listen')],
-                [Button.inline('移除点击账号', data='remove_all_role:click')],
-                [Button.inline('移除全部账号', data='remove_all_role:all')],
-                [Button.inline('取消', data='remove_all_role:cancel')]
-            ]
-            await event.respond(
-                '⚠️ 请选择要移除的账号类型：',
-                buttons=buttons
-            )
+            print(f"[移除账号] 收到命令: 移除所有账号")
+            try:
+                buttons = [
+                    [Button.inline('移除监听账号', data='remove_all_role:listen')],
+                    [Button.inline('移除点击账号', data='remove_all_role:click')],
+                    [Button.inline('移除全部账号', data='remove_all_role:all')],
+                    [Button.inline('取消', data='remove_all_role:cancel')]
+                ]
+                await event.respond(
+                    '⚠️ 请选择要移除的账号类型：',
+                    buttons=buttons
+                )
+                print(f"[移除账号] 已发送选择按钮")
+            except Exception as e:
+                print(f"[移除账号] ❌ 发送消息失败: {e}")
+                import traceback
+                traceback.print_exc()
+                await event.respond(f'❌ 发送消息失败：{e}')
             return
 
         if is_cmd(text, '添加监听账号'):
