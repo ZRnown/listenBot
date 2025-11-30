@@ -12,6 +12,7 @@ _send_workers = []
 
 async def _send_worker(worker_id: int):
     """发送工作协程：从队列中取出任务并发送，确保真正并发"""
+    from datetime import datetime
     while True:
         try:
             # 从队列中获取发送任务
@@ -23,16 +24,13 @@ async def _send_worker(worker_id: int):
             
             # 立即发送，不等待
             try:
-                send_start = datetime.now()
                 await bot_client.send_message(
                     target_entity,
                     message_text,
                     parse_mode=parse_mode,
                     buttons=buttons
                 )
-                send_end = datetime.now()
-                send_duration = (send_end - send_start).total_seconds()
-                print(f"[发送工作协程 #{worker_id}] ✅ 消息发送成功 (耗时: {send_duration:.3f}秒)")
+                # 减少日志输出，只在出错时打印
             except Exception as e:
                 print(f"[发送工作协程 #{worker_id}] ❌ 发送失败: {e}")
             
@@ -44,8 +42,8 @@ def _ensure_send_workers(bot_client):
     """确保发送工作协程已启动（全局共享，所有 bot_client 使用同一个协程池）"""
     global _send_workers_started, _send_workers
     if not _send_workers_started:
-        # 启动多个工作协程，确保并发发送
-        num_workers = 50  # 50个并发工作协程，确保真正并发
+        # 启动多个工作协程，确保并发发送（增加工作协程数量以提升并发度）
+        num_workers = 200  # 200个并发工作协程，确保极致并发
         _send_workers = [asyncio.create_task(_send_worker(i)) for i in range(num_workers)]
         _send_workers_started = True
         print(f"[发送队列] 启动 {num_workers} 个发送工作协程，确保真正并发")
@@ -57,20 +55,26 @@ async def send_alert(bot_client, account, event, matched_keyword: str, control_b
     print(f"[发送提醒] [{timestamp}] 开始构建提醒消息...")
     
     # 极致优化：并发获取 sender 和 chat，使用 gather 真正并发
+    # 使用超时机制，避免长时间阻塞
     try:
-        sender, chat = await asyncio.gather(
-            event.get_sender(),
-            event.get_chat(),
-            return_exceptions=True
+        sender, chat = await asyncio.wait_for(
+            asyncio.gather(
+                event.get_sender(),
+                event.get_chat(),
+                return_exceptions=True
+            ),
+            timeout=0.5  # 0.5秒超时，避免阻塞
         )
         
         # 处理异常
         if isinstance(sender, Exception):
-            print(f"[发送提醒] [{timestamp}] ⚠️ 获取发送者失败: {sender}，使用默认值")
             sender = None
         if isinstance(chat, Exception):
-            print(f"[发送提醒] [{timestamp}] ⚠️ 获取聊天失败: {chat}，使用默认值")
             chat = None
+    except asyncio.TimeoutError:
+        # 超时后使用默认值，不阻塞发送
+        sender = None
+        chat = None
         
         # 快速检查：如果消息来自控制机器人，跳过发送
         if sender:
@@ -310,22 +314,12 @@ async def send_alert(bot_client, account, event, matched_keyword: str, control_b
             
             # 使用机器人客户端发送消息
             # 使用Markdown解析模式
-            send_prep_timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
-            print(f"[发送提醒] [{send_prep_timestamp}] 准备发送到: {target_clean}")
-            print(f"[发送提醒] [{send_prep_timestamp}] 消息长度: {len(message_text)} 字符")
-            
             try:
                 # 如果是 Chat ID，直接使用整数；否则使用字符串（用户名）
                 if is_chat_id:
                     target_entity = chat_id_int
-                    print(f"[发送提醒] [{send_prep_timestamp}] 使用 Chat ID 发送: {target_entity}")
                 else:
                     target_entity = target_clean
-                    print(f"[发送提醒] [{send_prep_timestamp}] 使用用户名发送: {target_entity}")
-                
-                send_start_time = datetime.now()
-                send_start_timestamp = send_start_time.strftime('%H:%M:%S.%f')[:-3]
-                print(f"[发送提醒] [{send_start_timestamp}] 开始发送消息...")
                 
                 # 确保发送工作协程已启动
                 _ensure_send_workers(bot_client)
@@ -341,10 +335,6 @@ async def send_alert(bot_client, account, event, matched_keyword: str, control_b
                 ))
                 
                 # 立即返回，不等待发送完成（由工作协程处理）
-                send_end_time = datetime.now()
-                send_end_timestamp = send_end_time.strftime('%H:%M:%S.%f')[:-3]
-                send_duration = (send_end_time - send_start_time).total_seconds()
-                print(f"[发送提醒] [{send_end_timestamp}] ✅ 消息已加入发送队列 (耗时: {send_duration:.3f}秒，将由工作协程并发发送)")
                 delivered = 'success'
                 error = None
             except Exception as send_error:
