@@ -1,3 +1,4 @@
+import asyncio
 from telethon import events
 from telethon.tl.types import PeerUser, PeerChat, PeerChannel
 from telethon.tl.custom import Button
