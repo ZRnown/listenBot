@@ -65,11 +65,11 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
             
             # 如果不是 Chat ID，处理用户名格式
             if not is_chat_id:
-            # 如果目标不是以 @ 开头且不是数字（chat_id），尝试添加 @
+                # 如果目标不是以 @ 开头且不是数字（chat_id），尝试添加 @
                 if not target_clean.startswith('@'):
-                # 可能是用户名但没有 @，尝试添加
-                if not target_clean.startswith('http'):
-                    target_clean = '@' + target_clean.lstrip('@')
+                    # 可能是用户名但没有 @，尝试添加
+                    if not target_clean.startswith('http'):
+                        target_clean = '@' + target_clean.lstrip('@')
             
             # 构建消息内容（使用Markdown富文本格式，美观协调）
             account_id = account['id']
@@ -143,14 +143,14 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
                                 print(f"[发送提醒] ⚠️ 无法生成私有频道链接: channel_id={channel_id} 格式无效 (原始: {source_chat_id})")
                         elif chat_id_str.startswith('-'):
                             # 普通私有群组（负数但不是 -100 开头）
-                            # 对于普通群组，Telegram 不支持 https:// 链接
-                            # 尝试使用 tg:// 协议，但格式需要正确
+                            # 对于普通群组，Telegram 不支持 https:// 链接，但可以尝试使用 tg:// 协议
+                            # 虽然 tg:// 协议在某些客户端可能不工作，但总比没有按钮好
                             try:
-                                # tg:// 协议的格式：tg://openmessage?chat_id={chat_id}&message_id={message_id}
-                                # 注意：chat_id 需要保持负数格式
+                                # 尝试使用 tg:// 协议（至少提供一个可点击的按钮）
+                                # 格式：tg://openmessage?chat_id={chat_id}&message_id={message_id}
+                                # 注意：chat_id 需要是负数格式
                                 msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
-                                print(f"[发送提醒] ⚠️ 普通群组 (ID: {source_chat_id})，生成 tg:// 协议链接: {msg_link}")
-                                print(f"[发送提醒] 💡 提示：tg:// 协议链接可能在某些客户端不可用，建议使用公开群组或超级群组")
+                                print(f"[发送提醒] ⚠️ 普通群组 (ID: {source_chat_id})，生成 tg:// 协议链接: {msg_link} (可能在某些客户端不可用)")
                             except Exception as e:
                                 print(f"[发送提醒] ⚠️ 生成普通群组链接失败: {e}")
                         else:
@@ -170,7 +170,7 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
                                 print(f"[发送提醒] ⚠️ 生成正数 Chat ID https:// 链接失败: {e}")
                                 # 如果 https:// 链接生成失败，回退到 tg:// 协议
                                 try:
-                        msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
+                                    msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
                                     print(f"[发送提醒] ⚠️ 回退到 tg:// 协议链接: {msg_link}")
                                 except Exception as e2:
                                     print(f"[发送提醒] ⚠️ 生成 tg:// 协议链接也失败: {e2}")
@@ -184,7 +184,7 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
             if msg_link:
                 # 验证链接格式是否正确
                 if msg_link.startswith('https://') or msg_link.startswith('tg://'):
-                button_row.append(Button.url('👁️ 查看消息', msg_link))
+                    button_row.append(Button.url('👁️ 查看消息', msg_link))
                     print(f"[发送提醒] ✅ 已添加'查看消息'按钮，链接: {msg_link}")
                 else:
                     print(f"[发送提醒] ⚠️ 链接格式无效: {msg_link}")
@@ -234,15 +234,15 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
                     target_entity = target_clean
                     print(f"[发送提醒] 使用用户名发送: {target_entity}")
                 
-            await bot_client.send_message(
+                await bot_client.send_message(
                     target_entity, 
-                message_text, 
-                parse_mode='markdown',
-                buttons=buttons if buttons else None
-            )
+                    message_text, 
+                    parse_mode='markdown',
+                    buttons=buttons if buttons else None
+                )
                 print(f"[发送提醒] ✅ 消息发送成功到 {target_entity}")
-            delivered = 'success'
-            error = None
+                delivered = 'success'
+                error = None
             except Exception as send_error:
                 error_str = str(send_error)
                 error_type = type(send_error).__name__
