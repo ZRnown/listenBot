@@ -5,7 +5,7 @@ from telethon.tl.custom import Button
 from storage import dao_alerts
 from services import settings_service
 
-async def send_alert(bot_client, account, event, matched_keyword: str):
+async def send_alert(bot_client, account, event, matched_keyword: str, control_bot_id=None):
     from datetime import datetime
     start_time = datetime.now()
     timestamp = start_time.strftime('%H:%M:%S.%f')[:-3]  # 毫秒精度
@@ -16,6 +16,14 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
     chat_task = asyncio.create_task(event.get_chat())
     sender = await sender_task
     chat = await chat_task
+    
+    # 快速检查：如果消息来自控制机器人，跳过发送
+    if sender:
+        sender_id = getattr(sender, 'id', None)
+        is_bot = getattr(sender, 'bot', False)
+        if is_bot and control_bot_id and sender_id == control_bot_id:
+            print(f"[发送提醒] [{timestamp}] ⚠️ 消息来自控制机器人本身（ID: {sender_id}），跳过发送提醒")
+            return
     sender_name = f"{getattr(sender,'first_name', '') or ''} {getattr(sender,'last_name','') or ''}".strip() or 'Unknown'
     sender_username = getattr(sender, 'username', None)
     sender_username_display = f"@{sender_username}" if sender_username else '无'
