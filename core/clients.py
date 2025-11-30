@@ -303,15 +303,16 @@ class ClientManager:
         self.account_clients[account_id] = client
         await client.catch_up()
         
-        # 只有监听账号（listen 或 both）才需要轮询
-        # 点击账号（click）不需要轮询，只需要在收到链接时点击
-        from services import settings_service
-        role = settings_service.get_account_role(account_id) or 'both'
-        if role in ('listen', 'both'):
-            print(f"[启动] 账号 #{account_id} 是监听账号，启动轮询任务")
-            asyncio.create_task(self._active_polling_task(client, account_id, group_list))
-        else:
-            print(f"[启动] 账号 #{account_id} 是点击账号，不启动轮询任务（仅在收到链接时点击）")
+        # ❌ 移除主动轮询：Telethon 的 events.NewMessage 已经通过 TCP 长连接实时推送消息
+        # 主动轮询会导致：
+        # 1. 网络延迟（RTT）：每次 get_messages 需要等待网络往返
+        # 2. FloodWait 限流：频繁请求会触发 Telegram 的限流机制，导致账号被暂停
+        # 3. 资源浪费：占用大量 CPU 和网络带宽
+        # 
+        # ✅ 正确方案：完全依赖 events.NewMessage 事件推送
+        # Telegram 服务端会通过 TCP 长连接主动推送新消息，响应速度远快于主动轮询
+        # 且不会触发限流，不会漏消息
+        print(f"[启动] 账号 #{account_id} 已注册事件处理器，完全依赖 TCP 推送（无主动轮询）")
     
     async def _list_account_groups(self, client: TelegramClient, account_id: int):
         """列出账号加入的所有群组"""
