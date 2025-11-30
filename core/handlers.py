@@ -34,12 +34,18 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
         if event.is_private or not event.is_group or event.message.out:
             return
         
-        # 获取消息文本
+        # 获取消息文本（多种方式尝试，确保能立即获取）
         text = event.message.message or ''
         if not text:
             text = getattr(event.message, 'raw_text', '') or ''
-            if not text:
-                text = str(event.message.text) if hasattr(event.message, 'text') else ''
+        if not text:
+            text = str(event.message.text) if hasattr(event.message, 'text') else ''
+        if not text and hasattr(event.message, 'entities'):
+            # 尝试从entities中提取文本
+            try:
+                text = event.message.raw_text or ''
+            except:
+                pass
         
         role = settings_service.get_account_role(account['id']) or 'both'
 

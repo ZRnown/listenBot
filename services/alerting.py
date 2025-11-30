@@ -28,50 +28,93 @@ async def _send_worker(worker_id: int):
             
             # 在后台工作协程中完成所有耗时操作（真正并发）
             try:
-                # 并发获取 sender 和 chat（使用更短的超时，快速失败）
-                try:
-                    sender, chat = await asyncio.wait_for(
-                        asyncio.gather(
-                            event.get_sender(),
-                            event.get_chat(),
-                            return_exceptions=True
-                        ),
-                        timeout=0.2  # 缩短超时到0.2秒，快速失败
-                    )
-                    if isinstance(sender, Exception):
-                        sender = None
-                    if isinstance(chat, Exception):
-                        chat = None
-                except asyncio.TimeoutError:
-                    sender = None
-                    chat = None
-                
-                # 快速检查：如果消息来自控制机器人，跳过发送
-                if sender:
-                    sender_id = getattr(sender, 'id', None)
-                    is_bot = getattr(sender, 'bot', False)
-                    if is_bot and control_bot_id and sender_id == control_bot_id:
-                        # 跳过发送，但记录到数据库
-                        _record_alert_async(account, event, matched_keyword, sender, chat, 'error', '消息来自控制机器人')
-                        _send_queue.task_done()
-                        continue
-                
-                # 安全获取信息
-                sender_name = 'Unknown'
-                sender_username = None
-                sender_id = None
-                if sender:
-                    sender_name = f"{getattr(sender,'first_name', '') or ''} {getattr(sender,'last_name','') or ''}".strip() or 'Unknown'
-                    sender_username = getattr(sender, 'username', None)
-                    sender_id = getattr(sender, 'id', None)
-                
-                sender_username_display = f"@{sender_username}" if sender_username else '无'
-                source_title = (getattr(chat, 'title', '') or getattr(chat, 'username','') or 'Unknown') if chat else 'Unknown'
+                # 第一步：立即从消息对象中获取可用信息（不等待API调用）
+                # 这样可以立即发送基本消息，后台再补充完整信息
                 text = event.message.message or ''
-                source_chat_id = getattr(chat, 'id', None) if chat else None
+                if not text:
+                    text = getattr(event.message, 'raw_text', '') or ''
+                if not text:
+                    text = str(event.message.text) if hasattr(event.message, 'text') else ''
                 
-                # 快速获取 chat_entity（不阻塞）
-                chat_username = getattr(chat, 'username', None) if chat else None
+                # 从消息对象中直接获取chat_id（通常可用）
+                source_chat_id = getattr(event, 'chat_id', None)
+                if not source_chat_id:
+                    source_chat_id = getattr(event.message, 'peer_id', None)
+                    if hasattr(source_chat_id, 'channel_id'):
+                        source_chat_id = -1000000000000 - source_chat_id.channel_id
+                
+                # 从消息对象中直接获取sender_id（如果可用）
+                sender_id_from_msg = None
+                if hasattr(event.message, 'from_id'):
+                    from_id = event.message.from_id
+                    if from_id:
+                        if hasattr(from_id, 'user_id'):
+                            sender_id_from_msg = from_id.user_id
+                        elif isinstance(from_id, int):
+                            sender_id_from_msg = from_id
+                
+                # 快速检查：如果sender_id匹配控制机器人，跳过发送
+                if sender_id_from_msg and control_bot_id and sender_id_from_msg == control_bot_id:
+                    _record_alert_async(account, event, matched_keyword, None, None, 'error', '消息来自控制机器人')
+                    _send_queue.task_done()
+                    continue
+                
+                # 使用默认值，先发送基本消息（使用可用信息）
+                sender_name = f'用户 #{sender_id_from_msg}' if sender_id_from_msg else 'Unknown'
+                sender_username = None
+                sender_id = sender_id_from_msg
+                sender_username_display = '无'
+                source_title = f'群组 #{source_chat_id}' if source_chat_id else 'Unknown'
+                chat_username = None
+                
+                # 第二步：后台异步获取完整信息（不阻塞发送）
+                async def _fetch_full_info():
+                    """后台获取完整信息，用于后续更新或记录"""
+                    try:
+                        sender, chat = await asyncio.wait_for(
+                            asyncio.gather(
+                                event.get_sender(),
+                                event.get_chat(),
+                                return_exceptions=True
+                            ),
+                            timeout=2.0  # 增加到2秒，确保能获取到信息
+                        )
+                        if isinstance(sender, Exception):
+                            sender = None
+                        if isinstance(chat, Exception):
+                            chat = None
+                        
+                        # 更新信息（用于数据库记录）
+                        if sender:
+                            sender_name_full = f"{getattr(sender,'first_name', '') or ''} {getattr(sender,'last_name','') or ''}".strip() or 'Unknown'
+                            sender_username_full = getattr(sender, 'username', None)
+                            sender_id_full = getattr(sender, 'id', None)
+                        else:
+                            sender_name_full = 'Unknown'
+                            sender_username_full = None
+                            sender_id_full = sender_id_from_msg
+                        
+                        source_title_full = (getattr(chat, 'title', '') or getattr(chat, 'username','') or 'Unknown') if chat else source_title
+                        chat_username_full = getattr(chat, 'username', None) if chat else None
+                        
+                        return {
+                            'sender_name': sender_name_full,
+                            'sender_username': sender_username_full,
+                            'sender_id': sender_id_full,
+                            'source_title': source_title_full,
+                            'chat_username': chat_username_full,
+                            'chat': chat
+                        }
+                    except asyncio.TimeoutError:
+                        return None
+                    except Exception:
+                        return None
+                
+                # 启动后台任务获取完整信息（不等待）
+                full_info_task = asyncio.create_task(_fetch_full_info())
+                
+                # 立即使用可用信息构建消息（不等待完整信息）
+                # 如果获取到完整信息，会在数据库记录中使用
                 
                 # 构建消息内容
                 account_id = account['id']
@@ -106,22 +149,15 @@ async def _send_worker(worker_id: int):
                     f"📄 **消息内容：** {escape_md(text)}"
                 )
                 
-                # 快速生成消息链接
+                # 快速生成消息链接（使用可用信息）
                 buttons = []
                 msg_link = None
-                if source_chat_id and event.message.id:
-                    if chat_username:
-                        msg_link = f"https://t.me/{chat_username}/{event.message.id}"
-                    elif str(source_chat_id).startswith('-100'):
-                        channel_id = str(source_chat_id)[4:]
-                        if channel_id.isdigit():
-                            msg_link = f"https://t.me/c/{channel_id}/{event.message.id}"
-                    elif str(source_chat_id).startswith('-'):
-                        msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
-                    else:
-                        msg_link = f"https://t.me/c/{source_chat_id}/{event.message.id}"
+                msg_id = getattr(event.message, 'id', None)
+                if source_chat_id and msg_id:
+                    # 先尝试使用tg://协议（总是可用）
+                    msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={msg_id}"
                 
-                if msg_link and (msg_link.startswith('https://') or msg_link.startswith('tg://')):
+                if msg_link:
                     buttons.append([Button.url('👁️ 查看消息', msg_link)])
                 
                 if sender_id:
@@ -130,7 +166,12 @@ async def _send_worker(worker_id: int):
                 # 获取目标实体
                 target = settings_service.get_target_chat()
                 if not target or not target.strip():
-                    _record_alert_async(account, event, matched_keyword, sender, chat, 'error', 'Target chat not configured')
+                    # 等待完整信息后再记录
+                    full_info = await full_info_task if not full_info_task.done() else None
+                    _record_alert_async(account, event, matched_keyword, 
+                                       full_info.get('chat') if full_info else None,
+                                       full_info if full_info else None,
+                                       'error', 'Target chat not configured')
                     _send_queue.task_done()
                     continue
                 
@@ -147,7 +188,7 @@ async def _send_worker(worker_id: int):
                 
                 target_entity = chat_id_int if is_chat_id else target_clean
                 
-                # 立即发送消息（这是真正的发送操作）
+                # 立即发送消息（使用基本信息，不等待完整信息）
                 try:
                     await bot_client.send_message(
                         target_entity,
@@ -155,13 +196,25 @@ async def _send_worker(worker_id: int):
                         parse_mode='markdown',
                         buttons=buttons if buttons else None
                     )
-                    # 后台记录成功（不阻塞）
-                    _record_alert_async(account, event, matched_keyword, sender, chat, 'success', None)
+                    # 等待完整信息后再记录（但发送已完成）
+                    full_info = await full_info_task if not full_info_task.done() else None
+                    if full_info:
+                        # 使用完整信息记录
+                        _record_alert_async(account, event, matched_keyword,
+                                           full_info.get('chat'),
+                                           full_info,
+                                           'success', None)
+                    else:
+                        # 使用基本信息记录
+                        _record_alert_async(account, event, matched_keyword, None, None, 'success', None)
                 except Exception as send_error:
                     error_str = str(send_error)
-                    error_type = type(send_error).__name__
-                    # 后台记录失败（不阻塞）
-                    _record_alert_async(account, event, matched_keyword, sender, chat, 'error', error_str[:200])
+                    # 等待完整信息后再记录
+                    full_info = await full_info_task if not full_info_task.done() else None
+                    _record_alert_async(account, event, matched_keyword,
+                                       full_info.get('chat') if full_info else None,
+                                       full_info if full_info else None,
+                                       'error', error_str[:200])
             
             except Exception as e:
                 # 记录错误但不阻塞
@@ -171,21 +224,42 @@ async def _send_worker(worker_id: int):
         except Exception as e:
             print(f"[发送工作协程 #{worker_id}] ❌ 错误: {e}")
 
-def _record_alert_async(account, event, matched_keyword, sender, chat, delivered_status, delivered_error):
+def _record_alert_async(account, event, matched_keyword, chat, full_info, delivered_status, delivered_error):
     """异步记录提醒到数据库（不阻塞）"""
     def _record():
         try:
-            sender_name = 'Unknown'
-            sender_username = None
-            sender_id = None
-            if sender:
-                sender_name = f"{getattr(sender,'first_name', '') or ''} {getattr(sender,'last_name','') or ''}".strip() or 'Unknown'
-                sender_username = getattr(sender, 'username', None)
-                sender_id = getattr(sender, 'id', None)
+            # 优先使用完整信息
+            if full_info and isinstance(full_info, dict):
+                sender_name = full_info.get('sender_name', 'Unknown')
+                sender_username = full_info.get('sender_username')
+                sender_id = full_info.get('sender_id')
+                source_title = full_info.get('source_title', 'Unknown')
+                chat_obj = full_info.get('chat')
+            else:
+                # 使用基本信息
+                sender_name = 'Unknown'
+                sender_username = None
+                sender_id = None
+                source_title = 'Unknown'
+                chat_obj = chat
             
-            source_title = (getattr(chat, 'title', '') or getattr(chat, 'username','') or 'Unknown') if chat else 'Unknown'
+            # 从chat对象获取信息
+            if chat_obj:
+                source_title = (getattr(chat_obj, 'title', '') or getattr(chat_obj, 'username','') or source_title)
+                source_chat_id = getattr(chat_obj, 'id', None)
+            else:
+                # 从event获取
+                source_chat_id = getattr(event, 'chat_id', None)
+                if not source_chat_id:
+                    source_chat_id = getattr(event.message, 'peer_id', None)
+                    if hasattr(source_chat_id, 'channel_id'):
+                        source_chat_id = -1000000000000 - source_chat_id.channel_id
+            
             text = event.message.message or ''
-            source_chat_id = getattr(chat, 'id', None) if chat else None
+            if not text:
+                text = getattr(event.message, 'raw_text', '') or ''
+            if not text:
+                text = str(event.message.text) if hasattr(event.message, 'text') else ''
             
             dao_alerts.insert_alert(
                 account_id=account['id'],
