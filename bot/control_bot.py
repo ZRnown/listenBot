@@ -154,7 +154,18 @@ def list_accounts(role_filter: Optional[str] = None):
 
 
 async def setup_handlers(manager: ClientManager):
+    """设置机器人事件处理器（防止重复注册）"""
+    # 如果已经设置过，直接返回
+    if manager._handlers_setup:
+        print("[警告] 事件处理器已经设置过，跳过重复注册")
+        return
+    
     bot = manager.bot
+    if not bot:
+        raise RuntimeError("Bot 未初始化，请先调用 start_control_bot()")
+    
+    # 标记为已设置
+    manager._handlers_setup = True
 
     def keywords_label(kind: str) -> str:
         return '监听' if kind == 'listen' else '点击'
@@ -538,15 +549,14 @@ async def setup_handlers(manager: ClientManager):
             )
 
     async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id, accounts: List[dict], report_chat_id: int):
-        """开始点击任务：获取消息、匹配关键词并依次点击"""
+        """开始点击任务：获取消息、匹配关键词并并发点击（控制并发数避免封号）"""
         bot = manager.bot
         try:
-            # 使用第一个可用的账号客户端获取消息（bot可能无法访问私有群组）
+            # 使用第一个可用的账号客户端获取消息
             target_msg = None
             buttons = None
             button_positions = []
             
-            # 尝试使用账号客户端获取消息
             for acc in accounts:
                 acc_id = acc['id']
                 client = manager.account_clients.get(acc_id)
@@ -554,31 +564,20 @@ async def setup_handlers(manager: ClientManager):
                     continue
                 
                 try:
-                    print(f"[点击任务] 尝试使用账号 #{acc_id} 获取消息 (chat_id: {target_chat_id}, msg_id: {target_msg_id})")
                     target_msg = await client.get_messages(target_chat_id, ids=target_msg_id)
                     if target_msg:
-                        print(f"[点击任务] ✅ 账号 #{acc_id} 成功获取消息")
-                        # 检查消息是否有按钮
                         buttons = getattr(target_msg, 'buttons', None)
                         if buttons:
-                            # 收集所有按钮文本和位置
                             for i, row in enumerate(buttons):
                                 for j, btn in enumerate(row):
                                     btn_text = getattr(btn, 'text', None) or ''
                                     button_positions.append((i, j, btn_text))
-                            print(f"[点击任务] 找到 {len(button_positions)} 个按钮")
                         break
-                except Exception as e:
-                    print(f"[点击任务] 账号 #{acc_id} 获取消息失败: {e}")
+                except Exception:
                     continue
             
-            # 如果所有账号都无法获取消息，报错
             if not target_msg:
-                error_msg = f'❌ 无法获取消息（Chat ID: {target_chat_id}, Message ID: {target_msg_id}）\n\n'
-                error_msg += '可能的原因：\n'
-                error_msg += '1. 账号未加入该群组/频道\n'
-                error_msg += '2. 消息链接无效或消息已被删除\n'
-                error_msg += '3. 账号没有访问该消息的权限'
+                error_msg = f'❌ 无法获取消息（Chat ID: {target_chat_id}, Message ID: {target_msg_id}）\n\n可能的原因：\n1. 账号未加入该群组/频道\n2. 消息链接无效或消息已被删除\n3. 账号没有访问该消息的权限'
                 await bot.send_message(report_chat_id, error_msg)
                 return
             
@@ -593,18 +592,16 @@ async def setup_handlers(manager: ClientManager):
                 keywords = settings_service.get_account_keywords(acc_id, kind='click') or []
                 if not keywords:
                     continue
-                # 检查是否有按钮包含关键词
                 for i, j, btn_text in button_positions:
                     if any(k for k in keywords if k and k in btn_text):
                         matched_accounts.append((acc, i, j, btn_text))
-                        break  # 每个账号只匹配第一个按钮
+                        break
             
             if not matched_accounts:
                 all_btn_texts = [bt[2] for bt in button_positions]
                 await bot.send_message(
                     report_chat_id,
-                    f'⚠️ 没有账号的关键词匹配到按钮\n\n'
-                    f'按钮文本：{", ".join(all_btn_texts[:5])}{"..." if len(all_btn_texts) > 5 else ""}'
+                    f'⚠️ 没有账号的关键词匹配到按钮\n\n按钮文本：{", ".join(all_btn_texts[:5])}{"..." if len(all_btn_texts) > 5 else ""}'
                 )
                 return
             
@@ -612,85 +609,77 @@ async def setup_handlers(manager: ClientManager):
             all_btn_texts = [bt[2] for bt in button_positions]
             await bot.send_message(
                 report_chat_id,
-                f'🚀 **开始点击任务**\n'
-                f'━━━━━━━━━━━━━━━━\n'
-                f'📱 匹配账号数：{len(matched_accounts)}\n'
-                f'📋 按钮文本：{", ".join(all_btn_texts[:3])}{"..." if len(all_btn_texts) > 3 else ""}',
+                f'🚀 **开始点击任务**\n━━━━━━━━━━━━━━━━\n📱 匹配账号数：{len(matched_accounts)}\n📋 按钮文本：{", ".join(all_btn_texts[:3])}{"..." if len(all_btn_texts) > 3 else ""}',
                 parse_mode='markdown'
             )
             
-            # 依次使用每个账号点击
+            # 并发控制：同时最多3个账号点击（避免封号）
+            click_semaphore = asyncio.Semaphore(3)
             success_count = 0
             fail_count = 0
-            for idx, (acc, btn_row, btn_col, btn_text) in enumerate(matched_accounts):
+            
+            async def click_with_account(acc, btn_row, btn_col, btn_text, index):
+                nonlocal success_count, fail_count
                 acc_id = acc['id']
                 acc_name = acc.get('username') or acc.get('phone') or f"#{acc_id}"
                 
-                # 获取账号客户端
-                client = manager.account_clients.get(acc_id)
-                if not client:
-                    fail_count += 1
-                    await bot.send_message(report_chat_id, f'❌ 账号 {acc_name} 离线，跳过')
-                    continue
-                
-                try:
-                    # 获取点击延迟
-                    delay = settings_service.get_click_delay(acc_id) or 0
-                    if delay > 0:
-                        await asyncio.sleep(delay)
-                    
-                    # 获取消息（使用账号客户端）
-                    try:
-                        print(f"[点击任务] 账号 {acc_name} 尝试获取消息 (chat_id: {target_chat_id}, msg_id: {target_msg_id})")
-                        acc_msg = await client.get_messages(target_chat_id, ids=target_msg_id)
-                        if not acc_msg:
-                            error_detail = f'消息不存在或账号 {acc_name} 无法访问该消息 (Chat ID: {target_chat_id}, Message ID: {target_msg_id})'
-                            print(f"[点击任务] ❌ {error_detail}")
-                            raise Exception(error_detail)
-                        print(f"[点击任务] ✅ 账号 {acc_name} 成功获取消息")
-                    except Exception as e:
+                async with click_semaphore:
+                    # 获取账号客户端
+                    client = manager.account_clients.get(acc_id)
+                    if not client:
                         fail_count += 1
-                        error_msg = f'❌ 账号 {acc_name} 无法获取消息：{str(e)}'
-                        print(f"[点击任务] {error_msg}")
-                        await bot.send_message(report_chat_id, error_msg)
-                        continue
+                        await bot.send_message(report_chat_id, f'❌ 账号 {acc_name} 离线，跳过')
+                        return
                     
-                    # 点击按钮
                     try:
-                        await acc_msg.click(btn_row, btn_col)
-                        success_count += 1
-                        await bot.send_message(report_chat_id, f'✅ 账号 {acc_name} 点击成功（按钮：{btn_text}）')
-                    except Exception as e:
-                        fail_count += 1
-                        await bot.send_message(report_chat_id, f'❌ 账号 {acc_name} 点击失败：{e}')
-                    
-                    # 每个账号间隔3秒
-                    if idx < len(matched_accounts) - 1:
-                        await asyncio.sleep(3)
+                        # 应用延迟（每个账号之间随机延迟1-3秒，避免同时点击）
+                        delay = settings_service.get_click_delay(acc_id) or 0
+                        jitter = random.uniform(0.5, 1.5)
+                        await asyncio.sleep(delay + jitter + index * 0.5)
                         
-                except Exception as e:
-                    fail_count += 1
-                    await bot.send_message(report_chat_id, f'❌ 账号 {acc_name} 处理失败：{e}')
+                        # 获取消息
+                        try:
+                            acc_msg = await client.get_messages(target_chat_id, ids=target_msg_id)
+                            if not acc_msg:
+                                raise Exception(f'消息不存在或账号 {acc_name} 无法访问该消息')
+                        except Exception as e:
+                            fail_count += 1
+                            await bot.send_message(report_chat_id, f'❌ 账号 {acc_name} 无法获取消息：{str(e)}')
+                            return
+                        
+                        # 点击按钮
+                        try:
+                            await acc_msg.click(btn_row, btn_col)
+                            success_count += 1
+                            await bot.send_message(report_chat_id, f'✅ 账号 {acc_name} 点击成功（按钮：{btn_text}）')
+                        except Exception as e:
+                            fail_count += 1
+                            await bot.send_message(report_chat_id, f'❌ 账号 {acc_name} 点击失败：{e}')
+                    except Exception as e:
+                        fail_count += 1
+                        await bot.send_message(report_chat_id, f'❌ 账号 {acc_name} 处理失败：{e}')
+            
+            # 并发执行所有点击任务（但通过信号量控制并发数）
+            tasks = [click_with_account(acc, btn_row, btn_col, btn_text, idx) 
+                     for idx, (acc, btn_row, btn_col, btn_text) in enumerate(matched_accounts)]
+            await asyncio.gather(*tasks, return_exceptions=True)
             
             # 发送完成报告
             await bot.send_message(
                 report_chat_id,
-                f'✅ **点击任务完成**\n'
-                f'━━━━━━━━━━━━━━━━\n'
-                f'✅ 成功：{success_count} 个\n'
-                f'❌ 失败：{fail_count} 个',
+                f'✅ **点击任务完成**\n━━━━━━━━━━━━━━━━\n✅ 成功：{success_count} 个\n❌ 失败：{fail_count} 个',
                 parse_mode='markdown'
             )
         except Exception as e:
             await bot.send_message(report_chat_id, f'❌ 点击任务出错：{e}')
 
-    @bot.on(events.NewMessage)
+    @bot.on(events.NewMessage(incoming=True))
     async def _(event):
         chat_id = event.chat_id
         text = (event.raw_text or '').strip()
         
         # 排除 /start 命令，避免重复处理（已在上面单独处理）
-        if text == '/start':
+        if text == '/start' or text.startswith('/start '):
             return
         
         st = get_state(chat_id)
@@ -763,31 +752,33 @@ async def setup_handlers(manager: ClientManager):
                         buttons=main_keyboard()
                     )
                     return
-            if mode == 'choose_account_role':
-                account_id = st['pending']['account_id']
-                t = text.strip()
-                if t in ('监听账号', '监听', 'listen'):
-                    settings_service.set_account_role(account_id, 'listen')
-                    set_state(chat_id, 'set_account_target', account_id=account_id)
-                    await event.respond('🎯 该账号为"监听账号"。请输入此账号的提醒目标（chat_id 或 @username）。\n提示：留空或发送"全局"将使用全局目标。')
+
+                elif mode == 'choose_account_role':
+                    account_id = st['pending']['account_id']
+                    t = text.strip()
+                    if t in ('监听账号', '监听', 'listen'):
+                        settings_service.set_account_role(account_id, 'listen')
+                        set_state(chat_id, 'set_account_target', account_id=account_id)
+                        await event.respond('🎯 该账号为"监听账号"。请输入此账号的提醒目标（chat_id 或 @username）。\n提示：留空或发送"全局"将使用全局目标。')
+                        return
+                    if t in ('点击账号', '点击', 'click'):
+                        settings_service.set_account_role(account_id, 'click')
+                        set_state(chat_id)
+                        await event.respond('✅ 已设置为"点击账号"', buttons=main_keyboard())
+                        return
+                    if t in ('同时监听与点击', 'both'):
+                        settings_service.set_account_role(account_id, 'both')
+                        set_state(chat_id, 'set_account_target', account_id=account_id)
+                        await event.respond('🎯 该账号为"同时"。请输入此账号的提醒目标（chat_id 或 @username）。\n提示：留空或发送"全局"将使用全局目标。')
+                        return
+                    if t in ('跳过', 'skip'):
+                        set_state(chat_id)
+                        await event.respond('已跳过角色设置（默认按全局策略处理）', buttons=main_keyboard())
+                        return
+                    await event.respond('请选择账号角色：', buttons=roles_keyboard())
                     return
-                if t in ('点击账号', '点击', 'click'):
-                    settings_service.set_account_role(account_id, 'click')
-                    set_state(chat_id)
-                    await event.respond('✅ 已设置为"点击账号"', buttons=main_keyboard())
-                    return
-                if t in ('同时监听与点击', 'both'):
-                    settings_service.set_account_role(account_id, 'both')
-                    set_state(chat_id, 'set_account_target', account_id=account_id)
-                    await event.respond('🎯 该账号为"同时"。请输入此账号的提醒目标（chat_id 或 @username）。\n提示：留空或发送"全局"将使用全局目标。')
-                    return
-                if t in ('跳过', 'skip'):
-                    set_state(chat_id)
-                    await event.respond('已跳过角色设置（默认按全局策略处理）', buttons=main_keyboard())
-                    return
-                await event.respond('请选择账号角色：', buttons=roles_keyboard())
-                return
-                if mode == 'change_account_role':
+
+                elif mode == 'change_account_role':
                     account_id = st['pending']['account_id']
                     t = text.strip()
                     if t in ('监听账号', '监听', 'listen'):
@@ -808,22 +799,24 @@ async def setup_handlers(manager: ClientManager):
                     if t in ('取消', '退出', 'cancel'):
                         set_state(chat_id)
                         await event.respond('✅ 已取消', buttons=main_keyboard())
+                        return
+                    await event.respond('请选择账号角色：', buttons=roles_keyboard())
                     return
-                await event.respond('请选择账号角色：', buttons=roles_keyboard())
-                return
-            if mode == 'set_account_target':
-                account_id = st['pending']['account_id']
-                t = (text or '').strip()
-                if t in ('全局', 'global', ''):
-                    settings_service.set_account_target_chat(account_id, None)
+
+                elif mode == 'set_account_target':
+                    account_id = st['pending']['account_id']
+                    t = (text or '').strip()
+                    if t in ('全局', 'global', ''):
+                        settings_service.set_account_target_chat(account_id, None)
+                        set_state(chat_id)
+                        await event.respond('✅ 已设置为使用"全局提醒目标"', buttons=main_keyboard())
+                        return
+                    settings_service.set_account_target_chat(account_id, t)
                     set_state(chat_id)
-                    await event.respond('✅ 已设置为使用"全局提醒目标"', buttons=main_keyboard())
+                    await event.respond('✅ 已设置账号专属提醒目标', buttons=main_keyboard())
                     return
-                settings_service.set_account_target_chat(account_id, t)
-                set_state(chat_id)
-                await event.respond('✅ 已设置账号专属提醒目标', buttons=main_keyboard())
-                return
-                if mode == 'set_forward_target_global':
+
+                elif mode == 'set_forward_target_global':
                     t = (text or '').strip()
                     if t in ('取消', '退出', 'cancel'):
                         set_state(chat_id)
@@ -850,18 +843,20 @@ async def setup_handlers(manager: ClientManager):
                     settings_service.set_target_chat(final_target)
                     set_state(chat_id)
                     await event.respond(f'✅ 转发目标已设置：{final_target}', buttons=main_keyboard())
-                return
-            if mode == 'set_target_chat':
-                settings_service.set_target_chat(text)
-                set_state(chat_id)
-                await event.respond('已设置提醒目标', buttons=main_keyboard())
-                return
-                if mode == 'start_click_wait_link':
+                    return
+
+                elif mode == 'set_target_chat':
+                    settings_service.set_target_chat(text)
+                    set_state(chat_id)
+                    await event.respond('已设置提醒目标', buttons=main_keyboard())
+                    return
+
+                elif mode == 'start_click_wait_link':
                     t = (text or '').strip()
                     if t in ('取消', '退出', 'cancel'):
                         set_state(chat_id)
                         await event.respond('✅ 已取消', buttons=main_keyboard())
-                    return
+                        return
                     
                     # 解析消息链接
                     # 支持格式：https://t.me/c/xxx/123 或 https://t.me/username/123
@@ -893,36 +888,37 @@ async def setup_handlers(manager: ClientManager):
                     if not click_accounts:
                         set_state(chat_id)
                         await event.respond('⚠️ 没有可用的点击账号', buttons=main_keyboard())
-                    return
+                        return
                     
-                set_state(chat_id)
-                await event.respond(
-                        f'✅ 已解析消息链接，准备为 {len(click_accounts)} 个点击账号依次执行点击操作。',
-                    buttons=main_keyboard()
-                )
+                    set_state(chat_id)
+                    await event.respond(
+                            f'✅ 已解析消息链接，准备为 {len(click_accounts)} 个点击账号依次执行点击操作。',
+                        buttons=main_keyboard()
+                    )
                     
                     # 异步执行点击任务
-                asyncio.create_task(start_click_job(
+                    asyncio.create_task(start_click_job(
                         manager, chat_id_from_link, msg_id_from_link, click_accounts, event.chat_id
                     ))
-                return
-                if mode == 'set_target_bot':
+                    return
+
+                elif mode == 'set_target_bot':
                     t = (text or '').strip()
                     if not t:
                         await event.respond('⚠️ 请输入机器人用户名', buttons=None)
-                    return
+                        return
                     
                     # 允许取消
                     if t in ('取消', '退出', 'cancel', 'exit'):
                         set_state(chat_id)
                         await event.respond('✅ 已取消', buttons=main_keyboard())
-                    return
+                        return
                     
                     # 检查是否包含emoji（按钮文本）
                     has_emoji = any(unicodedata.category(c) == 'So' for c in t)
                     if has_emoji:
-                        await event.respond('⚠️ 请输入正确的用户名（不含emoji）', buttons=None)
-                    return
+                        await event.respond('⚠️ 请直接输入用户名，不要点击按钮', buttons=None)
+                        return
                     
                     # 处理输入
                     clean = t.lstrip('@')
@@ -939,15 +935,16 @@ async def setup_handlers(manager: ClientManager):
                         settings_service.set_target_bot(clean)
                         set_state(chat_id)
                         await event.respond(
-                            f'✅ 目标机器人已设置：@{clean}\n\n'
-                            '点击"▶️ 开始发送"按钮来批量发送消息。',
-                            buttons=main_keyboard()
-                    )
+                                f'✅ 目标机器人已设置：@{clean}\n\n'
+                                '点击"▶️ 开始发送"按钮来批量发送消息。',
+                                buttons=main_keyboard()
+                        )
                     except Exception as e:
                         set_state(chat_id)
                         await event.respond(f'⚠️ 设置失败：{e}', buttons=main_keyboard())
-                return
-                if mode == 'set_global_template':
+                    return
+
+                elif mode == 'set_global_template':
                     t = (text or '').strip()
                     if not t:
                         await event.respond('⚠️ 请输入消息内容', buttons=None)
@@ -955,7 +952,7 @@ async def setup_handlers(manager: ClientManager):
                     if t in ('取消', '退出', 'cancel'):
                         set_state(chat_id)
                         await event.respond('✅ 已取消', buttons=main_keyboard())
-                    return
+                        return
                     settings_service.set_global_template(t)
                     set_state(chat_id)
                     await event.respond(
@@ -963,13 +960,14 @@ async def setup_handlers(manager: ClientManager):
                         '点击"▶️ 开始发送"按钮来批量发送消息。',
                         buttons=main_keyboard()
                     )
-                return
-                if mode == 'set_global_send_delay':
+                    return
+
+                elif mode == 'set_global_send_delay':
                     t = (text or '').strip()
                     if t in ('取消', '退出', 'cancel'):
                         set_state(chat_id)
                         await event.respond('✅ 已取消', buttons=main_keyboard())
-                    return
+                        return
                     try:
                         val = float(t)
                         if val < 0:
@@ -980,24 +978,26 @@ async def setup_handlers(manager: ClientManager):
                     except ValueError:
                         await event.respond('⚠️ 请输入有效的数字（如 0.5、1、2）', buttons=None)
                     return
-                if mode == 'add_account_wait_file':
+
+                elif mode == 'add_account_wait_file':
                     await event.respond('请发送 .session 文件作为文档（不是文本）')
                     return
-                if mode == 'add_listen_account_wait_string':
+
+                elif mode == 'add_listen_account_wait_string':
                     # 如果消息包含文件，让文件处理器处理，不在这里处理
                     if event.file:
                         return
-                tmsg = (text or '').strip()
-                if tmsg in ('完成', '结束', '返回'):
-                    set_state(chat_id)
-                    await event.respond('✅ 已结束添加', buttons=main_keyboard())
-                    return
-                
-                # 检查是否为空或明显不是 StringSession
-                if not tmsg:
-                    await event.respond('⚠️ 请输入 StringSession 文本，或发送 .session 文件（作为文档）\n发送"完成"可结束添加')
-                    return
-                
+                    tmsg = (text or '').strip()
+                    if tmsg in ('完成', '结束', '返回'):
+                        set_state(chat_id)
+                        await event.respond('✅ 已结束添加', buttons=main_keyboard())
+                        return
+                    
+                    # 检查是否为空或明显不是 StringSession
+                    if not tmsg:
+                        await event.respond('⚠️ 请输入 StringSession 文本，或发送 .session 文件（作为文档）\n发送"完成"可结束添加')
+                        return
+                    
                     # StringSession 通常以 "1A" 开头，如果不是，提示用户
                     if not tmsg.startswith('1'):
                         await event.respond(
@@ -1038,8 +1038,9 @@ async def setup_handlers(manager: ClientManager):
                             "请检查 StringSession 文本是否正确，或发送 .session 文件（作为文档）。\n"
                             '发送"完成"可结束添加'
                         )
-                return
-                if mode == 'add_click_account_wait_file':
+                    return
+
+                elif mode == 'add_click_account_wait_file':
                     # 如果消息包含文件，让文件处理器处理，不在这里处理
                     if event.file:
                         return
@@ -1095,172 +1096,178 @@ async def setup_handlers(manager: ClientManager):
                             "请检查 StringSession 文本是否正确，或发送 .session 文件（作为文档）。\n"
                             '发送"完成"可结束添加'
                         )
-                return
-            if mode == 'keywords_manage':
-                account_id = st['pending']['account_id']
-                kind = st['pending']['kind']
-                t = (text or '').strip()
-                if not t:
-                    await event.respond('⚠️ 请发送指令，或发送"完成"返回主菜单。')
                     return
-                lower = t.lower()
-                if lower in ('完成', '返回'):
-                    set_state(chat_id)
-                    await event.respond('⬅️ 已返回主菜单', buttons=main_keyboard())
-                    return
-                if lower in ('导出', 'export'):
-                    cur = settings_service.get_account_keywords(account_id, kind=kind) or []
-                    listing = '\n'.join(cur) or '（空）'
-                    await event.respond(
-                        f"当前关键字（{keywords_label(kind)}）共 {len(cur)} 条：\n{listing}"
-                    )
-                    return
-                if lower in ('导入', 'import'):
-                    set_state(chat_id, 'keywords_import_wait_file', account_id=account_id, kind=kind)
-                    await event.respond('📄 请发送包含关键字的文本文件（每行一个，支持逗号/换行分隔），作为文档上传。')
-                    return
-                
-                before = set(settings_service.get_account_keywords(account_id, kind=kind) or [])
-                message = None
-                payload = t[1:] if t[:1] in ('+', '＋', '-', '－', 'q', 'Q') else t
-                if t.startswith(('+', '＋')):
-                    parts = split_keywords_payload(payload)
-                    if not parts:
-                        await event.respond('⚠️ 请提供要追加的关键字')
-                        return
-                    for word in parts:
-                        settings_service.add_keyword(account_id, word, kind=kind)
-                    after = set(settings_service.get_account_keywords(account_id, kind=kind) or [])
-                    message = f"✅ 已追加 {len(after - before)} 条关键字"
-                elif t.startswith(('-', '－')) or t.lower().startswith('q'):
-                    parts = split_keywords_payload(payload)
-                    if not parts:
-                        await event.respond('⚠️ 请提供要删除的关键字')
-                        return
-                    for word in parts:
-                        settings_service.delete_keyword(account_id, word, kind=kind)
-                    after = set(settings_service.get_account_keywords(account_id, kind=kind) or [])
-                    removed = max(0, len(before - after))
-                    message = f"🗑️ 已删除 {removed} 条关键字"
-                else:
-                    parts = split_keywords_payload(t)
-                    dao_keywords.set_keywords(account_id, parts, kind=kind)
-                    message = f"✅ 已覆盖关键字列表（共 {len(parts)} 条）"
-                await event.respond(message or '✅ 操作完成')
-                await event.respond(keywords_overview_text(account_id, kind))
-                return
-            if mode == 'set_click_delay_choose_account':
-                try:
-                    acc_id = int(text)
-                    row = dao_accounts.get(acc_id)
-                    if not row:
-                        await event.respond('账号不存在，请重新输入账号ID')
-                        return
-                    if not role_allows_click(get_account_role(acc_id)):
-                        await event.respond('该账号不是点击账号，请重新输入账号ID')
-                        return
-                    set_state(chat_id, 'set_click_delay_input', account_id=acc_id)
-                    await event.respond('⏱️ 请输入点击延迟（单位秒，可为小数，例如 0.8）')
-                except Exception:
-                    await event.respond('⚠️ 请输入有效的账号ID（数字）')
-                return
-            if mode == 'set_click_delay_input':
-                account_id = st['pending']['account_id']
-                try:
-                    value = float(text)
-                    settings_service.set_click_delay(str(value), account_id)
-                    set_state(chat_id)
-                    await event.respond('✅ 已设置点击延迟', buttons=main_keyboard())
-                except Exception:
-                    await event.respond('⚠️ 请输入数字，例如 0.8')
-                return
-            if mode == 'set_send_delay_choose_account':
-                try:
-                    acc_id = int(text)
-                    row = dao_accounts.get(acc_id)
-                    if not row:
-                        await event.respond('账号不存在，请重新输入账号ID')
-                        return
-                    if not role_allows_click(get_account_role(acc_id)):
-                        await event.respond('该账号不是点击账号，请重新输入账号ID')
-                        return
-                    set_state(chat_id, 'set_send_delay_input', account_id=acc_id)
-                    await event.respond('🐢 请输入发送延迟（单位秒，可为小数）')
-                except Exception:
-                    await event.respond('⚠️ 请输入有效的账号ID（数字）')
-                return
-            if mode == 'set_send_delay_input':
-                account_id = st['pending']['account_id']
-                try:
-                    value = float(text)
-                    settings_service.set_send_delay(str(value), account_id)
-                    set_state(chat_id)
-                    await event.respond('✅ 已设置发送延迟', buttons=main_keyboard())
-                except Exception:
-                    await event.respond('⚠️ 请输入数字，例如 1.2')
-                return
-            if mode == 'set_template_choose_account':
-                try:
-                    acc_id = int(text)
-                    row = dao_accounts.get(acc_id)
-                    if not row:
-                        await event.respond('账号不存在，请重新输入账号ID')
-                        return
-                    if not role_allows_click(get_account_role(acc_id)):
-                        await event.respond('该账号不是点击账号，请重新输入账号ID')
-                        return
-                    set_state(chat_id, 'set_template_input', account_id=acc_id)
-                    await event.respond('📝 请输入发送消息模板（文本）')
-                except Exception:
-                    await event.respond('⚠️ 请输入有效的账号ID（数字）')
-                return
-            if mode == 'set_template_input':
-                account_id = st['pending']['account_id']
-                settings_service.set_template_message(text, account_id)
-                set_state(chat_id)
-                await event.respond('✅ 已设置发送消息模板', buttons=main_keyboard())
-                return
-            if mode == 'auto_join_wait_link':
-                link = text
-                account_ids = st['pending'].get('account_ids', [])
-                role_sel = st['pending'].get('role', 'listen')
-                if not account_ids:
-                    set_state(chat_id)
-                    await event.respond(
-                        f"⚠️ 当前没有激活的{'监听' if role_sel == 'listen' else '点击'}账号，请先添加并连接成功。",
-                        buttons=main_keyboard()
-                    )
-                    return
-                lines = [l.strip() for l in link.splitlines() if l.strip()]
-                if not lines:
-                    await event.respond('⚠️ 请发送至少一个有效的群链接或用户名。')
-                    return
-                ok = 0
-                fail = 0
-                mn, mx = settings_service.get_join_delay_range()
-                for target in lines:
-                    for acc_id in account_ids:
-                        client = manager.account_clients.get(acc_id)
-                        if not client:
-                            continue
-                        try:
-                            await joining.join_chat(client, target)
-                            ok += 1
-                        except Exception:
-                            fail += 1
-                        await asyncio.sleep(random.uniform(mn, mx))
-                set_state(chat_id)
-                msg = (
-                    f"✅ 批量进群完成（使用{'监听' if role_sel=='listen' else '点击'}账号）\n"
-                    '────────────\n'
-                    f'处理链接：{len(lines)} 个\n'
-                    f'✅ 成功次数：{ok}\n'
-                    f'❌ 失败次数：{fail}'
-                )
-                await event.respond(msg, buttons=main_keyboard())
-                return
 
-            # 监听群组相关模式已移除（现在监听账号默认监听所有群组）
+                elif mode == 'keywords_manage':
+                    account_id = st['pending']['account_id']
+                    kind = st['pending']['kind']
+                    t = (text or '').strip()
+                    if not t:
+                        await event.respond('⚠️ 请发送指令，或发送"完成"返回主菜单。')
+                        return
+                    lower = t.lower()
+                    if lower in ('完成', '返回'):
+                        set_state(chat_id)
+                        await event.respond('⬅️ 已返回主菜单', buttons=main_keyboard())
+                        return
+                    if lower in ('导出', 'export'):
+                        cur = settings_service.get_account_keywords(account_id, kind=kind) or []
+                        listing = '\n'.join(cur) or '（空）'
+                        await event.respond(
+                            f"当前关键字（{keywords_label(kind)}）共 {len(cur)} 条：\n{listing}"
+                        )
+                        return
+                    if lower in ('导入', 'import'):
+                        set_state(chat_id, 'keywords_import_wait_file', account_id=account_id, kind=kind)
+                        await event.respond('📄 请发送包含关键字的文本文件（每行一个，支持逗号/换行分隔），作为文档上传。')
+                        return
+                    
+                    before = set(settings_service.get_account_keywords(account_id, kind=kind) or [])
+                    message = None
+                    payload = t[1:] if t[:1] in ('+', '＋', '-', '－', 'q', 'Q') else t
+                    if t.startswith(('+', '＋')):
+                        parts = split_keywords_payload(payload)
+                        if not parts:
+                            await event.respond('⚠️ 请提供要追加的关键字')
+                            return
+                        for word in parts:
+                            settings_service.add_keyword(account_id, word, kind=kind)
+                        after = set(settings_service.get_account_keywords(account_id, kind=kind) or [])
+                        message = f"✅ 已追加 {len(after - before)} 条关键字"
+                    elif t.startswith(('-', '－')) or t.lower().startswith('q'):
+                        parts = split_keywords_payload(payload)
+                        if not parts:
+                            await event.respond('⚠️ 请提供要删除的关键字')
+                            return
+                        for word in parts:
+                            settings_service.delete_keyword(account_id, word, kind=kind)
+                        after = set(settings_service.get_account_keywords(account_id, kind=kind) or [])
+                        removed = max(0, len(before - after))
+                        message = f"🗑️ 已删除 {removed} 条关键字"
+                    else:
+                        parts = split_keywords_payload(t)
+                        dao_keywords.set_keywords(account_id, parts, kind=kind)
+                        message = f"✅ 已覆盖关键字列表（共 {len(parts)} 条）"
+                    await event.respond(message or '✅ 操作完成')
+                    await event.respond(keywords_overview_text(account_id, kind))
+                    return
+
+                elif mode == 'set_click_delay_choose_account':
+                    try:
+                        acc_id = int(text)
+                        row = dao_accounts.get(acc_id)
+                        if not row:
+                            await event.respond('账号不存在，请重新输入账号ID')
+                            return
+                        if not role_allows_click(get_account_role(acc_id)):
+                            await event.respond('该账号不是点击账号，请重新输入账号ID')
+                            return
+                        set_state(chat_id, 'set_click_delay_input', account_id=acc_id)
+                        await event.respond('⏱️ 请输入点击延迟（单位秒，可为小数，例如 0.8）')
+                    except Exception:
+                        await event.respond('⚠️ 请输入有效的账号ID（数字）')
+                    return
+
+                elif mode == 'set_click_delay_input':
+                    account_id = st['pending']['account_id']
+                    try:
+                        value = float(text)
+                        settings_service.set_click_delay(str(value), account_id)
+                        set_state(chat_id)
+                        await event.respond('✅ 已设置点击延迟', buttons=main_keyboard())
+                    except Exception:
+                        await event.respond('⚠️ 请输入数字，例如 0.8')
+                    return
+
+                elif mode == 'set_send_delay_choose_account':
+                    try:
+                        acc_id = int(text)
+                        row = dao_accounts.get(acc_id)
+                        if not row:
+                            await event.respond('账号不存在，请重新输入账号ID')
+                            return
+                        if not role_allows_click(get_account_role(acc_id)):
+                            await event.respond('该账号不是点击账号，请重新输入账号ID')
+                            return
+                        set_state(chat_id, 'set_send_delay_input', account_id=acc_id)
+                        await event.respond('🐢 请输入发送延迟（单位秒，可为小数）')
+                    except Exception:
+                        await event.respond('⚠️ 请输入有效的账号ID（数字）')
+                    return
+
+                elif mode == 'set_send_delay_input':
+                    account_id = st['pending']['account_id']
+                    try:
+                        value = float(text)
+                        settings_service.set_send_delay(str(value), account_id)
+                        set_state(chat_id)
+                        await event.respond('✅ 已设置发送延迟', buttons=main_keyboard())
+                    except Exception:
+                        await event.respond('⚠️ 请输入数字，例如 1.2')
+                    return
+
+                elif mode == 'set_template_choose_account':
+                    try:
+                        acc_id = int(text)
+                        row = dao_accounts.get(acc_id)
+                        if not row:
+                            await event.respond('账号不存在，请重新输入账号ID')
+                            return
+                        if not role_allows_click(get_account_role(acc_id)):
+                            await event.respond('该账号不是点击账号，请重新输入账号ID')
+                            return
+                        set_state(chat_id, 'set_template_input', account_id=acc_id)
+                        await event.respond('📝 请输入发送消息模板（文本）')
+                    except Exception:
+                        await event.respond('⚠️ 请输入有效的账号ID（数字）')
+                    return
+
+                elif mode == 'set_template_input':
+                    account_id = st['pending']['account_id']
+                    settings_service.set_template_message(text, account_id)
+                    set_state(chat_id)
+                    await event.respond('✅ 已设置发送消息模板', buttons=main_keyboard())
+                    return
+
+                elif mode == 'auto_join_wait_link':
+                    link = text
+                    account_ids = st['pending'].get('account_ids', [])
+                    role_sel = st['pending'].get('role', 'listen')
+                    if not account_ids:
+                        set_state(chat_id)
+                        await event.respond(
+                            f"⚠️ 当前没有激活的{'监听' if role_sel == 'listen' else '点击'}账号，请先添加并连接成功。",
+                            buttons=main_keyboard()
+                        )
+                        return
+                    lines = [l.strip() for l in link.splitlines() if l.strip()]
+                    if not lines:
+                        await event.respond('⚠️ 请发送至少一个有效的群链接或用户名。')
+                        return
+                    ok = 0
+                    fail = 0
+                    mn, mx = settings_service.get_join_delay_range()
+                    for target in lines:
+                        for acc_id in account_ids:
+                            client = manager.account_clients.get(acc_id)
+                            if not client:
+                                continue
+                            try:
+                                await joining.join_chat(client, target)
+                                ok += 1
+                            except Exception:
+                                fail += 1
+                            await asyncio.sleep(random.uniform(mn, mx))
+                    set_state(chat_id)
+                    msg = (
+                        f"✅ 批量进群完成（使用{'监听' if role_sel=='listen' else '点击'}账号）\n"
+                        '────────────\n'
+                        f'处理链接：{len(lines)} 个\n'
+                        f'✅ 成功次数：{ok}\n'
+                        f'❌ 失败次数：{fail}'
+                    )
+                    await event.respond(msg, buttons=main_keyboard())
+                    return
 
         if is_cmd(text, '设置转发目标'):
             # 显示当前全局转发目标
@@ -1319,13 +1326,13 @@ async def setup_handlers(manager: ClientManager):
                 if target_row:
                     set_state(chat_id, 'change_account_role', account_id=acc_hint)
                     current_role = get_account_role(acc_hint)
-                await event.respond(
+                    await event.respond(
                         f'🔄 修改账号 #{acc_hint} 的角色\n'
                         f'当前角色：{format_role_label(current_role)}\n\n'
                         '请选择新角色：',
                         buttons=roles_keyboard()
                     )
-            return
+                return
 
             listen_rows = list_accounts('listen')
             click_rows = list_accounts('click')
@@ -1344,7 +1351,7 @@ async def setup_handlers(manager: ClientManager):
                 f"监听账号（{len(listen_rows)}）：\n{format_rows(listen_rows)}\n\n"
                 f"点击账号（{len(click_rows)}）：\n{format_rows(click_rows)}\n\n"
                 f"💡 提示：发送「账号列表 #账号ID」可修改账号角色"
-                )
+            )
             await event.respond(summary)
             return
 
@@ -1395,7 +1402,7 @@ async def setup_handlers(manager: ClientManager):
                 client = manager.account_clients.get(account_id)
                 if not client:
                     await event.respond(f'❌ 账号 #{account_id} 未在线')
-                return
+                    return
 
                 await event.respond('🔍 正在获取群组列表，请稍候...')
                 try:
@@ -1493,8 +1500,6 @@ async def setup_handlers(manager: ClientManager):
             )
             return
 
-        # 批量添加入口已移除
-
         if is_cmd(text, '设置点击延迟'):
             rows = list_accounts('click')
             if not rows:
@@ -1549,7 +1554,7 @@ async def setup_handlers(manager: ClientManager):
             bot_username = settings_service.get_target_bot()
             if not bot_username:
                 await event.respond('⚠️ 请先设置目标机器人（点击"🎯 设置目标机器人"）', buttons=main_keyboard())
-            return
+                return
 
             # 获取发送消息（默认 /start）
             send_msg = settings_service.get_global_template() or '/start'
