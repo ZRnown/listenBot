@@ -32,9 +32,16 @@ async def main():
         await manager.load_active_accounts()
         print(f"[启动日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ✅ 系统启动完成，开始监听消息...")
         
-        # 主循环：保持程序运行
+        # 主循环：保持程序运行（使用更可靠的方式）
         print(f"[启动日志] 程序正在运行，按 Ctrl+C 退出...")
-        await asyncio.Event().wait()  # Keep main task running
+        try:
+            # 创建一个永远不会被设置的 Event，保持程序运行
+            stop_event = asyncio.Event()
+            await stop_event.wait()
+        except asyncio.CancelledError:
+            # 正常处理取消
+            print(f"[启动日志] 主循环被取消")
+            raise
     except KeyboardInterrupt:
         # graceful shutdown on Ctrl+C
         print(f"\n[启动日志] 收到退出信号，正在关闭...")
@@ -63,6 +70,14 @@ async def main():
 
 if __name__ == '__main__':
     try:
+        # 使用 asyncio.run 运行主函数
         asyncio.run(main())
     except KeyboardInterrupt:
-        pass
+        print("\n[启动日志] 程序被用户中断")
+    except asyncio.CancelledError:
+        print("\n[启动日志] 程序被取消")
+    except Exception as e:
+        print(f"[启动日志] ❌ 程序异常退出: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
