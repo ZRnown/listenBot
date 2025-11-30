@@ -520,14 +520,49 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
                     fail_accounts.append(f"{acc_name}: {str(e)[:50]}")
                     # 不发送单个账号的失败消息，只在最终报告中显示
         
-        # 并发执行所有点击任务（但通过信号量控制并发数）
-        print(f"[点击任务] 🎯 开始执行点击，共 {len(matched_accounts)} 个账号需要点击")
-        tasks = [click_with_account(acc, btn_row, btn_col, btn_text, idx) 
-                 for idx, (acc, btn_row, btn_col, btn_text) in enumerate(matched_accounts)]
+        # 优化：将点击账号分成多个批次，每批次并发执行
+        # 每个批次约10个账号，充分利用CPU和内存
+        accounts_per_batch = 10
+        total_accounts = len(matched_accounts)
+        num_batches = max(1, (total_accounts + accounts_per_batch - 1) // accounts_per_batch)
         
-        print(f"[点击任务] 创建了 {len(tasks)} 个点击任务，开始并发执行...")
-        results = await asyncio.gather(*tasks, return_exceptions=True)
-        print(f"[点击任务] 所有点击任务执行完成，结果: {len(results)} 个")
+        print(f"[点击任务] 🎯 开始执行点击，共 {total_accounts} 个账号需要点击，分成 {num_batches} 个批次（每批次约 {accounts_per_batch} 个账号）")
+        
+        # 将账号列表分成多个批次
+        account_batches = []
+        for i in range(0, total_accounts, accounts_per_batch):
+            batch = matched_accounts[i:i + accounts_per_batch]
+            account_batches.append(batch)
+        
+        # 定义批次点击函数
+        async def click_batch(batch_accounts, batch_index):
+            """执行一个批次的点击任务（并发）"""
+            try:
+                batch_tasks = [click_with_account(acc, btn_row, btn_col, btn_text, idx) 
+                              for idx, (acc, btn_row, btn_col, btn_text) in enumerate(batch_accounts, start=batch_index * accounts_per_batch)]
+                batch_results = await asyncio.gather(*batch_tasks, return_exceptions=True)
+                
+                batch_success = sum(1 for r in batch_results if not isinstance(r, Exception))
+                batch_fail = len(batch_results) - batch_success
+                print(f"[点击批次 #{batch_index + 1}] 完成: 成功 {batch_success} 个，失败 {batch_fail} 个")
+                return batch_results
+            except Exception as e:
+                print(f"[点击批次 #{batch_index + 1}] 执行出错: {e}")
+                return []
+        
+        # 所有批次并发执行（充分利用CPU和内存）
+        batch_tasks = [click_batch(batch, idx) for idx, batch in enumerate(account_batches)]
+        all_results = await asyncio.gather(*batch_tasks, return_exceptions=True)
+        
+        # 展平所有批次的结果
+        results = []
+        for batch_results in all_results:
+            if isinstance(batch_results, list):
+                results.extend(batch_results)
+            elif isinstance(batch_results, Exception):
+                print(f"[点击任务] ⚠️ 批次执行异常: {batch_results}")
+        
+        print(f"[点击任务] 所有点击任务执行完成，共处理 {len(results)} 个结果")
         
         # 检查是否有异常
         for i, result in enumerate(results):
