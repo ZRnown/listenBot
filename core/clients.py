@@ -710,24 +710,24 @@ class ClientManager:
                                             except Exception as e:
                                                 last_message_ids[chat_id] = msg.id
                                                 print(f"[轮询] 账号 #{account_id} 处理消息失败: {e}")
-                            
-                            if messages:
-                                last_message_ids[chat_id] = max(msg.id for msg in messages)
-                            
-                            return group_new_count
-                        except (ConnectionError, RuntimeError) as e:
-                            # 捕获断开连接错误，优雅退出
-                            if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
-                                print(f"[轮询] 账号 #{account_id} 客户端已断开连接，停止检查群组")
+                                
+                                if messages:
+                                    last_message_ids[chat_id] = max(msg.id for msg in messages)
+                                
+                                return group_new_count
+                            except (ConnectionError, RuntimeError) as e:
+                                # 捕获断开连接错误，优雅退出
+                                if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
+                                    print(f"[轮询] 账号 #{account_id} 客户端已断开连接，停止检查群组")
+                                    return 0
+                                print(f"[轮询] 账号 #{account_id} 检查群组失败: {e}")
                                 return 0
-                            print(f"[轮询] 账号 #{account_id} 检查群组失败: {e}")
-                            return 0
-                        except (GeneratorExit, asyncio.CancelledError):
-                            # 优雅处理协程取消
-                            return 0
-                        except Exception as e:
-                            print(f"[轮询] 账号 #{account_id} 检查群组失败: {e}")
-                            return 0
+                            except (GeneratorExit, asyncio.CancelledError):
+                                # 优雅处理协程取消
+                                return 0
+                            except Exception as e:
+                                print(f"[轮询] 账号 #{account_id} 检查群组失败: {e}")
+                                return 0
                         
                         tasks = [check_group(g) for g in batch]
                         results = await asyncio.gather(*tasks, return_exceptions=True)
