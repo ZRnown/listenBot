@@ -265,7 +265,7 @@ class ClientManager:
             await self._process_message(event, account_id, "MessageEdited")
     
     async def _process_message(self, event, account_id: int, handler_name: str):
-        """处理收到的消息（异步并发处理，不阻塞）"""
+        """处理收到的消息（异步并发处理，不阻塞，实时推送）"""
         try:
             # 快速过滤：只处理群组消息
             if event.is_private or not event.is_group:
@@ -273,11 +273,17 @@ class ClientManager:
             
             account = dao_accounts.get(account_id)
             if account:
-                # 异步处理，不阻塞事件循环
+                # 立即异步处理，不阻塞事件循环（实时推送）
                 # 传递控制机器人的 ID，用于过滤自己的消息
-                asyncio.create_task(on_new_message(event, account, self.bot, self.bot_id))
+                # 使用 create_task 立即调度，确保消息立即处理
+                task = asyncio.create_task(on_new_message(event, account, self.bot, self.bot_id))
+                # 不等待任务完成，让消息处理立即开始
+                if handler_name == "ActivePolling":
+                    print(f"[处理消息] ✅ 账号 #{account_id} 消息已调度处理（来源: {handler_name}）")
         except Exception as e:
             print(f"[处理消息] ❌ 账号 #{account_id} 错误: {str(e)}")
+            import traceback
+            traceback.print_exc()
 
     async def start_account_client(self, account_row):
         account_id = account_row['id']
@@ -454,6 +460,7 @@ class ClientManager:
                             
                             group_new_count = 0
                             if messages:
+                                # 优化：立即处理每条新消息，不等待批量处理完成
                                 for msg in reversed(messages):
                                     if msg.id > last_id and not msg.out:
                                         try:
@@ -484,12 +491,16 @@ class ClientManager:
                                             mock_event = MockEvent(msg, entity, chat_id, client)
                                             
                                             if mock_event.is_group:
-                                                await self._process_message(mock_event, account_id, "ActivePolling")
+                                                # 立即异步处理消息，不等待完成（实时推送）
+                                                # 使用 create_task 立即调度，不阻塞轮询
+                                                asyncio.create_task(self._process_message(mock_event, account_id, "ActivePolling"))
                                                 group_new_count += 1
+                                                print(f"[轮询] 🚀 账号 #{account_id} 检测到新消息 (ID: {msg.id})，立即推送")
                                             
                                             last_message_ids[chat_id] = msg.id
-                                        except Exception:
+                                        except Exception as e:
                                             last_message_ids[chat_id] = msg.id
+                                            print(f"[轮询] ⚠️ 处理消息时出错: {e}")
                                             pass
                             
                             if messages:
@@ -530,6 +541,7 @@ class ClientManager:
                                 
                                 group_new_count = 0
                                 if messages:
+                                    # 优化：立即处理每条新消息，不等待批量处理完成
                                     for msg in reversed(messages):
                                         if msg.id > last_id and not msg.out:
                                             try:
@@ -560,12 +572,16 @@ class ClientManager:
                                                 mock_event = MockEvent(msg, entity, chat_id, client)
                                                 
                                                 if mock_event.is_group:
-                                                    await self._process_message(mock_event, account_id, "ActivePolling")
+                                                    # 立即异步处理消息，不等待完成（实时推送）
+                                                    # 使用 create_task 立即调度，不阻塞轮询
+                                                    asyncio.create_task(self._process_message(mock_event, account_id, "ActivePolling"))
                                                     group_new_count += 1
+                                                    print(f"[轮询] 🚀 账号 #{account_id} 检测到新消息 (ID: {msg.id})，立即推送")
                                                 
                                                 last_message_ids[chat_id] = msg.id
-                                            except Exception:
+                                            except Exception as e:
                                                 last_message_ids[chat_id] = msg.id
+                                                print(f"[轮询] ⚠️ 处理消息时出错: {e}")
                                                 pass
                                 
                                 if messages:
