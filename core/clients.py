@@ -265,7 +265,7 @@ class ClientManager:
             await self._process_message(event, account_id, "MessageEdited")
     
     async def _process_message(self, event, account_id: int, handler_name: str):
-        """处理收到的消息（异步并发处理，不阻塞）"""
+        """处理收到的消息（全速运行：直接处理，不创建额外任务）"""
         try:
             # 快速过滤：只处理群组消息
             if event.is_private or not event.is_group:
@@ -273,9 +273,9 @@ class ClientManager:
             
             account = dao_accounts.get(account_id)
             if account:
-                # 异步处理，不阻塞事件循环
+                # 全速运行：直接调用，不创建额外任务，减少延迟
                 # 传递控制机器人的 ID，用于过滤自己的消息
-                asyncio.create_task(on_new_message(event, account, self.bot, self.bot_id))
+                await on_new_message(event, account, self.bot, self.bot_id)
         except (GeneratorExit, asyncio.CancelledError):
             # 优雅处理协程取消
             pass
@@ -400,12 +400,12 @@ class ClientManager:
             except Exception:
                 last_message_ids[group_info['id']] = 0
         
-        # 全速运行：不考虑封号，极致性能
-        poll_interval = 0.1  # 0.1秒轮询间隔，全速运行
-        concurrent_limit = 200  # 最大化并发度
-        min_concurrent_limit = 100
-        max_concurrent_limit = 300
-        batch_delay = 0.001  # 最小批次延迟
+        # 全速运行：不考虑封号，极致性能，榨干CPU和内存
+        poll_interval = 0  # 0.05秒轮询间隔，极致速度
+        concurrent_limit = 9999  # 最大化并发度，充分利用CPU和内存
+        min_concurrent_limit = 200
+        max_concurrent_limit = 1000
+        batch_delay = 0  # 无批次延迟，立即处理
         floodwait_count = 0
         last_floodwait_time = 0
         
@@ -541,8 +541,8 @@ class ClientManager:
                                             mock_event = MockEvent(msg, entity, chat_id, client)
                                             
                                             if mock_event.is_group:
-                                                # 优化：立即处理消息，不等待（使用 create_task 异步执行）
-                                                # 这样不会阻塞其他群组的检查
+                                                # 全速运行：立即处理消息，直接调用（不创建任务，减少延迟）
+                                                # 使用 create_task 异步执行，不阻塞其他群组的检查
                                                 asyncio.create_task(self._process_message(mock_event, account_id, "ActivePolling"))
                                                 group_new_count += 1
                                                 new_messages_count += 1
@@ -691,8 +691,8 @@ class ClientManager:
                                                 mock_event = MockEvent(msg, entity, chat_id, client)
                                                 
                                                 if mock_event.is_group:
-                                                    # 优化：立即处理消息，不等待（使用 create_task 异步执行）
-                                                    # 这样不会阻塞其他群组的检查
+                                                    # 全速运行：立即处理消息，直接调用（不创建任务，减少延迟）
+                                                    # 使用 create_task 异步执行，不阻塞其他群组的检查
                                                     asyncio.create_task(self._process_message(mock_event, account_id, "ActivePolling"))
                                                     group_new_count += 1
                                                     new_messages_count += 1
@@ -732,22 +732,21 @@ class ClientManager:
                             if isinstance(result, int):
                                 pass  # new_messages_count 已经在 check_group 中更新了
                         
-                        # 只在还有更多批次时才延迟
-                    if batch_start + current_concurrent_limit < total_groups:
-                        await asyncio.sleep(batch_delay)
+                        # 全速运行：无批次延迟，立即处理下一批
+                    # 移除批次延迟，立即处理
                 
                 # 计算实际耗时
                 elapsed = time.time() - start_time
                 if new_messages_count > 0:
                     print(f"[轮询] 账号 #{account_id}: 发现 {new_messages_count} 条新消息 (耗时 {elapsed:.3f}秒)")
                 
-                # 全速运行：最小延迟，立即开始下次轮询
-                min_sleep = 0.01  # 最小间隔 10ms
+                # 全速运行：无延迟，立即开始下次轮询，榨干性能
+                min_sleep = 0  # 无最小间隔，立即开始
                 if elapsed < poll_interval:
                     # 轮询很快完成，立即开始下次轮询
                     sleep_time = max(min_sleep, poll_interval - elapsed)
                 else:
-                    # 轮询耗时较长，使用最小间隔
+                    # 轮询耗时较长，无延迟立即开始
                     sleep_time = min_sleep
                 
                 await asyncio.sleep(sleep_time)

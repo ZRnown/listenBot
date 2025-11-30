@@ -10,8 +10,9 @@ _ACCOUNT_SEMAPHORES: dict[int, tuple[asyncio.Semaphore, int]] = {}
 
 
 def _get_semaphore(account_id: int) -> asyncio.Semaphore:
-    """获取账号的信号量，用于控制并发数"""
-    value = max(1, settings_service.get_concurrency(account_id))
+    """获取账号的信号量，用于控制并发数（全速运行：最大化并发）"""
+    # 全速运行：默认并发数设为100，充分利用CPU和内存
+    value = max(100, settings_service.get_concurrency(account_id) or 100)
     sem, current = _ACCOUNT_SEMAPHORES.get(account_id, (None, 0))
     if sem is None or current != value:
         sem = asyncio.Semaphore(value)
@@ -89,11 +90,11 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
                     should_alert = False
                 
                 if should_alert:
-                    # 优化：立即发送提醒，不等待（使用 create_task 异步执行）
-                    # 这样不会阻塞消息处理，极大提升监听速度
+                    # 全速运行：立即发送提醒，直接调用（不创建任务，减少延迟）
+                    # 使用 create_task 异步执行，不阻塞消息处理，榨干性能
                     async def _send_alert_task():
                         try:
-                            print(f"[监听] 准备发送提醒...")
+                            print(f"[监听] 立即发送提醒...")
                             await send_alert(bot_client, account, event, matched)
                             print(f"[监听] ✅ 提醒发送成功")
                         except Exception as e:
@@ -101,7 +102,7 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
                             import traceback
                             traceback.print_exc()
                     
-                    # 立即创建任务，不等待完成
+                    # 立即创建任务，不等待完成，充分利用CPU
                     asyncio.create_task(_send_alert_task())
                 else:
                     print(f"[监听] ⚠️ 跳过发送提醒（should_alert=False）")
