@@ -249,35 +249,15 @@ class ClientManager:
             group_list: 群组列表（可选）
             register_listeners: 是否注册事件监听器（只有监听账号才需要）
         """
-        # 只有监听账号才需要设置监控群组列表
-        if register_listeners and group_list:
-            # 收集所有可能的ID格式（原始ID、int、负数）
-            group_ids_set = set()
-            for g in group_list:
-                chat_id = g['id']
-                group_ids_set.add(chat_id)
-                try:
-                    # 添加int格式
-                    chat_id_int = int(chat_id)
-                    group_ids_set.add(chat_id_int)
-                    # 添加负数格式（如果是正数）
-                    if chat_id_int > 0:
-                        group_ids_set.add(-chat_id_int)
-                    # 如果是负数，也添加正数格式
-                    elif chat_id_int < 0:
-                        group_ids_set.add(-chat_id_int)
-                except (ValueError, TypeError):
-                    pass
-            
-            client._monitored_group_ids = group_ids_set
-            print(f"[注册处理器] 账号 #{account_id} 设置监控群组列表: {len(group_list)} 个群组 (ID集合大小: {len(group_ids_set)})")
-            # 打印前几个群组ID用于调试
-            sample_ids = list(group_ids_set)[:5]
-            print(f"[注册处理器] 账号 #{account_id} 监控群组ID示例: {sample_ids}")
+        # 完全按照 TelegramForwarder 的方式：不限制群组列表，监听所有群组
+        # TelegramForwarder 不设置群组列表限制，监听所有消息，然后在处理时检查数据库
+        if register_listeners:
+            # 不设置群组列表限制，监听所有群组（完全按照 TelegramForwarder 的方式）
+            client._monitored_group_ids = None
+            print(f"[注册处理器] 账号 #{account_id} 监听所有群组（完全按照 TelegramForwarder 方式，无群组列表限制）")
         else:
             client._monitored_group_ids = None
-            if not register_listeners:
-                print(f"[注册处理器] 账号 #{account_id} 是点击账号，不设置监控群组列表")
+            print(f"[注册处理器] 账号 #{account_id} 是点击账号，不设置监控群组列表")
         
         # 过滤器：排除控制机器人自己的消息（完全按照 TelegramForwarder 的方式）
         async def not_from_control_bot(event):
@@ -336,32 +316,13 @@ class ClientManager:
                 except Exception as e:
                     print(f"[事件监听] 账号 #{account_id} 记录消息日志失败: {e}")
                 
-                # 如果指定了群组列表，检查是否在监控列表中
-                if hasattr(client, '_monitored_group_ids') and client._monitored_group_ids is not None:
-                    event_chat_id = event.chat_id
-                    # 尝试多种ID格式匹配（Telegram的群组ID可能是负数或正数）
-                    is_monitored = (
-                        event_chat_id in client._monitored_group_ids or
-                        int(event_chat_id) in client._monitored_group_ids or
-                        -int(event_chat_id) in client._monitored_group_ids
-                    )
-                    
-                    if not is_monitored:
-                        # 调试：打印监控列表和当前群组ID
-                        print(f"[事件监听] 账号 #{account_id} 消息来自未监控的群组: {event_chat_id} (类型: {type(event_chat_id).__name__})")
-                        print(f"[事件监听] 账号 #{account_id} 监控群组数量: {len(client._monitored_group_ids)}")
-                        # 打印几个监控的群组ID示例
-                        sample_ids = list(client._monitored_group_ids)[:3]
-                        print(f"[事件监听] 账号 #{account_id} 监控群组ID示例: {sample_ids}")
-                        return
+                # 完全按照 TelegramForwarder 的方式：不限制群组列表，监听所有群组
+                # 所有群组消息都会进入处理流程，由后续逻辑决定是否处理
                 await self._process_message(event, account_id, "NewMessage")
             
             @client.on(events.MessageEdited(func=not_from_control_bot))
             async def handle_message_edited(event):
-                # 如果指定了群组列表，只处理这些群组
-                if hasattr(client, '_monitored_group_ids') and client._monitored_group_ids is not None:
-                    if event.chat_id not in client._monitored_group_ids:
-                        return
+                # 完全按照 TelegramForwarder 的方式：不限制群组列表，监听所有群组
                 await self._process_message(event, account_id, "MessageEdited")
         else:
             print(f"[注册处理器] 账号 #{account_id} 是点击账号，不注册事件监听器")
