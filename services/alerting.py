@@ -142,8 +142,23 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
                                 except:
                                     pass
                         else:
-                            # 正数 chat_id（理论上不应该出现，但处理一下）
-                            print(f"[发送提醒] ⚠️ 意外的正数 Chat ID: {source_chat_id}")
+                            # 正数 chat_id（可能是普通群组或特殊类型）
+                            # 对于正数 Chat ID，尝试使用 tg:// 协议
+                            try:
+                                # 尝试使用 tg:// 协议（至少提供一个可点击的按钮）
+                                msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
+                                print(f"[发送提醒] ⚠️ 正数 Chat ID: {source_chat_id}，生成 tg:// 协议链接: {msg_link} (可能在某些客户端不可用)")
+                                
+                                # 另外，尝试检查是否是某种特殊格式的群组
+                                # 某些情况下，正数 Chat ID 可能需要转换为负数格式
+                                # 但先尝试直接使用正数
+                            except Exception as e:
+                                print(f"[发送提醒] ⚠️ 生成正数 Chat ID 链接失败: {e}")
+                                # 即使失败，也尝试生成一个基本的链接
+                                try:
+                                    msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
+                                except:
+                                    pass
                 except Exception as e:
                     print(f"[发送提醒] ❌ 生成消息链接时出错: {e}")
                     import traceback
@@ -155,16 +170,23 @@ async def send_alert(bot_client, account, event, matched_keyword: str):
                 button_row.append(Button.url('👁️ 查看消息', msg_link))
                 print(f"[发送提醒] ✅ 已添加'查看消息'按钮，链接: {msg_link}")
             else:
-                # 如果无法生成链接，至少记录日志
-                print(f"[发送提醒] ⚠️ 无法生成消息链接 (Chat ID: {source_chat_id}, Message ID: {event.message.id if hasattr(event, 'message') and event.message else 'N/A'})")
-                # 尝试使用最基本的 tg:// 链接作为备选
-                if source_chat_id and hasattr(event, 'message') and event.message and hasattr(event.message, 'id'):
+                # 如果无法生成链接，尝试使用最基本的 tg:// 链接作为备选
+                msg_id = None
+                if hasattr(event, 'message') and event.message:
+                    msg_id = getattr(event.message, 'id', None)
+                
+                if source_chat_id and msg_id:
                     try:
-                        fallback_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={event.message.id}"
+                        # 尝试生成备选链接（无论 Chat ID 是正数还是负数）
+                        fallback_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={msg_id}"
                         button_row.append(Button.url('👁️ 查看消息', fallback_link))
-                        print(f"[发送提醒] ✅ 使用备选 tg:// 链接: {fallback_link}")
+                        print(f"[发送提醒] ✅ 使用备选 tg:// 链接: {fallback_link} (Chat ID: {source_chat_id}, Message ID: {msg_id})")
                     except Exception as e:
-                        print(f"[发送提醒] ❌ 生成备选链接也失败: {e}")
+                        print(f"[发送提醒] ❌ 生成备选链接失败: {e}")
+                        print(f"[发送提醒] ⚠️ 无法生成消息链接 (Chat ID: {source_chat_id}, Message ID: {msg_id})")
+                else:
+                    # 如果连基本信息都没有，记录详细日志
+                    print(f"[发送提醒] ⚠️ 无法生成消息链接 - 缺少必要信息 (Chat ID: {source_chat_id}, Message ID: {msg_id})")
             
             if button_row:
                 buttons.append(button_row)
