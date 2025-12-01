@@ -503,10 +503,42 @@ class ClientManager:
                         entity = g['entity']
                         await client.get_entity(entity)
                         try:
-                            await client.get_messages(entity, limit=1)
+                            # 获取最新消息
+                            messages = await client.get_messages(entity, limit=1)
+                            
+                            # 标记消息为已读（模拟点击，触发 Telegram 同步）
+                            try:
+                                from telethon.tl.functions.messages import ReadHistoryRequest
+                                if messages:
+                                    await client(ReadHistoryRequest(
+                                        peer=entity,
+                                        max_id=messages[0].id
+                                    ))
+                                else:
+                                    # 如果没有消息，也尝试标记已读（保持群组活跃）
+                                    await client(ReadHistoryRequest(
+                                        peer=entity,
+                                        max_id=0
+                                    ))
+                            except Exception:
+                                pass  # 标记已读失败不影响同步
+                                
                         except FloodWaitError as e:
                             await asyncio.sleep(e.seconds)
-                            await client.get_messages(entity, limit=1)
+                            try:
+                                messages = await client.get_messages(entity, limit=1)
+                                # 标记已读
+                                try:
+                                    from telethon.tl.functions.messages import ReadHistoryRequest
+                                    if messages:
+                                        await client(ReadHistoryRequest(
+                                            peer=entity,
+                                            max_id=messages[0].id
+                                        ))
+                                except Exception:
+                                    pass
+                            except Exception:
+                                pass
                         except Exception:
                             pass
                         return True
@@ -607,8 +639,32 @@ class ClientManager:
                     # 信号量只用于 API 调用，不阻塞消息处理
                     try:
                         async with poll_semaphore:  # 只控制 API 调用的并发度
-                            # 极致优化：只获取最新3条消息，减少数据传输，提升速度
+                            # 方法1：获取最新消息（触发同步）
                             messages = await client.get_messages(entity, min_id=last_id, limit=3)
+                            
+                            # 方法2：标记消息为已读（模拟点击，触发 Telegram 同步）
+                            # 这会让 Telegram 认为你"访问"了群组，从而触发消息同步
+                            try:
+                                from telethon.tl.functions.messages import ReadHistoryRequest
+                                # 获取最新一条消息的ID用于标记已读
+                                if messages:
+                                    max_msg_id = max(msg.id for msg in messages)
+                                    await client(ReadHistoryRequest(
+                                        peer=entity,
+                                        max_id=max_msg_id
+                                    ))
+                                    # 特别记录目标群组的同步操作
+                                    if chat_id == -1002964498071:
+                                        print(f"[🔍 同步] ⭐ 账号 #{account_id} 标记目标群组消息为已读: Chat ID={chat_id}, Max Msg ID={max_msg_id}")
+                                elif last_id > 0:
+                                    # 如果没有新消息，但之前有消息，也标记已读（保持群组活跃）
+                                    await client(ReadHistoryRequest(
+                                        peer=entity,
+                                        max_id=last_id
+                                    ))
+                            except Exception as read_error:
+                                # 标记已读失败不影响消息获取
+                                pass
                     except FloodWaitError as e:
                         wait_seconds = e.seconds
                         await self._notify_user_waiting(account_id, wait_seconds, f"检查群组 '{group_title}'")
