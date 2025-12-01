@@ -33,50 +33,50 @@ class KeywordFilter(BaseFilter):
         msg_text = context.message_text
         msg_id = getattr(context.event.message, 'id', None)
         chat_id = getattr(context.event, 'chat_id', None)
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
         
-        print(f"\n[关键词检查] [{timestamp}] 账号 #{account_id}")
-        print(f"  └─ Chat ID: {chat_id}, Msg ID: {msg_id}, 文本长度: {len(msg_text)}")
-        print(f"  └─ 消息文本: '{msg_text[:200]}{'...' if len(msg_text) > 200 else ''}'")
+        print(f"[KeywordFilter] 账号 #{account_id} 开始检查关键词: Chat ID={chat_id}, Msg ID={msg_id}, 文本长度={len(msg_text)}")
         
         role = settings_service.get_account_role(account_id) or 'both'
         
         # 只处理监听账号
         if role not in ('listen', 'both'):
-            print(f"  └─ ❌ 不是监听账号（角色: {role}），跳过关键词检查")
+            print(f"[KeywordFilter] 账号 #{account_id} 不是监听账号，跳过")
             return False
         
         # 快速匹配关键词
         keywords = settings_service.get_account_keywords(account_id, kind='listen') or []
-        print(f"  └─ 关键词数量: {len(keywords)}")
+        print(f"[KeywordFilter] 账号 #{account_id} 关键词数量: {len(keywords)}")
         if not keywords:
-            print(f"  └─ ❌ 没有关键词，跳过")
+            print(f"[KeywordFilter] 账号 #{account_id} 没有关键词，跳过")
             return False
         
-        # 详细日志：打印关键词列表
-        print(f"  └─ 关键词列表: {keywords}")
+        # 详细日志：打印关键词列表和消息文本
+        print(f"[KeywordFilter] 账号 #{account_id} 关键词列表: {keywords}")
+        print(f"[KeywordFilter] 账号 #{account_id} 消息文本: '{msg_text}'")
         
         matched = match_keywords(account_id, msg_text, kind='listen')
+        print(f"[KeywordFilter] 账号 #{account_id} 关键词匹配结果: {matched}")
         
         # 如果没有匹配，尝试详细匹配每个关键词
         if not matched:
-            print(f"  └─ 开始逐个检查关键词:")
+            print(f"[KeywordFilter] 账号 #{account_id} 开始逐个检查关键词:")
             for kw in keywords:
                 if kw and kw.strip():
                     keyword = kw.strip()
                     is_match = keyword in msg_text
-                    match_status = "✅ 匹配" if is_match else "❌ 不匹配"
-                    print(f"      • 关键词 '{keyword}': {match_status}")
-            print(f"  └─ ❌ 未匹配到任何关键词")
-        else:
+                    print(f"[KeywordFilter]   关键词 '{keyword}' 在文本 '{msg_text}' 中: {is_match}")
+        
+        if matched:
             context.matched_keyword = matched
             context.should_forward = True
             
             # 快速日志
+            timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
             logger.info(f"[监听] [{timestamp}] ✅ 账号 #{account_id} 匹配关键词: '{matched}' (消息ID: {msg_id}, Chat ID: {chat_id})")
-            print(f"  └─ ✅ 匹配到关键词: '{matched}'")
+            print(f"[KeywordFilter] ✅ 账号 #{account_id} 匹配关键词: '{matched}'")
             return True
         
+        print(f"[KeywordFilter] 账号 #{account_id} 未匹配到关键词")
         return False
 
 
