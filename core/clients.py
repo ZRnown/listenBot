@@ -443,8 +443,12 @@ class ClientManager:
             self._register_handlers_for_account(client, account_id, group_list, register_listeners=True)
             print(f"[启动] 账号 #{account_id} 事件监听器已注册（NewMessage, MessageEdited）")
             
+            # 启动主动轮询任务，确保能接收到所有群组的新消息（包括非活跃群组）
+            asyncio.create_task(self._active_polling_task(client, account_id, group_list))
+            print(f"[启动] 账号 #{account_id} 主动轮询任务已启动（确保接收所有群组消息）")
+            
             keywords_count = len(settings_service.get_account_keywords(account_id, kind='listen') or [])
-            print(f"[启动] ✅ 账号 #{account_id} 是监听账号，使用被动事件监听（完全按照 TelegramForwarder 方式，无轮询）")
+            print(f"[启动] ✅ 账号 #{account_id} 是监听账号，使用被动事件监听 + 主动轮询（确保接收所有群组消息）")
             print(f"[启动] 账号 #{account_id} 监听关键词数量: {keywords_count}")
             if keywords_count == 0:
                 print(f"[启动] ⚠️ 账号 #{account_id} 没有设置监听关键词，将不会触发提醒")
@@ -632,12 +636,20 @@ class ClientManager:
                                                 self.client = client_obj
                                                 self._chat_entity = chat_entity
                                                 self._msg_obj = msg_obj
-                                                self.is_private = False
+                                                # 判断是否为私聊
+                                                self.is_private = False  # 群组消息不是私聊
                                                 is_megagroup = getattr(chat_entity, 'megagroup', False)
                                                 is_broadcast = getattr(chat_entity, 'broadcast', False)
+                                                # 放宽判断：所有非广播频道的群组都认为是群组
                                                 self.is_group = is_megagroup or (not is_broadcast and chat_id_val < 0)
                                                 self.is_channel = is_broadcast
                                                 self.out = getattr(msg_obj, 'out', False)
+                                                
+                                                # 添加 is_channel 属性（用于兼容）
+                                                try:
+                                                    self.is_channel = is_broadcast
+                                                except:
+                                                    self.is_channel = False
                                             
                                             async def get_chat(self):
                                                 return self._chat_entity
@@ -684,7 +696,13 @@ class ClientManager:
                                         
                                     mock_event = MockEvent(msg, entity, chat_id, client)
                                     
-                                    if mock_event.is_group:
+                                    # 放宽条件：处理所有非私聊、非自己发送的消息（包括群组、超级群组、频道等）
+                                    # 不限制为 is_group，确保所有消息都能被处理
+                                    if not mock_event.is_private and not mock_event.out:
+                                        # 特别记录目标群组的消息
+                                        if chat_id == -1002964498071:
+                                            print(f"[🔍 轮询] ⭐ 账号 #{account_id} 轮询检测到目标群组新消息: Chat ID={chat_id}, Msg ID={msg.id}")
+                                        
                                         # 极致优化：立即处理消息，不等待，不阻塞，真正并发
                                         # 使用 create_task 异步执行，立即调度，不阻塞其他群组
                                         # 检测到关键词后立即推送，不等待整个轮询周期
