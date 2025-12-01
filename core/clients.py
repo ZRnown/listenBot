@@ -447,6 +447,10 @@ class ClientManager:
             asyncio.create_task(self._active_polling_task(client, account_id, group_list))
             print(f"[启动] 账号 #{account_id} 主动轮询任务已启动（确保接收所有群组消息）")
             
+            # 启动定期"点击"群组任务（模拟点击，触发 Telegram 同步）
+            asyncio.create_task(self._periodic_click_groups_task(client, account_id, group_list))
+            print(f"[启动] 账号 #{account_id} 定期点击群组任务已启动（模拟点击，触发同步）")
+            
             keywords_count = len(settings_service.get_account_keywords(account_id, kind='listen') or [])
             print(f"[启动] ✅ 账号 #{account_id} 是监听账号，使用被动事件监听 + 主动轮询（确保接收所有群组消息）")
             print(f"[启动] 账号 #{account_id} 监听关键词数量: {keywords_count}")
@@ -673,6 +677,25 @@ class ClientManager:
                             break
                         async with poll_semaphore:
                             messages = await client.get_messages(entity, min_id=last_id, limit=3)
+                            
+                            # 标记消息为已读（模拟点击，触发 Telegram 同步）
+                            try:
+                                from telethon.tl.functions.messages import ReadHistoryRequest
+                                if messages:
+                                    max_msg_id = max(msg.id for msg in messages)
+                                    await client(ReadHistoryRequest(
+                                        peer=entity,
+                                        max_id=max_msg_id
+                                    ))
+                                    if chat_id == -1002964498071:
+                                        print(f"[🔍 同步] ⭐ 账号 #{account_id} 标记目标群组消息为已读: Chat ID={chat_id}, Max Msg ID={max_msg_id}")
+                                elif last_id > 0:
+                                    await client(ReadHistoryRequest(
+                                        peer=entity,
+                                        max_id=last_id
+                                    ))
+                            except Exception:
+                                pass
                     except (ConnectionError, RuntimeError) as e:
                         if 'disconnected' in str(e).lower() or 'Cannot send requests' in str(e):
                             break
@@ -789,6 +812,99 @@ class ClientManager:
         # 启动所有群组的独立协程（每个群组一个持续运行的协程）
         print(f"[轮询优化] 账号 #{account_id}: 启动 {total_groups} 个群组的独立持续运行协程...")
         group_tasks = [asyncio.create_task(check_group_loop(g)) for g in group_list]
+        
+        # 等待所有任务完成（实际上它们会持续运行直到客户端断开）
+        try:
+            await asyncio.gather(*group_tasks, return_exceptions=True)
+        except (GeneratorExit, asyncio.CancelledError):
+            # 取消所有任务
+            for task in group_tasks:
+                task.cancel()
+    
+    async def _periodic_click_groups_task(self, client: TelegramClient, account_id: int, group_list: list):
+        """定期"点击"所有群组任务：模拟点击群组，触发 Telegram 同步消息
+        这个任务会定期访问所有群组，让 Telegram 认为你"点击"了群组，从而触发消息同步
+        """
+        if not group_list:
+            return
+        
+        print(f"[定期点击] 账号 #{account_id}: 启动定期点击任务，共 {len(group_list)} 个群组")
+        
+        # 定期访问间隔：每 30 秒访问一次所有群组（模拟点击）
+        click_interval = 30  # 30秒访问一次所有群组
+        
+        # 使用信号量控制并发度
+        click_semaphore = asyncio.Semaphore(100)  # 允许100个并发访问
+        
+        async def click_group(group_info):
+            """访问单个群组（模拟点击）"""
+            chat_id = group_info['id']
+            group_title = group_info.get('title', f'Group#{chat_id}')
+            entity = group_info['entity']
+            
+            try:
+                async with click_semaphore:
+                    # 方法1：获取最新消息（触发同步）
+                    try:
+                        messages = await client.get_messages(entity, limit=1)
+                        
+                        # 方法2：标记消息为已读（模拟点击，触发 Telegram 同步）
+                        from telethon.tl.functions.messages import ReadHistoryRequest
+                        if messages:
+                            max_msg_id = messages[0].id
+                            await client(ReadHistoryRequest(
+                                peer=entity,
+                                max_id=max_msg_id
+                            ))
+                            # 特别记录目标群组的同步操作
+                            if chat_id == -1002964498071:
+                                print(f"[🔍 同步] ⭐ 账号 #{account_id} 定期点击目标群组: Chat ID={chat_id}, Msg ID={max_msg_id}, 群组={group_title}")
+                        else:
+                            # 如果没有消息，也尝试标记已读（保持群组活跃）
+                            await client(ReadHistoryRequest(
+                                peer=entity,
+                                max_id=0
+                            ))
+                            if chat_id == -1002964498071:
+                                print(f"[🔍 同步] ⭐ 账号 #{account_id} 定期点击目标群组（无消息）: Chat ID={chat_id}, 群组={group_title}")
+                    except Exception as e:
+                        # 如果获取消息失败，至少尝试标记已读
+                        try:
+                            from telethon.tl.functions.messages import ReadHistoryRequest
+                            await client(ReadHistoryRequest(
+                                peer=entity,
+                                max_id=0
+                            ))
+                            if chat_id == -1002964498071:
+                                print(f"[🔍 同步] ⭐ 账号 #{account_id} 定期点击目标群组（标记已读）: Chat ID={chat_id}, 群组={group_title}, 错误={str(e)[:50]}")
+                        except Exception:
+                            pass
+            except Exception as e:
+                # 静默处理错误，不影响其他群组
+                if chat_id == -1002964498071:
+                    print(f"[🔍 同步] ❌ 账号 #{account_id} 定期点击目标群组失败: Chat ID={chat_id}, 错误={str(e)[:50]}")
+        
+        # 持续运行，定期访问所有群组
+        while True:
+            try:
+                if not client.is_connected():
+                    break
+                
+                # 并发访问所有群组（模拟点击）
+                print(f"[定期点击] 账号 #{account_id}: 开始定期点击所有群组（共 {len(group_list)} 个）...")
+                click_tasks = [asyncio.create_task(click_group(g)) for g in group_list]
+                await asyncio.gather(*click_tasks, return_exceptions=True)
+                print(f"[定期点击] 账号 #{account_id}: 完成定期点击，等待 {click_interval} 秒后继续...")
+                
+                # 等待指定时间后再次访问
+                await asyncio.sleep(click_interval)
+                
+            except (GeneratorExit, asyncio.CancelledError):
+                print(f"[定期点击] 账号 #{account_id}: 定期点击任务已取消")
+                break
+            except Exception as e:
+                print(f"[定期点击] 账号 #{account_id}: 定期点击任务出错: {str(e)}")
+                await asyncio.sleep(60)  # 出错后等待1分钟再重试
         
         # 等待所有任务完成（实际上它们会持续运行直到客户端断开）
         try:
