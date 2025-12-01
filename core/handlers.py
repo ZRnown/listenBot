@@ -42,12 +42,17 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
         msg_text = getattr(event.message, 'message', '') or getattr(event.message, 'text', '') or ''
         print(f"[on_new_message] 账号 #{account_id} 开始处理: Chat ID={chat_id}, Msg ID={msg_id}, 文本长度={len(msg_text)}")
         
-        # 快速过滤：跳过私聊、非群组、自己发送的消息
+        # 放宽过滤条件：只跳过私聊和自己发送的消息，其他所有消息都处理
+        # 这样可以监听所有群组、超级群组、频道等
         if event.is_private:
-            print(f"[on_new_message] 账号 #{account_id} 跳过私聊消息")
+            print(f"[on_new_message] 账号 #{account_id} 跳过私聊消息: Chat ID={chat_id}")
             return
         
-        # 改进：不仅检查 is_group，也检查是否是超级群组（megagroup）
+        if event.message.out:
+            print(f"[on_new_message] 账号 #{account_id} 跳过自己发送的消息: Chat ID={chat_id}")
+            return
+        
+        # 获取群组类型信息（用于日志）
         is_group = event.is_group
         is_megagroup = False
         is_broadcast = False
@@ -58,20 +63,12 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
         except:
             pass
         
-        # 允许通过：是群组 或 是超级群组（但不是广播频道）
-        should_process = is_group or (is_megagroup and not is_broadcast)
+        # 记录所有处理的消息（特别是目标群组）
+        if chat_id == -1002964498071:
+            print(f"[🔍 诊断] 账号 #{account_id} 目标群组消息进入处理: Chat ID={chat_id}")
+            print(f"[🔍 诊断] 群组类型: is_group={is_group}, is_megagroup={is_megagroup}, is_broadcast={is_broadcast}")
         
-        if not should_process:
-            # 特别记录目标群组的过滤情况
-            if chat_id == -1002964498071:
-                print(f"[🔍 诊断] 账号 #{account_id} 目标群组在 on_new_message 被过滤: Chat ID={chat_id}")
-                print(f"[🔍 诊断] 过滤原因: is_group={is_group}, is_megagroup={is_megagroup}, is_broadcast={is_broadcast}")
-            print(f"[on_new_message] 账号 #{account_id} 跳过非群组消息: Chat ID={chat_id}, is_group={is_group}, is_megagroup={is_megagroup}, is_broadcast={is_broadcast}")
-            return
-        
-        if event.message.out:
-            print(f"[on_new_message] 账号 #{account_id} 跳过自己发送的消息")
-            return
+        # 所有非私聊、非自己发送的消息都会继续处理
         
         role = settings_service.get_account_role(account_id) or 'both'
         print(f"[on_new_message] 账号 #{account_id} 角色: {role}")
