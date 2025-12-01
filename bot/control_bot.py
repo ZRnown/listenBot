@@ -1849,9 +1849,17 @@ async def setup_handlers(manager: ClientManager):
             return
 
 
-        # 诊断功能：列出账号加入的所有群组
+        # 诊断功能：列出账号加入的所有群组，或检查特定群组
         if text.startswith('诊断群组') or text.startswith('诊断 #'):
+            # 支持两种格式：
+            # 1. 诊断群组 #账号ID - 列出所有群组
+            # 2. 诊断群组 #账号ID -1002964498071 - 检查特定群组
             match = re.search(r'#(\d+)', text)
+            target_chat_id = None
+            chat_id_match = re.search(r'-?\d{10,}', text)
+            if chat_id_match:
+                target_chat_id = int(chat_id_match.group(0))
+            
             if match:
                 account_id = int(match.group(1))
                 client = manager.account_clients.get(account_id)
@@ -1859,6 +1867,49 @@ async def setup_handlers(manager: ClientManager):
                     await event.respond(f'❌ 账号 #{account_id} 未在线')
                     return
 
+                if target_chat_id:
+                    # 检查特定群组
+                    await event.respond(f'🔍 正在检查群组 {target_chat_id}，请稍候...')
+                    try:
+                        # 尝试获取群组实体
+                        try:
+                            entity = await client.get_entity(target_chat_id)
+                            chat_title = getattr(entity, 'title', '') or getattr(entity, 'username', '') or f"Chat#{target_chat_id}"
+                            chat_username = getattr(entity, 'username', None)
+                            is_megagroup = getattr(entity, 'megagroup', False)
+                            is_broadcast = getattr(entity, 'broadcast', False)
+                            chat_type = "超级群组" if is_megagroup else ("频道" if is_broadcast else "群组")
+                            
+                            # 检查账号是否在群组中
+                            try:
+                                await client.get_participants(entity, limit=1)
+                                is_member = True
+                            except:
+                                is_member = False
+                            
+                            result = (
+                                f'📊 **群组诊断结果**\n\n'
+                                f'**群组信息：**\n'
+                                f'• 名称：{chat_title}\n'
+                                f'• Chat ID：`{target_chat_id}`\n'
+                                f'• 用户名：@{chat_username if chat_username else "无"}\n'
+                                f'• 类型：{chat_type}\n'
+                                f'• 是超级群组：{"是" if is_megagroup else "否"}\n'
+                                f'• 是广播频道：{"是" if is_broadcast else "否"}\n\n'
+                                f'**账号状态：**\n'
+                                f'• 账号 #{account_id} {"✅ 已加入" if is_member else "❌ 未加入或无法访问"}\n\n'
+                                f'**监听状态：**\n'
+                                f'• 会被监听：{"✅ 是" if (is_megagroup and not is_broadcast) or (not is_broadcast) else "❌ 否（可能是广播频道）"}'
+                            )
+                            await event.respond(result, parse_mode='markdown')
+                        except Exception as e:
+                            await event.respond(f'❌ 无法获取群组信息：{str(e)}\n\n可能原因：\n• 账号未加入该群组\n• 群组ID错误\n• 没有访问权限')
+                        return
+                    except Exception as e:
+                        await event.respond(f'❌ 诊断失败：{str(e)}')
+                        return
+                
+                # 列出所有群组
                 await event.respond('🔍 正在获取群组列表，请稍候...')
                 try:
                     groups = []
@@ -1907,7 +1958,15 @@ async def setup_handlers(manager: ClientManager):
                     import traceback
                     traceback.print_exc()
             else:
-                await event.respond('⚠️ 请使用格式：诊断群组 #账号ID\n例如：诊断群组 #5')
+                await event.respond(
+                    '⚠️ 请使用格式：\n'
+                    '• `诊断群组 #账号ID` - 列出所有群组\n'
+                    '• `诊断群组 #账号ID -1002964498071` - 检查特定群组\n\n'
+                    '例如：\n'
+                    '• 诊断群组 #5\n'
+                    '• 诊断群组 #5 -1002964498071',
+                    parse_mode='markdown'
+                )
             return
 
         if is_cmd(text, '移除所有账号'):

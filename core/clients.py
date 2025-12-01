@@ -274,9 +274,29 @@ class ClientManager:
                 if is_private:
                     print(f"[过滤器] 账号 #{account_id} 跳过私聊消息: Chat ID={chat_id}")
                     return False
-                if not is_group:
-                    print(f"[过滤器] 账号 #{account_id} 跳过非群组消息: Chat ID={chat_id}")
+                
+                # 改进：不仅检查 is_group，也检查是否是超级群组（megagroup）
+                # 某些群组可能被识别为频道但实际上是超级群组
+                is_megagroup = False
+                is_broadcast = False
+                try:
+                    if hasattr(event, 'chat') and event.chat:
+                        is_megagroup = getattr(event.chat, 'megagroup', False)
+                        is_broadcast = getattr(event.chat, 'broadcast', False)
+                except:
+                    pass
+                
+                # 允许通过：是群组 或 是超级群组（但不是广播频道）
+                should_allow = is_group or (is_megagroup and not is_broadcast)
+                
+                if not should_allow:
+                    # 特别记录目标群组的过滤情况
+                    if chat_id == -1002964498071:
+                        print(f"[🔍 诊断] 账号 #{account_id} 目标群组被过滤: Chat ID={chat_id}")
+                        print(f"[🔍 诊断] 过滤原因: is_group={is_group}, is_megagroup={is_megagroup}, is_broadcast={is_broadcast}")
+                    print(f"[过滤器] 账号 #{account_id} 跳过非群组消息: Chat ID={chat_id}, is_group={is_group}, is_megagroup={is_megagroup}, is_broadcast={is_broadcast}")
                     return False
+                
                 if is_out:
                     print(f"[过滤器] 账号 #{account_id} 跳过自己发送的消息: Chat ID={chat_id}")
                     return False
@@ -307,13 +327,34 @@ class ClientManager:
             # 完全按照 TelegramForwarder：不使用 incoming=True，监听所有消息
             @client.on(events.NewMessage(func=not_from_control_bot))
             async def handle_new_message(event):
-                # 详细日志：记录收到消息
+                # 详细日志：记录收到消息（包括群组类型诊断）
                 try:
                     chat_id = getattr(event, 'chat_id', None)
                     msg_id = getattr(event.message, 'id', None)
                     msg_text = getattr(event.message, 'message', '') or getattr(event.message, 'text', '') or ''
                     msg_text_preview = msg_text[:50] if msg_text else '(无文本)'
-                    print(f"[事件监听] 账号 #{account_id} 收到新消息: Chat ID={chat_id}, Msg ID={msg_id}, 内容预览={msg_text_preview}")
+                    
+                    # 诊断信息：检查群组类型
+                    is_private = getattr(event, 'is_private', False)
+                    is_group = getattr(event, 'is_group', False)
+                    is_channel = getattr(event, 'is_channel', False)
+                    is_broadcast = False
+                    is_megagroup = False
+                    try:
+                        if hasattr(event, 'chat'):
+                            chat = event.chat
+                            is_broadcast = getattr(chat, 'broadcast', False)
+                            is_megagroup = getattr(chat, 'megagroup', False)
+                    except:
+                        pass
+                    
+                    # 特别记录目标群组的消息
+                    if chat_id == -1002964498071:
+                        print(f"[🔍 诊断] 账号 #{account_id} 收到目标群组消息: Chat ID={chat_id}, Msg ID={msg_id}")
+                        print(f"[🔍 诊断] 群组类型: is_private={is_private}, is_group={is_group}, is_channel={is_channel}, is_broadcast={is_broadcast}, is_megagroup={is_megagroup}")
+                        print(f"[🔍 诊断] 消息内容预览: {msg_text_preview}")
+                    
+                    print(f"[事件监听] 账号 #{account_id} 收到新消息: Chat ID={chat_id}, Msg ID={msg_id}, 类型=[私聊={is_private}, 群组={is_group}, 频道={is_channel}], 内容预览={msg_text_preview}")
                 except Exception as e:
                     print(f"[事件监听] 账号 #{account_id} 记录消息日志失败: {e}")
                 

@@ -46,9 +46,29 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
         if event.is_private:
             print(f"[on_new_message] 账号 #{account_id} 跳过私聊消息")
             return
-        if not event.is_group:
-            print(f"[on_new_message] 账号 #{account_id} 跳过非群组消息")
+        
+        # 改进：不仅检查 is_group，也检查是否是超级群组（megagroup）
+        is_group = event.is_group
+        is_megagroup = False
+        is_broadcast = False
+        try:
+            if hasattr(event, 'chat') and event.chat:
+                is_megagroup = getattr(event.chat, 'megagroup', False)
+                is_broadcast = getattr(event.chat, 'broadcast', False)
+        except:
+            pass
+        
+        # 允许通过：是群组 或 是超级群组（但不是广播频道）
+        should_process = is_group or (is_megagroup and not is_broadcast)
+        
+        if not should_process:
+            # 特别记录目标群组的过滤情况
+            if chat_id == -1002964498071:
+                print(f"[🔍 诊断] 账号 #{account_id} 目标群组在 on_new_message 被过滤: Chat ID={chat_id}")
+                print(f"[🔍 诊断] 过滤原因: is_group={is_group}, is_megagroup={is_megagroup}, is_broadcast={is_broadcast}")
+            print(f"[on_new_message] 账号 #{account_id} 跳过非群组消息: Chat ID={chat_id}, is_group={is_group}, is_megagroup={is_megagroup}, is_broadcast={is_broadcast}")
             return
+        
         if event.message.out:
             print(f"[on_new_message] 账号 #{account_id} 跳过自己发送的消息")
             return
