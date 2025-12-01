@@ -208,16 +208,11 @@ async def send_alert(bot_client, account, event, matched_keyword: str, control_b
                         if cid_str.startswith('-100'):
                             msg_link = f"https://t.me/c/{cid_str[4:]}/{msg_id}"
                         else:
-                            # 对于普通群组 / 没有 -100 前缀的 ID，也尝试使用 https://t.me/c 方案（去掉符号位）
-                            internal_id = cid_str.lstrip('-')
-                            msg_link = f"https://t.me/c/{internal_id}/{msg_id}"
-                except Exception:
-                    msg_link = None
+                            msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={msg_id}"
+                except: pass
             
-            # 最后兜底仍然保证是 https 链接
             if not msg_link and source_chat_id and msg_id:
-                cid_str = str(source_chat_id).lstrip('-')
-                msg_link = f"https://t.me/c/{cid_str}/{msg_id}"
+                 msg_link = f"tg://openmessage?chat_id={source_chat_id}&message_id={msg_id}"
             
             btn_row = []
             if msg_link and (msg_link.startswith('https://') or msg_link.startswith('tg://')):
