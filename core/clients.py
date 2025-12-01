@@ -54,6 +54,7 @@ class ClientManager:
         self.bot_token = os.getenv('BOT_TOKEN')
         self.api_id = int(os.getenv('API_ID', '0') or 0) or None
         self.api_hash = os.getenv('API_HASH')
+        self.account_start_ts: dict[int, float] = {}
         if not (self.bot_token and self.api_id and self.api_hash):
             raise RuntimeError('BOT_TOKEN, API_ID, API_HASH are required in environment')
         self.account_clients = {}  # account_id -> TelegramClient
@@ -430,6 +431,15 @@ class ClientManager:
                 print(f"[处理消息] 账号 #{account_id} 跳过重复消息: Chat ID={chat_id}, Msg ID={msg_id}")
                 return
             
+            # 跳过启动前的历史消息
+            start_ts = self.account_start_ts.get(account_id)
+            msg_date = getattr(getattr(event, 'message', None), 'date', None)
+            if start_ts and msg_date:
+                msg_ts = msg_date.timestamp()
+                if msg_ts < start_ts - 1:
+                    print(f"[处理消息] 账号 #{account_id} 跳过历史消息: Chat ID={chat_id}, Msg ID={msg_id}, MsgTs={msg_ts}, StartTs={start_ts}")
+                    return
+            
             # 过滤器已经处理了基本过滤（私聊、非群组、控制机器人消息等），这里直接处理
             account = dao_accounts.get(account_id)
             if account:
@@ -465,6 +475,8 @@ class ClientManager:
         
         await client.start(phone=lambda: None, password=lambda: None, code_callback=lambda: None)
         print(f"[启动] 账号 #{account_id} 客户端已启动")
+        # 记录启动时间，防止处理历史消息
+        self.account_start_ts[account_id] = time.time()
         
         # 检查账号角色，决定是否需要监听消息
         from services import settings_service
