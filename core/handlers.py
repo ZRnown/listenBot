@@ -121,15 +121,6 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
                                 
                                 # 定义点击任务（全速运行：立即点击，无延迟）
                                 async def _click_button(row_idx, col_idx, b_text):
-                                    try:
-                                        # 全速运行：移除所有延迟，立即点击
-                                        # 尝试点击（使用信号量控制并发）
-                                        sem = _get_semaphore(account['id'])
-                                        async with sem:
-                                            logger.info(f"[点击] 账号 #{account['id']} 立即点击按钮 [{row_idx},{col_idx}] '{b_text}'")
-                                            await event.click(row_idx, col_idx)
-                                            logger.info(f"[点击] ✅ 账号 #{account['id']} 点击成功（按钮：{b_text}）")
-                                    except Exception as e:
                                         error_str = str(e)
                                         error_type = type(e).__name__
                                         logger.error(f"[点击] ❌ 账号 #{account['id']} 点击失败：{error_type}: {error_str}")
@@ -143,7 +134,7 @@ async def on_new_message(event, account: dict, bot_client, control_bot_id=None):
     except (GeneratorExit, RuntimeError) as e:
         # 忽略常见的异步关闭错误
         if 'GeneratorExit' in str(type(e).__name__) or 'coroutine ignored' in str(e):
-            return
+                    return
         logger.warning(f"[监听] ⚠️ 账号 #{account.get('id', '?')} RuntimeError: {str(e)}")
     except Exception as e:
         logger.error(f"[监听] ❌ 账号 #{account.get('id', '?')} 错误: {str(e)}")
