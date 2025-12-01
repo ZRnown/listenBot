@@ -290,29 +290,23 @@ class ClientManager:
                 except:
                     pass
                 
-                # 记录所有通过的消息（特别是目标群组）
-                if chat_id == -1002964498071:
-                    print(f"[🔍 诊断] 账号 #{account_id} 目标群组消息通过过滤器: Chat ID={chat_id}")
-                    print(f"[🔍 诊断] 群组类型: is_group={is_group}, is_megagroup={is_megagroup}, is_broadcast={is_broadcast}")
-                
-                # 允许所有非私聊、非自己发送的消息通过（包括群组、超级群组、频道等）
-                return True
-                
-                # 检查发送者是否是控制机器人
-                if self.bot_id is None:
-                    print(f"[过滤器] 账号 #{account_id} 控制机器人ID未设置，允许通过")
-                    return True
-                
-                if sender_id is not None:
+                # 检查发送者是否是控制机器人（必须在最后检查）
+                if self.bot_id is not None and sender_id is not None:
                     try:
                         sender_id_int = int(sender_id)
-                        is_not_bot = sender_id_int != self.bot_id
-                        if not is_not_bot:
-                            print(f"[过滤器] 账号 #{account_id} 跳过控制机器人消息: Sender ID={sender_id_int}, Bot ID={self.bot_id}")
-                        return is_not_bot
+                        if sender_id_int == self.bot_id:
+                            print(f"[过滤器] 账号 #{account_id} 跳过控制机器人消息: Sender ID={sender_id_int}, Bot ID={self.bot_id}, Chat ID={chat_id}")
+                            return False
                     except (ValueError, TypeError):
                         pass  # 转换失败时不过滤
                 
+                # 记录所有通过的消息（特别是目标群组）
+                if chat_id == -1002964498071:
+                    print(f"[🔍 诊断] ✅ 账号 #{account_id} 目标群组消息通过过滤器: Chat ID={chat_id}")
+                    print(f"[🔍 诊断] ✅ 群组类型: is_group={is_group}, is_megagroup={is_megagroup}, is_broadcast={is_broadcast}")
+                    print(f"[🔍 诊断] ✅ 发送者ID: {sender_id}, 控制机器人ID: {self.bot_id}")
+                
+                # 允许所有非私聊、非自己发送、非控制机器人的消息通过（包括群组、超级群组、频道等）
                 return True
             except Exception as e:
                 print(f"[过滤器] 账号 #{account_id} 过滤器检查出错: {e}")
@@ -320,6 +314,26 @@ class ClientManager:
         
         # 只有监听账号才注册事件监听器
         if register_listeners:
+            # 添加一个完全无过滤的监听器用于诊断（只记录日志，不处理）
+            @client.on(events.NewMessage())
+            async def handle_all_messages_diagnostic(event):
+                """诊断监听器：记录所有收到的消息，用于排查问题"""
+                try:
+                    chat_id = getattr(event, 'chat_id', None)
+                    msg_id = getattr(event.message, 'id', None)
+                    is_private = getattr(event, 'is_private', False)
+                    is_out = getattr(event.message, 'out', False)
+                    sender_id = getattr(event, 'sender_id', None)
+                    
+                    # 只记录目标群组的消息，避免日志过多
+                    if chat_id == -1002964498071:
+                        print(f"[🔍 诊断监听器] ⭐⭐⭐ 账号 #{account_id} 收到目标群组原始消息: Chat ID={chat_id}, Msg ID={msg_id}")
+                        print(f"[🔍 诊断监听器] ⭐⭐⭐ 消息属性: is_private={is_private}, is_out={is_out}, sender_id={sender_id}")
+                        msg_text = getattr(event.message, 'message', '') or getattr(event.message, 'text', '') or ''
+                        print(f"[🔍 诊断监听器] ⭐⭐⭐ 消息内容: {msg_text[:100]}")
+                except Exception as e:
+                    print(f"[🔍 诊断监听器] 账号 #{account_id} 记录消息失败: {e}")
+            
             # 用户客户端监听器 - 使用过滤器，避免处理控制机器人消息（完全按照 TelegramForwarder 的方式）
             # 完全按照 TelegramForwarder：不使用 incoming=True，监听所有消息
             @client.on(events.NewMessage(func=not_from_control_bot))
