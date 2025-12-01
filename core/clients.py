@@ -906,18 +906,7 @@ class ClientManager:
                 print(f"[定期点击] 账号 #{account_id}: 定期点击任务出错: {str(e)}")
                 await asyncio.sleep(60)  # 出错后等待1分钟再重试
         
-        # 等待所有任务完成（实际上它们会持续运行直到客户端断开）
-        try:
-            await asyncio.gather(*group_tasks, return_exceptions=True)
-        except (GeneratorExit, asyncio.CancelledError):
-            # 取消所有任务
-            for task in group_tasks:
-                task.cancel()
-            await asyncio.gather(*group_tasks, return_exceptions=True)
-        except Exception as e:
-            print(f"[轮询] 账号 #{account_id} 轮询任务出错: {e}")
-            import traceback
-            traceback.print_exc()
+        # 这个任务会一直运行，除非被取消
     
     async def load_active_accounts(self):
         """加载所有活跃账号（支持多账号并发启动）"""
