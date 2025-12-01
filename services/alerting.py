@@ -152,6 +152,22 @@ async def send_alert(bot_client, account, event, matched_keyword: str, control_b
     sender_name = 'Unknown'
     sender_username = None
     sender_id = None
+    
+    # 如果 sender 为 None，但 sender_id 存在，尝试通过 sender_id 获取实体
+    if not sender:
+        try:
+            if hasattr(event, 'sender_id') and event.sender_id:
+                sender_id = event.sender_id
+                print(f"[发送提醒] 从 event.sender_id 获取到 ID: {sender_id}，尝试获取实体")
+                try:
+                    # 尝试通过 sender_id 获取实体
+                    sender = await event.client.get_entity(sender_id)
+                    print(f"[发送提醒] 通过 sender_id 成功获取到发送者实体")
+                except Exception as e:
+                    print(f"[发送提醒] 通过 sender_id 获取实体失败: {e}")
+        except Exception as e:
+            print(f"[发送提醒] 尝试从 event 获取发送者ID失败: {e}")
+    
     if sender:
         # 尝试多种方式获取发送者名称
         if hasattr(sender, 'title'):
@@ -164,17 +180,22 @@ async def send_alert(bot_client, account, event, matched_keyword: str, control_b
             sender_name = str(sender) if sender else 'Unknown'
         
         sender_username = getattr(sender, 'username', None)
-        sender_id = getattr(sender, 'id', None)
+        sender_id = getattr(sender, 'id', None) or sender_id
         
         print(f"[发送提醒] 获取到发送者信息: name={sender_name}, username={sender_username}, id={sender_id}")
-    else:
-        # 如果 sender 为 None，尝试从 event 中获取
+    
+    # 如果 chat 为 None，但 chat_id 存在，尝试通过 chat_id 获取实体
+    if not chat:
         try:
-            if hasattr(event, 'sender_id') and event.sender_id:
-                sender_id = event.sender_id
-                print(f"[发送提醒] 从 event.sender_id 获取到 ID: {sender_id}")
+            if chat_id:
+                print(f"[发送提醒] Chat 为 None，尝试通过 chat_id={chat_id} 获取实体")
+                try:
+                    chat = await event.client.get_entity(chat_id)
+                    print(f"[发送提醒] 通过 chat_id 成功获取到聊天实体")
+                except Exception as e:
+                    print(f"[发送提醒] 通过 chat_id 获取实体失败: {e}")
         except Exception as e:
-            print(f"[发送提醒] 尝试从 event 获取发送者ID失败: {e}")
+            print(f"[发送提醒] 尝试通过 chat_id 获取聊天信息失败: {e}")
     
     sender_username_display = f"@{sender_username}" if sender_username else '无'
     source_title = (getattr(chat, 'title', '') or getattr(chat, 'username','') or 'Unknown') if chat else 'Unknown'
