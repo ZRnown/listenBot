@@ -1,6 +1,7 @@
 import asyncio
 import os
 import time
+from collections import defaultdict, deque
 import app.config as cfg
 from telethon import TelegramClient, events
 from telethon.sessions import StringSession
@@ -9,6 +10,41 @@ from storage import dao_accounts
 from services import sessions as sess_service
 from services import settings_service
 from core.handlers import on_new_message
+
+# 消息去重缓存（防止 NewMessage / MessageEdited / 主动轮询 同一消息重复提醒）
+_DUP_CACHE: dict[int, deque] = defaultdict(deque)
+_DUP_SET: dict[int, set] = defaultdict(set)
+_DUP_TTL_SECONDS = 300  # 去重窗口 5 分钟
+_DUP_CACHE_LIMIT = 4000  # 每个账号最多记住 4000 条消息（自动淘汰最旧）
+
+
+def _is_duplicate_message(account_id: int, chat_id: int | None, msg_id: int | None) -> bool:
+    """检查并记录是否已处理过同一条消息"""
+    if chat_id is None or msg_id is None:
+        return False
+    key = (chat_id, msg_id)
+    now = time.monotonic()
+    
+    cache = _DUP_CACHE[account_id]
+    keyset = _DUP_SET[account_id]
+    
+    # 清理过期记录
+    while cache and now - cache[0][1] > _DUP_TTL_SECONDS:
+        old_key, _ = cache.popleft()
+        keyset.discard(old_key)
+    
+    if key in keyset:
+        return True
+    
+    cache.append((key, now))
+    keyset.add(key)
+    
+    # 控制缓存大小
+    while len(cache) > _DUP_CACHE_LIMIT:
+        old_key, _ = cache.popleft()
+        keyset.discard(old_key)
+    
+    return False
 
 
 class ClientManager:
@@ -389,6 +425,10 @@ class ClientManager:
             chat_id = getattr(event, 'chat_id', None)
             msg_id = getattr(event.message, 'id', None)
             print(f"[处理消息] 账号 #{account_id} 开始处理消息: Chat ID={chat_id}, Msg ID={msg_id}, Handler={handler_name}")
+            
+            if _is_duplicate_message(account_id, chat_id, msg_id):
+                print(f"[处理消息] 账号 #{account_id} 跳过重复消息: Chat ID={chat_id}, Msg ID={msg_id}")
+                return
             
             # 过滤器已经处理了基本过滤（私聊、非群组、控制机器人消息等），这里直接处理
             account = dao_accounts.get(account_id)
@@ -830,11 +870,19 @@ class ClientManager:
         
         print(f"[定期点击] 账号 #{account_id}: 启动定期点击任务，共 {len(group_list)} 个群组")
         
-        # 定期访问间隔：每 30 秒访问一次所有群组（模拟点击）
-        click_interval = 2  # 30秒访问一次所有群组
+        # 根据群组数量动态调整访问间隔（越多群组越频繁）
+        if len(group_list) >= 400:
+            click_interval = 0.3
+            semaphore_size = 300
+        elif len(group_list) >= 200:
+            click_interval = 0.4
+            semaphore_size = 200
+        else:
+            click_interval = 0.6
+            semaphore_size = 150
         
-        # 使用信号量控制并发度
-        click_semaphore = asyncio.Semaphore(100)  # 允许100个并发访问
+        # 使用高并发信号量，尽可能“多线程”访问所有群组
+        click_semaphore = asyncio.Semaphore(semaphore_size)
         
         async def click_group(group_info):
             """访问单个群组（模拟点击）"""
