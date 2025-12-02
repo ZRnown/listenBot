@@ -42,16 +42,16 @@ async def main():
             # 正常处理取消
             print(f"[启动日志] 主循环被取消")
             raise
-    except KeyboardInterrupt:
-        # graceful shutdown on Ctrl+C
-        print(f"\n[启动日志] 收到退出信号，正在关闭...")
-    except (GeneratorExit, RuntimeError) as e:
-        # 忽略 Telethon 内部连接关闭时的错误
-        if 'GeneratorExit' in str(type(e).__name__) or 'coroutine ignored' in str(e):
-            return
-        print(f"[启动日志] ❌ 运行时错误: {e}")
-        import traceback
-        traceback.print_exc()
+        except KeyboardInterrupt:
+            # graceful shutdown on Ctrl+C
+            print(f"\n[启动日志] 收到退出信号，正在关闭...")
+        except (GeneratorExit, RuntimeError) as e:
+            # 忽略 Telethon 内部连接关闭时的错误
+            if 'GeneratorExit' in str(type(e).__name__) or 'coroutine ignored' in str(e):
+                return
+            print(f"[启动日志] ❌ 运行时错误: {e}")
+            import traceback
+            traceback.print_exc()
     except Exception as e:
         print(f"[启动日志] ❌ 系统启动失败: {e}")
         import traceback

@@ -435,10 +435,12 @@ async def setup_handlers(manager: ClientManager):
         text = (event.raw_text or '').strip()
         
         # 排除 /start 命令，避免重复处理（已在上面单独处理）
-        if text == '/start' or text.startswith('/start '):
-            return
-        
         st = get_state(chat_id)
+        
+        # 如果用户有状态，/start 应该被当作普通文本处理，而不是命令
+        # 只有在没有状态时，/start 才作为命令处理
+        if not st and (text == '/start' or text.startswith('/start ')):
+            return
 
         # 如果没有状态，检查是否是链接，如果是就自动执行点击
         if not st:
@@ -1163,72 +1165,79 @@ async def setup_handlers(manager: ClientManager):
             return
 
         if is_cmd(text, '开始发送'):
-            rows = list_accounts('click')
-            if not rows:
-                await event.respond('⚠️ 尚无点击账号，请先添加。')
-                return
-            
-            # 获取目标机器人
-            bot_username = settings_service.get_target_bot()
-            if not bot_username:
-                await event.respond('⚠️ 请先设置目标机器人（点击"🎯 设置目标机器人"）', buttons=main_keyboard())
-            return
-
-            # 获取发送消息（默认 /start）
-            send_msg = settings_service.get_global_template() or '/start'
-            # 获取发送延迟
-            send_delay = settings_service.get_global_send_delay()
-            
-            target = f"@{bot_username}"
-            click_accounts = [acc_id for acc_id, client in list(manager.account_clients.items()) if role_allows_click(get_account_role(acc_id))]
-            if not click_accounts:
-                await event.respond('⚠️ 当前没有激活的点击账号，无法发送消息', buttons=main_keyboard())
-                return
-            
-            # 开启所有点击账号的发送开关
-            for r in rows:
-                settings_service.set_start_sending(True, r['id'])
-            
-            # 发送消息
-            await event.respond(f'⏳ 正在发送，共 {len(click_accounts)} 个账号…')
-            ok = 0
-            fail_details = []
-            for i, acc_id in enumerate(click_accounts):
-                client = manager.account_clients.get(acc_id)
-                if not client:
-                    acc_info = dao_accounts.get(acc_id)
-                    acc_label = acc_info.get('username') or acc_info.get('phone') or f"#{acc_id}"
-                    fail_details.append(f"账号 {acc_label}: 客户端未连接")
-                    continue
-                try:
-                    await client.send_message(target, send_msg)
-                    ok += 1
-                except Exception as e:
-                    acc_info = dao_accounts.get(acc_id)
-                    acc_label = acc_info.get('username') or acc_info.get('phone') or f"#{acc_id}"
-                    fail_details.append(f"账号 {acc_label}: {str(e)}")
+            try:
+                rows = list_accounts('click')
+                if not rows:
+                    await event.respond('⚠️ 尚无点击账号，请先添加。')
+                    return
                 
-                # 发送延迟（最后一个账号不需要等待）
-                if send_delay > 0 and i < len(click_accounts) - 1:
-                    await asyncio.sleep(send_delay)
-            
-            msg_parts = [
-                f"✅ 发送完成（共 {len(click_accounts)} 个账号）",
-                f"\n📝 发送消息：{send_msg}",
-                f"🎯 目标用户：{target}",
-                f"🐢 发送延迟：{send_delay} 秒",
-                f"\n✅ 成功：{ok} 个"
-            ]
-            if fail_details:
-                msg_parts.append(f"❌ 失败：{len(fail_details)} 个")
-                msg_parts.append("\n失败详情：")
-                for detail in fail_details[:10]:
-                    msg_parts.append(f"• {detail}")
-                if len(fail_details) > 10:
-                    msg_parts.append(f"• ... 还有 {len(fail_details) - 10} 个失败")
-            
-            msg = '\n'.join(msg_parts)
-            await event.respond(msg, buttons=main_keyboard())
+                # 获取目标机器人
+                bot_username = settings_service.get_target_bot()
+                if not bot_username:
+                    await event.respond('⚠️ 请先设置目标机器人（点击"🎯 设置目标机器人"）', buttons=main_keyboard())
+                    return
+
+                # 获取发送消息（默认 /start）
+                send_msg = settings_service.get_global_template() or '/start'
+                # 获取发送延迟
+                send_delay = settings_service.get_global_send_delay()
+                
+                target = f"@{bot_username}"
+                click_accounts = [acc_id for acc_id, client in list(manager.account_clients.items()) if role_allows_click(get_account_role(acc_id))]
+                if not click_accounts:
+                    await event.respond('⚠️ 当前没有激活的点击账号，无法发送消息', buttons=main_keyboard())
+                    return
+                
+                # 开启所有点击账号的发送开关
+                for r in rows:
+                    settings_service.set_start_sending(True, r['id'])
+                
+                # 发送消息
+                await event.respond(f'⏳ 正在发送，共 {len(click_accounts)} 个账号…')
+                ok = 0
+                fail_details = []
+                for i, acc_id in enumerate(click_accounts):
+                    client = manager.account_clients.get(acc_id)
+                    if not client:
+                        acc_info = dao_accounts.get(acc_id)
+                        acc_label = acc_info.get('username') or acc_info.get('phone') or f"#{acc_id}"
+                        fail_details.append(f"账号 {acc_label}: 客户端未连接")
+                        continue
+                    try:
+                        await client.send_message(target, send_msg)
+                        ok += 1
+                    except Exception as e:
+                        acc_info = dao_accounts.get(acc_id)
+                        acc_label = acc_info.get('username') or acc_info.get('phone') or f"#{acc_id}"
+                        fail_details.append(f"账号 {acc_label}: {str(e)}")
+                    
+                    # 发送延迟（最后一个账号不需要等待）
+                    if send_delay > 0 and i < len(click_accounts) - 1:
+                        await asyncio.sleep(send_delay)
+                
+                msg_parts = [
+                    f"✅ 发送完成（共 {len(click_accounts)} 个账号）",
+                    f"\n📝 发送消息：{send_msg}",
+                    f"🎯 目标用户：{target}",
+                    f"🐢 发送延迟：{send_delay} 秒",
+                    f"\n✅ 成功：{ok} 个"
+                ]
+                if fail_details:
+                    msg_parts.append(f"❌ 失败：{len(fail_details)} 个")
+                    msg_parts.append("\n失败详情：")
+                    for detail in fail_details[:10]:
+                        msg_parts.append(f"• {detail}")
+                    if len(fail_details) > 10:
+                        msg_parts.append(f"• ... 还有 {len(fail_details) - 10} 个失败")
+                
+                msg = '\n'.join(msg_parts)
+                await event.respond(msg, buttons=main_keyboard())
+            except Exception as e:
+                error_msg = f'❌ 发送过程中发生错误：{str(e)}'
+                print(f"[开始发送] 错误: {e}")
+                import traceback
+                traceback.print_exc()
+                await event.respond(error_msg, buttons=main_keyboard())
             return
 
         if is_cmd(text, '自动进群'):
