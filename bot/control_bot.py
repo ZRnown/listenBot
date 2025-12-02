@@ -166,6 +166,14 @@ async def setup_handlers(manager: ClientManager):
 
     @bot.on(events.NewMessage(pattern='/start'))
     async def _(event):
+        # 如果用户正在某个状态中（如设置消息、设置延迟等），不处理 /start 命令
+        # 让状态处理器来处理用户的输入
+        chat_id = event.chat_id
+        st = get_state(chat_id)
+        if st:
+            # 有状态时不处理 /start，让状态处理器处理
+            return
+        
         await event.respond(
             '🙌 欢迎使用控制面板\n\n'
             '功能一览：\n'
@@ -857,6 +865,7 @@ async def setup_handlers(manager: ClientManager):
                     return
 
                 elif mode == 'auto_join_wait_link':
+                    import random
                     link = text
                     account_ids = st['pending'].get('account_ids', [])
                     role_sel = st['pending'].get('role', 'click')
@@ -898,7 +907,7 @@ async def setup_handlers(manager: ClientManager):
 
         if is_cmd(text, '设置转发目标'):
             # 监听/转发提醒功能已移除，给出提示并直接返回
-            await event.respond('⚠️ 当前版本已移除“监听转发目标”功能，如需重新启用，请联系开发者修改代码。')
+            await event.respond('⚠️ 当前版本已移除"监听转发目标"功能，如需重新启用，请联系开发者修改代码。')
             return
 
         # 主菜单命令处理（仅保留点击关键词）
@@ -1006,53 +1015,53 @@ async def setup_handlers(manager: ClientManager):
                         return
                     except Exception as e:
                         await event.respond(f'❌ 诊断失败：{str(e)}')
-                        return
-
-                # 列出所有群组
-                await event.respond('🔍 正在获取群组列表，请稍候...')
-                try:
-                    groups = []
-                    async for dialog in client.iter_dialogs():
-                        if not dialog.is_user:  # 只获取群组和频道
-                            chat = dialog.entity
-                            chat_id = chat.id
-                            chat_title = getattr(chat, 'title', '') or getattr(chat, 'username', '') or f"Chat#{chat_id}"
-                            chat_username = getattr(chat, 'username', None)
-                            is_megagroup = getattr(chat, 'megagroup', False)
-                            is_broadcast = getattr(chat, 'broadcast', False)
-                            chat_type = "超级群组" if is_megagroup else ("频道" if is_broadcast else "群组")
-                            groups.append({
-                                'title': chat_title,
-                                'id': chat_id,
-                                'username': chat_username,
-                                'type': chat_type
-                            })
-                    
-                    if not groups:
-                        await event.respond(f'⚠️ 账号 #{account_id} 未加入任何群组或频道')
-                        return
-                    
-                    # 按类型分组显示
-                    groups_by_type = {}
-                    for g in groups:
-                        gtype = g['type']
-                        if gtype not in groups_by_type:
-                            groups_by_type[gtype] = []
-                        groups_by_type[gtype].append(g)
-                    
-                    result = f"📊 账号 #{account_id} 的群组列表（共 {len(groups)} 个）\n\n"
-                    for gtype in ['超级群组', '频道', '群组']:
-                        if gtype in groups_by_type:
-                            result += f"**{gtype}** ({len(groups_by_type[gtype])} 个):\n"
-                            for g in groups_by_type[gtype][:20]:  # 每种类型最多显示20个
-                                username_str = f" @{g['username']}" if g['username'] else ""
-                                result += f"• {g['title']}{username_str} (ID: {g['id']})\n"
-                            if len(groups_by_type[gtype]) > 20:
-                                result += f"  ... 还有 {len(groups_by_type[gtype]) - 20} 个\n"
-                            result += "\n"
-                    
-                    await event.respond(result, parse_mode='markdown')
-                except Exception as e:
+                    return
+                else:
+                    # 列出所有群组
+                    await event.respond('🔍 正在获取群组列表，请稍候...')
+                    try:
+                        groups = []
+                        async for dialog in client.iter_dialogs():
+                            if not dialog.is_user:  # 只获取群组和频道
+                                chat = dialog.entity
+                                chat_id = chat.id
+                                chat_title = getattr(chat, 'title', '') or getattr(chat, 'username', '') or f"Chat#{chat_id}"
+                                chat_username = getattr(chat, 'username', None)
+                                is_megagroup = getattr(chat, 'megagroup', False)
+                                is_broadcast = getattr(chat, 'broadcast', False)
+                                chat_type = "超级群组" if is_megagroup else ("频道" if is_broadcast else "群组")
+                                groups.append({
+                                    'title': chat_title,
+                                    'id': chat_id,
+                                    'username': chat_username,
+                                    'type': chat_type
+                                })
+                        
+                        if not groups:
+                            await event.respond(f'⚠️ 账号 #{account_id} 未加入任何群组或频道')
+                            return
+                        
+                        # 按类型分组显示
+                        groups_by_type = {}
+                        for g in groups:
+                            gtype = g['type']
+                            if gtype not in groups_by_type:
+                                groups_by_type[gtype] = []
+                            groups_by_type[gtype].append(g)
+                        
+                        result = f"📊 账号 #{account_id} 的群组列表（共 {len(groups)} 个）\n\n"
+                        for gtype in ['超级群组', '频道', '群组']:
+                            if gtype in groups_by_type:
+                                result += f"**{gtype}** ({len(groups_by_type[gtype])} 个):\n"
+                                for g in groups_by_type[gtype][:20]:  # 每种类型最多显示20个
+                                    username_str = f" @{g['username']}" if g['username'] else ""
+                                    result += f"• {g['title']}{username_str} (ID: {g['id']})\n"
+                                if len(groups_by_type[gtype]) > 20:
+                                    result += f"  ... 还有 {len(groups_by_type[gtype]) - 20} 个\n"
+                                result += "\n"
+                        
+                        await event.respond(result, parse_mode='markdown')
+                    except Exception as e:
                         await event.respond(f'❌ 获取群组列表失败: {str(e)}')
                         import traceback
                         traceback.print_exc()
@@ -1163,7 +1172,7 @@ async def setup_handlers(manager: ClientManager):
             bot_username = settings_service.get_target_bot()
             if not bot_username:
                 await event.respond('⚠️ 请先设置目标机器人（点击"🎯 设置目标机器人"）', buttons=main_keyboard())
-                return
+            return
 
             # 获取发送消息（默认 /start）
             send_msg = settings_service.get_global_template() or '/start'
