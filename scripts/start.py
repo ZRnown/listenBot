@@ -30,7 +30,7 @@ async def main():
         print(f"[启动日志] ✅ 机器人处理器设置完成")
         print(f"[启动日志] 正在加载活跃账号...")
         await manager.load_active_accounts()
-        print(f"[启动日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ✅ 系统启动完成，开始监听消息...")
+        print(f"[启动日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ✅ 系统启动完成")
         
         # 主循环：保持程序运行（使用更可靠的方式）
         print(f"[启动日志] 程序正在运行，按 Ctrl+C 退出...")
