@@ -75,12 +75,12 @@ async def parse_and_execute_click(manager: ClientManager, link_text: str, report
                 traceback.print_exc()
                 try:
                     error_msg = (
-                        f'❌ **点击任务执行失败**\\n'
-                        f'━━━━━━━━━━━━━━━━\\n'
-                        f'错误信息：`{str(e)}`\\n\\n'
-                        f'请检查：\\n'
-                        f'• 账号是否在线\\n'
-                        f'• 消息链接是否正确\\n'
+                        f'❌ **点击任务执行失败**\n'
+                        f'━━━━━━━━━━━━━━━━\n'
+                        f'错误信息：`{str(e)}`\n\n'
+                        f'请检查：\n'
+                        f'• 账号是否在线\n'
+                        f'• 消息链接是否正确\n'
                         f'• 账号是否已加入目标群组'
                     )
                     await manager.bot.send_message(
@@ -195,28 +195,28 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
 
         if not target_msg:
             error_msg = (
-                f'❌ **无法获取消息**\\n'
-                f'━━━━━━━━━━━━━━━━\\n'
-                f'📋 消息链接：Chat ID: `{target_chat_id}`, Message ID: `{target_msg_id}`\\n\\n'
-                f'**尝试了 {len(accounts)} 个账号，全部失败：**\\n'
+                f'❌ **无法获取消息**\n'
+                f'━━━━━━━━━━━━━━━━\n'
+                f'📋 消息链接：Chat ID: `{target_chat_id}`, Message ID: `{target_msg_id}`\n\n'
+                f'**尝试了 {len(accounts)} 个账号，全部失败：**\n'
             )
             if error_details:
                 for i, detail in enumerate(error_details[:10], 1):  # 最多显示10个错误
-                    error_msg += f'{i}. {detail}\\n'
+                    error_msg += f'{i}. {detail}\n'
                 if len(error_details) > 10:
-                    error_msg += f'... 还有 {len(error_details) - 10} 个账号失败\\n'
+                    error_msg += f'... 还有 {len(error_details) - 10} 个账号失败\n'
             else:
-                error_msg += '（无可用账号客户端）\\n'
+                error_msg += '（无可用账号客户端）\n'
 
             error_msg += (
-                f'\\n**可能的原因：**\\n'
-                f'1. ⚠️ **所有账号都未加入该群组/频道**（最常见）\\n'
-                f'2. 消息链接无效或消息已被删除\\n'
-                f'3. 账号没有访问该消息的权限\\n'
-                f'4. 账号已被群组/频道管理员禁止\\n\\n'
-                f'💡 **解决方案：**\\n'
-                f'• 确保至少有一个点击账号已加入目标群组/频道\\n'
-                f'• 检查消息链接是否正确\\n'
+                f'\n**可能的原因：**\n'
+                f'1. ⚠️ **所有账号都未加入该群组/频道**（最常见）\n'
+                f'2. 消息链接无效或消息已被删除\n'
+                f'3. 账号没有访问该消息的权限\n'
+                f'4. 账号已被群组/频道管理员禁止\n\n'
+                f'💡 **解决方案：**\n'
+                f'• 确保至少有一个点击账号已加入目标群组/频道\n'
+                f'• 检查消息链接是否正确\n'
                 f'• 使用"🚪 自动进群"功能让账号加入群组'
             )
             try:
@@ -280,28 +280,28 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
                     no_keywords_accounts.append(acc_name)
 
             error_msg = (
-                f'⚠️ **没有账号的关键词匹配到按钮**\\n'
-                f'━━━━━━━━━━━━━━━━\\n'
-                f'📋 按钮文本：{", ".join(all_btn_texts[:5])}{"..." if len(all_btn_texts) > 5 else ""}\\n\\n'
+                f'⚠️ **没有账号的关键词匹配到按钮**\n'
+                f'━━━━━━━━━━━━━━━━\n'
+                f'📋 按钮文本：{", ".join(all_btn_texts[:5])}{"..." if len(all_btn_texts) > 5 else ""}\n\n'
             )
 
             if no_keywords_accounts:
-                error_msg += f'**未设置点击关键词的账号：**\\n'
+                error_msg += f'**未设置点击关键词的账号：**\n'
                 for acc_name in no_keywords_accounts:
-                    error_msg += f'• {acc_name}\\n'
-                error_msg += '\\n'
+                    error_msg += f'• {acc_name}\n'
+                error_msg += '\n'
 
             if keywords_info:
-                error_msg += f'**当前点击关键词：**\\n'
+                error_msg += f'**当前点击关键词：**\n'
                 for info in keywords_info[:10]:
-                    error_msg += f'• {info}\\n'
-                error_msg += '\\n'
+                    error_msg += f'• {info}\n'
+                error_msg += '\n'
 
             error_msg += (
-                f'💡 **提示：**\\n'
-                f'• 检查按钮文本是否包含您设置的关键词\\n'
-                f'• 关键词匹配是大小写敏感的\\n'
-                f'• 可以在账号设置中添加或修改点击关键词\\n'
+                f'💡 **提示：**\n'
+                f'• 检查按钮文本是否包含您设置的关键词\n'
+                f'• 关键词匹配是大小写敏感的\n'
+                f'• 可以在账号设置中添加或修改点击关键词\n'
                 f'• 未设置关键词的账号不会参与点击'
             )
 
@@ -474,32 +474,32 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
                 chat_id_display = str(chat_id_display)
             
             report_msg = (
-                f'✅ **点击任务完成**\\n'
-                f'━━━━━━━━━━━━━━━━\\n'
-                f'📋 **消息信息**\\n'
-                f'• Chat ID: `{chat_id_display}`\\n'
-                f'• Message ID: `{target_msg_id}`\\n'
-                f'• 按钮文本: {", ".join(all_btn_texts[:3])}{"..." if len(all_btn_texts) > 3 else ""}\\n\\n'
-                f'📊 **执行统计**\\n'
-                f'• 总账号数: {total_accounts} 个\\n'
-                f'• 匹配账号数: {matched_count} 个\\n'
-                f'• ✅ 成功: {success_count} 个\\n'
-                f'• ❌ 失败: {fail_count} 个\\n'
+                f'✅ **点击任务完成**\n'
+                f'━━━━━━━━━━━━━━━━\n'
+                f'📋 **消息信息**\n'
+                f'• Chat ID: `{chat_id_display}`\n'
+                f'• Message ID: `{target_msg_id}`\n'
+                f'• 按钮文本: {", ".join(all_btn_texts[:3])}{"..." if len(all_btn_texts) > 3 else ""}\n\n'
+                f'📊 **执行统计**\n'
+                f'• 总账号数: {total_accounts} 个\n'
+                f'• 匹配账号数: {matched_count} 个\n'
+                f'• ✅ 成功: {success_count} 个\n'
+                f'• ❌ 失败: {fail_count} 个\n'
             )
 
             # 显示成功的账号
             if success_accounts:
-                report_msg += f'\\n✅ **成功账号** ({len(success_accounts)} 个):\\n'
+                report_msg += f'\n✅ **成功账号** ({len(success_accounts)} 个):\n'
                 for acc in success_accounts:
-                    report_msg += f'• {acc}\\n'
+                    report_msg += f'• {acc}\n'
 
             # 显示失败的账号
             if fail_accounts:
-                report_msg += f'\\n❌ **失败账号** ({len(fail_accounts)} 个):\\n'
+                report_msg += f'\n❌ **失败账号** ({len(fail_accounts)} 个):\n'
                 for acc_info in fail_accounts[:10]:  # 最多显示10个
-                    report_msg += f'• {acc_info}\\n'
+                    report_msg += f'• {acc_info}\n'
                 if len(fail_accounts) > 10:
-                    report_msg += f'• ... 还有 {len(fail_accounts) - 10} 个失败\\n'
+                    report_msg += f'• ... 还有 {len(fail_accounts) - 10} 个失败\n'
 
             await bot.send_message(report_chat_id, report_msg, parse_mode='markdown')
         except Exception as send_error:
@@ -510,10 +510,10 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
         traceback.print_exc()
         try:
             error_detail = (
-                f'❌ **点击任务执行出错**\\n'
-                f'━━━━━━━━━━━━━━━━\\n'
-                f'错误类型：`{type(e).__name__}`\\n'
-                f'错误信息：`{str(e)}`\\n\\n'
+                f'❌ **点击任务执行出错**\n'
+                f'━━━━━━━━━━━━━━━━\n'
+                f'错误类型：`{type(e).__name__}`\n'
+                f'错误信息：`{str(e)}`\n\n'
                 f'请检查日志获取更多信息。'
             )
             await bot.send_message(report_chat_id, error_detail, parse_mode='markdown')
