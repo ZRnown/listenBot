@@ -18,18 +18,18 @@ async def main():
     manager = None
     try:
         print(f"[启动日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 开始启动系统...")
-    migrate()
+        migrate()
         print(f"[启动日志] 数据库迁移完成")
-    manager = ClientManager()
+        manager = ClientManager()
         print(f"[启动日志] 客户端管理器初始化完成")
         print(f"[启动日志] 正在启动控制机器人...")
-    await manager.start_control_bot()
+        await manager.start_control_bot()
         print(f"[启动日志] ✅ 控制机器人启动成功")
         print(f"[启动日志] 正在设置机器人处理器...")
-    await setup_handlers(manager)
+        await setup_handlers(manager)
         print(f"[启动日志] ✅ 机器人处理器设置完成")
         print(f"[启动日志] 正在加载活跃账号...")
-    await manager.load_active_accounts()
+        await manager.load_active_accounts()
         print(f"[启动日志] [{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] ✅ 系统启动完成")
         
         # 主循环：保持程序运行（使用更可靠的方式）
