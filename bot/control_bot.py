@@ -790,6 +790,12 @@ async def setup_handlers(manager: ClientManager):
                     return
 
                 elif mode == 'set_click_delay_choose_account':
+                    t = (text or '').strip().lower()
+                    # 支持 "all" 或 "全部" 来应用到所有账号
+                    if t in ('all', '全部', '所有'):
+                        set_state(chat_id, 'set_click_delay_input', account_id='all')
+                        await event.respond('⏱️ 请输入点击延迟（单位秒，可为小数，例如 0.8）\n\n（将应用到所有点击账号）')
+                        return
                     try:
                         acc_id = int(text)
                         row = dao_accounts.get(acc_id)
@@ -802,16 +808,30 @@ async def setup_handlers(manager: ClientManager):
                         set_state(chat_id, 'set_click_delay_input', account_id=acc_id)
                         await event.respond('⏱️ 请输入点击延迟（单位秒，可为小数，例如 0.8）')
                     except Exception:
-                        await event.respond('⚠️ 请输入有效的账号ID（数字）')
+                        await event.respond('⚠️ 请输入有效的账号ID（数字），或输入 "all"/"全部" 应用到所有账号')
                     return
 
                 elif mode == 'set_click_delay_input':
                     account_id = st['pending']['account_id']
                     try:
                         value = float(text)
-                        settings_service.set_click_delay(str(value), account_id)
-                        set_state(chat_id)
-                        await event.respond('✅ 已设置点击延迟', buttons=main_keyboard())
+                        if account_id == 'all':
+                            # 应用到所有点击账号
+                            rows = list_accounts('click')
+                            if not rows:
+                                await event.respond('⚠️ 当前没有点击账号', buttons=main_keyboard())
+                                set_state(chat_id)
+                                return
+                            count = 0
+                            for r in rows:
+                                settings_service.set_click_delay(str(value), r['id'])
+                                count += 1
+                            set_state(chat_id)
+                            await event.respond(f'✅ 已为所有 {count} 个点击账号设置点击延迟：{value} 秒', buttons=main_keyboard())
+                        else:
+                            settings_service.set_click_delay(str(value), account_id)
+                            set_state(chat_id)
+                            await event.respond('✅ 已设置点击延迟', buttons=main_keyboard())
                     except Exception:
                         await event.respond('⚠️ 请输入数字，例如 0.8')
                     return
@@ -1138,7 +1158,10 @@ async def setup_handlers(manager: ClientManager):
             else:
                 set_state(chat_id, 'set_click_delay_choose_account')
                 listing = '\n'.join([f"{r['id']}: {r['username'] or r['phone'] or ''}" for r in rows])
-                await event.respond('🔢 请输入要设置点击延迟的账号ID：\n' + listing)
+                await event.respond(
+                    '🔢 请输入要设置点击延迟的账号ID：\n\n'
+                    '💡 提示：输入 "all" 或 "全部" 可应用到所有账号\n\n' + listing
+                )
             return
 
         # 发送相关功能入口（全局设置）
