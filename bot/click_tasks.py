@@ -119,6 +119,7 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
         buttons = None
         button_positions = []
         error_details = []  # 记录所有尝试的错误信息
+        actual_chat_id = None  # 真实的 Chat ID（从消息对象中获取）
 
         print(f"[点击任务] 开始尝试获取消息，共有 {len(accounts)} 个账号")
         print(f"[点击任务] 当前在线账号数: {len(manager.account_clients)}")
@@ -148,13 +149,36 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
                 print(f"[点击任务] 尝试使用账号 {acc_name} (#{acc_id}) 获取消息...")
                 target_msg = await client.get_messages(target_chat_id, ids=target_msg_id)
                 if target_msg:
+                    # 从消息对象中获取真实的 Chat ID
+                    try:
+                        if hasattr(target_msg, 'chat_id'):
+                            actual_chat_id = target_msg.chat_id
+                        elif hasattr(target_msg, 'peer_id'):
+                            peer = target_msg.peer_id
+                            if hasattr(peer, 'channel_id'):
+                                actual_chat_id = int(f'-100{peer.channel_id}')
+                            elif hasattr(peer, 'chat_id'):
+                                actual_chat_id = -peer.chat_id
+                            elif hasattr(peer, 'user_id'):
+                                actual_chat_id = peer.user_id
+                        # 如果还是获取不到，尝试从消息的 chat 属性获取
+                        if actual_chat_id is None:
+                            try:
+                                chat = await target_msg.get_chat()
+                                if chat:
+                                    actual_chat_id = chat.id
+                            except:
+                                pass
+                    except Exception as chat_id_error:
+                        print(f"[点击任务] ⚠️ 获取真实 Chat ID 失败: {chat_id_error}")
+                    
                     buttons = getattr(target_msg, 'buttons', None)
                     if buttons:
                         for i, row in enumerate(buttons):
                             for j, btn in enumerate(row):
                                 btn_text = getattr(btn, 'text', None) or ''
                                 button_positions.append((i, j, btn_text))
-                    print(f"[点击任务] ✅ 账号 {acc_name} (#{acc_id}) 成功获取消息，找到 {len(button_positions)} 个按钮")
+                    print(f"[点击任务] ✅ 账号 {acc_name} (#{acc_id}) 成功获取消息，找到 {len(button_positions)} 个按钮，Chat ID={actual_chat_id}")
                     break
                 else:
                     print(f"[点击任务] ⚠️ 账号 {acc_name} (#{acc_id}) 获取的消息为空")
@@ -291,9 +315,38 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
         all_btn_texts = [bt[2] for bt in button_positions]
         print(f"[点击任务] 开始执行点击，匹配账号数：{len(matched_accounts)}，按钮文本：{', '.join(all_btn_texts[:3])}")
 
-        # 并发控制：同时最多8个账号点击（在防封前提下最大化性能）
-        # 通过延迟和抖动来分散请求，避免同时触发
-        click_semaphore = asyncio.Semaphore(8)
+        # 优化：预先为所有账号获取消息对象，避免重复获取
+        print(f"[点击任务] 🚀 开始预获取消息对象，共 {len(matched_accounts)} 个账号")
+        account_messages = {}  # acc_id -> message object
+        pre_fetch_semaphore = asyncio.Semaphore(20)  # 预获取并发数
+        
+        async def pre_fetch_message(acc):
+            acc_id = acc['id']
+            acc_name = acc.get('username') or acc.get('phone') or f"#{acc_id}"
+            client = manager.account_clients.get(acc_id)
+            if not client:
+                return
+            try:
+                if not client.is_connected():
+                    return
+            except:
+                return
+            
+            async with pre_fetch_semaphore:
+                try:
+                    msg = await client.get_messages(target_chat_id, ids=target_msg_id)
+                    if msg:
+                        account_messages[acc_id] = msg
+                except:
+                    pass  # 失败不记录，点击时会重试
+        
+        # 并发预获取所有消息
+        pre_fetch_tasks = [pre_fetch_message(acc) for acc, _, _, _ in matched_accounts]
+        await asyncio.gather(*pre_fetch_tasks, return_exceptions=True)
+        print(f"[点击任务] ✅ 预获取完成，成功获取 {len(account_messages)}/{len(matched_accounts)} 个消息对象")
+
+        # 并发控制：提高并发数到20（在防封前提下最大化性能）
+        click_semaphore = asyncio.Semaphore(20)
         success_count = 0
         fail_count = 0
         success_accounts = []  # 记录成功的账号
@@ -304,15 +357,10 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
             acc_id = acc['id']
             acc_name = acc.get('username') or acc.get('phone') or f"#{acc_id}"
 
-            print(f"[点击任务] 🎯 账号 {acc_name} (#{acc_id}) 开始点击任务 (索引: {index}, 按钮: [{btn_row},{btn_col}] '{btn_text}')")
-
             async with click_semaphore:
-                print(f"[点击任务] 账号 {acc_name} 获取信号量，开始执行")
-
                 # 获取账号客户端
                 client = manager.account_clients.get(acc_id)
                 if not client:
-                    print(f"[点击任务] ❌ 账号 {acc_name} 客户端不存在")
                     fail_count += 1
                     fail_accounts.append(f"{acc_name}: 客户端不存在")
                     return
@@ -320,68 +368,49 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
                 # 检查客户端是否真正连接
                 try:
                     if not client.is_connected():
-                        print(f"[点击任务] ❌ 账号 {acc_name} 客户端未连接")
                         fail_count += 1
                         fail_accounts.append(f"{acc_name}: 客户端未连接")
                         return
-                except Exception as conn_check_error:
-                    print(f"[点击任务] ⚠️ 账号 {acc_name} 检查连接状态失败: {conn_check_error}")
+                except Exception:
                     fail_count += 1
                     fail_accounts.append(f"{acc_name}: 连接状态异常")
                     return
 
-                print(f"[点击任务] ✅ 账号 {acc_name} 客户端已连接")
-
                 try:
-                    # 全速运行：移除所有延迟，立即点击
-                    # 不再等待，直接执行点击
+                    # 使用预获取的消息对象，如果没有则重新获取
+                    acc_msg = account_messages.get(acc_id)
+                    if not acc_msg:
+                        try:
+                            acc_msg = await client.get_messages(target_chat_id, ids=target_msg_id)
+                            if not acc_msg:
+                                raise Exception('消息不存在或账号无法访问该消息')
+                        except Exception as e:
+                            fail_count += 1
+                            error_str = str(e)
+                            if 'CHANNEL_PRIVATE' in error_str or 'CHAT_FORBIDDEN' in error_str or 'USER_BANNED_IN_CHANNEL' in error_str:
+                                error_msg = '未加入群组/频道或已被禁止'
+                            elif 'MESSAGE_NOT_FOUND' in error_str or 'MSG_ID_INVALID' in error_str:
+                                error_msg = '消息不存在或无效'
+                            else:
+                                error_msg = error_str[:50]
+                            fail_accounts.append(f"{acc_name}: {error_msg}")
+                            return
 
-                    # 获取消息
-                    print(f"[点击任务] 账号 {acc_name} 开始获取消息: chat_id={target_chat_id}, msg_id={target_msg_id}")
-                    try:
-                        acc_msg = await client.get_messages(target_chat_id, ids=target_msg_id)
-                        if not acc_msg:
-                            raise Exception('消息不存在或账号无法访问该消息')
-                        print(f"[点击任务] ✅ 账号 {acc_name} 成功获取消息")
-                    except Exception as e:
-                        print(f"[点击任务] ❌ 账号 {acc_name} 获取消息失败: {e}")
-                        fail_count += 1
-                        error_str = str(e)
-                        # 判断具体错误类型
-                        if 'CHANNEL_PRIVATE' in error_str or 'CHAT_FORBIDDEN' in error_str or 'USER_BANNED_IN_CHANNEL' in error_str:
-                            error_msg = '未加入群组/频道或已被禁止'
-                        elif 'MESSAGE_NOT_FOUND' in error_str or 'MSG_ID_INVALID' in error_str:
-                            error_msg = '消息不存在或无效'
-                        else:
-                            error_msg = error_str[:50]
-                        fail_accounts.append(f"{acc_name}: {error_msg}")
-                        # 不发送单个账号的失败消息，只在最终报告中显示
-                        return
-
-                    # 点击按钮
-                    print(f"[点击任务] 🖱️ 账号 {acc_name} 准备点击按钮 [{btn_row},{btn_col}] '{btn_text}'")
+                    # 直接点击按钮（消息对象已准备好）
                     try:
                         await acc_msg.click(btn_row, btn_col)
                         success_count += 1
                         success_accounts.append(acc_name)
-                        print(f"[点击任务] ✅ 账号 {acc_name} 点击成功！")
-                        # 不发送单个账号的成功消息，只在最终报告中显示
                     except Exception as e:
-                        print(f"[点击任务] ❌ 账号 {acc_name} 点击失败: {type(e).__name__}: {e}")
                         fail_count += 1
                         fail_accounts.append(f"{acc_name}: {str(e)[:50]}")
-                        # 不发送单个账号的失败消息，只在最终报告中显示
                 except Exception as e:
-                    print(f"[点击任务] ❌ 账号 {acc_name} 处理过程出错: {type(e).__name__}: {e}")
-                    import traceback
-                    traceback.print_exc()
                     fail_count += 1
                     fail_accounts.append(f"{acc_name}: {str(e)[:50]}")
-                    # 不发送单个账号的失败消息，只在最终报告中显示
 
         # 优化：将点击账号分成多个批次，每批次并发执行
-        # 每个批次约10个账号，充分利用CPU和内存
-        accounts_per_batch = 10
+        # 提高批次大小到20，充分利用CPU和内存
+        accounts_per_batch = 20
         total_accounts = len(matched_accounts)
         num_batches = max(1, (total_accounts + accounts_per_batch - 1) // accounts_per_batch)
 
@@ -435,11 +464,20 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
             matched_count = len(matched_accounts)
             all_btn_texts = [bt[2] for bt in button_positions]
 
+            # 格式化 Chat ID 显示
+            chat_id_display = actual_chat_id if actual_chat_id is not None else target_chat_id
+            if isinstance(chat_id_display, str):
+                # 如果是用户名，尝试显示为 @username 格式
+                chat_id_display = f"@{chat_id_display}" if not chat_id_display.startswith('@') else chat_id_display
+            else:
+                # 如果是数字，直接显示
+                chat_id_display = str(chat_id_display)
+            
             report_msg = (
                 f'✅ **点击任务完成**\\n'
                 f'━━━━━━━━━━━━━━━━\\n'
                 f'📋 **消息信息**\\n'
-                f'• Chat ID: `{target_chat_id}`\\n'
+                f'• Chat ID: `{chat_id_display}`\\n'
                 f'• Message ID: `{target_msg_id}`\\n'
                 f'• 按钮文本: {", ".join(all_btn_texts[:3])}{"..." if len(all_btn_texts) > 3 else ""}\\n\\n'
                 f'📊 **执行统计**\\n'
