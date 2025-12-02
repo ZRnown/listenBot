@@ -813,6 +813,12 @@ async def setup_handlers(manager: ClientManager):
 
                 elif mode == 'set_click_delay_input':
                     account_id = st['pending']['account_id']
+                    t = (text or '').strip()
+                    # 支持取消操作
+                    if t.lower() in ('取消', '退出', 'cancel', 'exit'):
+                        set_state(chat_id)
+                        await event.respond('✅ 已取消设置', buttons=main_keyboard())
+                        return
                     try:
                         value = float(text)
                         if account_id == 'all':
@@ -833,7 +839,7 @@ async def setup_handlers(manager: ClientManager):
                             set_state(chat_id)
                             await event.respond('✅ 已设置点击延迟', buttons=main_keyboard())
                     except Exception:
-                        await event.respond('⚠️ 请输入数字，例如 0.8')
+                        await event.respond('⚠️ 请输入数字，例如 0.8，或输入"取消"退出')
                     return
 
                 elif mode == 'set_send_delay_choose_account':
@@ -898,32 +904,61 @@ async def setup_handlers(manager: ClientManager):
                             buttons=main_keyboard()
                         )
                         return
+                    # 支持取消操作
+                    t = (link or '').strip()
+                    if t.lower() in ('取消', '退出', 'cancel', 'exit'):
+                        set_state(chat_id)
+                        await event.respond('✅ 已取消进群操作', buttons=main_keyboard())
+                        return
                     lines = [l.strip() for l in link.splitlines() if l.strip()]
                     if not lines:
-                        await event.respond('⚠️ 请发送至少一个有效的群链接或用户名。')
+                        await event.respond('⚠️ 请发送至少一个有效的群链接或用户名，或输入"取消"退出。')
                         return
+                    
+                    # 发送进度提示
+                    await event.respond(f'⏳ 正在自动进群，共 {len(account_ids)} 个账号…')
+                    
                     ok = 0
                     fail = 0
+                    fail_details = []
                     mn, mx = settings_service.get_join_delay_range()
+                    total_operations = len(lines) * len(account_ids)
+                    
                     for target in lines:
                         for acc_id in account_ids:
                             client = manager.account_clients.get(acc_id)
                             if not client:
+                                acc_info = dao_accounts.get(acc_id)
+                                acc_label = acc_info.get('username') or acc_info.get('phone') or f"#{acc_id}"
+                                fail_details.append(f"账号 {acc_label}: 客户端未连接")
+                                fail += 1
                                 continue
                             try:
                                 await joining.join_chat(client, target)
                                 ok += 1
-                            except Exception:
+                            except Exception as e:
+                                acc_info = dao_accounts.get(acc_id)
+                                acc_label = acc_info.get('username') or acc_info.get('phone') or f"#{acc_id}"
+                                fail_details.append(f"账号 {acc_label} -> {target}: {str(e)}")
                                 fail += 1
                             await asyncio.sleep(random.uniform(mn, mx))
+                    
                     set_state(chat_id)
-                    msg = (
-                        "✅ 批量进群完成（使用点击账号）\n"
-                        '────────────\n'
-                        f'处理链接：{len(lines)} 个\n'
-                        f'✅ 成功次数：{ok}\n'
-                        f'❌ 失败次数：{fail}'
-                    )
+                    msg_parts = [
+                        f"✅ 进群完成（共 {len(account_ids)} 个账号）",
+                        f"\n📋 处理链接：{len(lines)} 个",
+                        f"🐢 进群延迟：{mn:.1f}-{mx:.1f} 秒",
+                        f"\n✅ 成功：{ok} 个"
+                    ]
+                    if fail_details:
+                        msg_parts.append(f"❌ 失败：{len(fail_details)} 个")
+                        msg_parts.append("\n失败详情：")
+                        for detail in fail_details[:10]:
+                            msg_parts.append(f"• {detail}")
+                        if len(fail_details) > 10:
+                            msg_parts.append(f"• ... 还有 {len(fail_details) - 10} 个失败")
+                    
+                    msg = '\n'.join(msg_parts)
                     await event.respond(msg, buttons=main_keyboard())
                     return
 
@@ -1150,7 +1185,8 @@ async def setup_handlers(manager: ClientManager):
             await event.respond(
                 '⏱️ 设置点击延迟\n\n'
                 '请输入点击延迟（单位秒，可为小数，例如 0.8）：\n'
-                f'（将应用到所有 {len(rows)} 个点击账号）'
+                f'（将应用到所有 {len(rows)} 个点击账号）\n\n'
+                '💡 输入"取消"或"退出"可取消操作'
             )
             return
 
@@ -1261,7 +1297,9 @@ async def setup_handlers(manager: ClientManager):
             set_state(event.chat_id, 'auto_join_wait_link', account_ids=click_active, role='click')
             text = (
                 "🚪 使用点击账号自动进群\n"
-                "请发送群链接或 @用户名（每行一个，可多个）\n支持：https://t.me/+inviteHash / https://t.me/groupname / @groupname"
+                "请发送群链接或 @用户名（每行一个，可多个）\n"
+                "支持：https://t.me/+inviteHash / https://t.me/groupname / @groupname\n\n"
+                '💡 输入"取消"或"退出"可取消操作'
             )
             await event.respond(text)
             return
