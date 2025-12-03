@@ -21,6 +21,9 @@ from bot.click_tasks import parse_and_execute_click
 from core.filters import normalize_text_for_matching
 
 
+TEST_BUTTON_COUNTER = 0
+
+
 async def parse_and_execute_click(manager: ClientManager, link_text: str, report_chat_id: int):
     """兼容旧调用入口，实际实现已迁移至 bot.click_tasks.parse_and_execute_click。"""
     from bot.click_tasks import parse_and_execute_click as _impl
@@ -185,6 +188,15 @@ async def setup_handlers(manager: ClientManager):
             '👇 请选择功能：',
             buttons=main_keyboard()
         )
+
+    @bot.on(events.CallbackQuery(pattern=b'testbtn\\|'))
+    async def _(event):
+        try:
+            payload = event.data.decode(errors='ignore')
+            _, counter = payload.split('|', 1)
+        except Exception:
+            counter = '?'
+        await event.answer(f'测试按钮 #{counter}', alert=False)
 
     @bot.on(events.CallbackQuery(pattern=b'start_all:(on|off)'))
     async def _(event):
@@ -430,6 +442,20 @@ async def setup_handlers(manager: ClientManager):
             return
 
     @bot.on(events.NewMessage(incoming=True))
+    async def handle_test_button(event):
+        text = (event.raw_text or '').strip()
+        if not text or not is_cmd(text, '🧪 测试点击按钮'):
+            return
+
+        global TEST_BUTTON_COUNTER
+        set_state(event.chat_id)
+        TEST_BUTTON_COUNTER += 1
+        counter = TEST_BUTTON_COUNTER
+        button = [[Button.inline('领取红包', data=f'testbtn|{counter}')]]
+        await event.respond(str(counter), buttons=button)
+        raise events.StopPropagation
+
+    @bot.on(events.NewMessage(incoming=True))
     async def _(event):
         chat_id = event.chat_id
         text = (event.raw_text or '').strip()
@@ -482,7 +508,8 @@ async def setup_handlers(manager: ClientManager):
             '⏱️ 设置点击延迟',
             '▶️ 开始发送',
             '🎯 设置目标机器人', '🚪 自动进群',
-            '🗑️ 移除所有账号'
+            '🗑️ 移除所有账号',
+            '🧪 测试点击按钮'
         }
         
         # 检查是否为主菜单命令
