@@ -52,7 +52,8 @@ class AutoClickListener:
                 return
 
             message = event.message
-            if not message or not getattr(message, 'buttons', None):
+            buttons = getattr(message, 'buttons', None) if message else None
+            if not message or not buttons:
                 return
 
             chat_id = event.chat_id
@@ -60,25 +61,63 @@ class AutoClickListener:
                 return
 
             chat = None
+            chat_label = str(chat_id)
             try:
                 chat = await event.get_chat()
+                chat_label = getattr(chat, 'title', None) or getattr(chat, 'username', None) or str(chat_id)
             except Exception:
                 pass
 
+            # 检测到按钮，记录日志
+            button_texts = []
+            for row in buttons:
+                for btn in row:
+                    btn_text = getattr(btn, 'text', '') or ''
+                    if btn_text:
+                        button_texts.append(btn_text)
+            print(
+                f"[监听点击] 账号 {self._account_label} 检测到按钮 | "
+                f"群组: {chat_label} | "
+                f"消息ID: {event.message.id} | "
+                f"按钮数量: {len(button_texts)} | "
+                f"按钮文本: {', '.join(button_texts[:5])}{'...' if len(button_texts) > 5 else ''}"
+            )
+
             if not self._is_source_allowed(chat, chat_id):
+                print(f"[监听点击] 账号 {self._account_label} 群组 {chat_label} 不在监听白名单中，跳过")
                 return
 
             keywords = self._get_click_keywords()
             if not keywords:
+                print(f"[监听点击] 账号 {self._account_label} 未设置点击关键词，跳过")
                 return
 
             coords = self._find_matching_button(message, keywords)
             if not coords:
+                print(
+                    f"[监听点击] 账号 {self._account_label} 未匹配到关键词 | "
+                    f"群组: {chat_label} | "
+                    f"当前关键词: {', '.join(keywords[:3])}{'...' if len(keywords) > 3 else ''}"
+                )
                 return
 
             row_idx, col_idx, btn_text, matched_keyword = coords
             if self._already_clicked(chat_id, message.id):
+                print(
+                    f"[监听点击] 账号 {self._account_label} 已点击过该消息，跳过 | "
+                    f"群组: {chat_label} | "
+                    f"消息ID: {event.message.id} | "
+                    f"按钮: '{btn_text}' (关键词: {matched_keyword})"
+                )
                 return
+
+            print(
+                f"[监听点击] 账号 {self._account_label} 匹配到关键词，准备点击 | "
+                f"群组: {chat_label} | "
+                f"消息ID: {event.message.id} | "
+                f"按钮: '{btn_text}' (位置: [{row_idx},{col_idx}]) | "
+                f"关键词: {matched_keyword}"
+            )
 
             success = await self._click_button(message, row_idx, col_idx, btn_text, matched_keyword, chat)
             if success:
