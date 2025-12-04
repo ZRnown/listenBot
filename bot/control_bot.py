@@ -191,12 +191,25 @@ async def setup_handlers(manager: ClientManager):
 
     @bot.on(events.CallbackQuery(pattern=b'testbtn\\|'))
     async def _(event):
+        global TEST_BUTTON_COUNTER
         try:
             payload = event.data.decode(errors='ignore')
-            _, counter = payload.split('|', 1)
+            _, counter_str = payload.split('|', 1)
+            current = int(counter_str)
         except Exception:
-            counter = '?'
-        await event.answer(f'测试按钮 #{counter}', alert=False)
+            await event.answer('⚠️ 测试按钮参数错误', alert=True)
+            return
+
+        next_value = current + 1
+        TEST_BUTTON_COUNTER = max(TEST_BUTTON_COUNTER, next_value)
+        new_data = f'testbtn|{next_value}'
+        try:
+            await event.edit(str(next_value), buttons=[[Button.inline('领取红包', data=new_data)]])
+        except Exception as e:
+            await event.answer(f'⚠️ 无法更新按钮：{e}', alert=True)
+            return
+
+        await event.answer(f'测试按钮 #{next_value}', alert=False)
 
     @bot.on(events.CallbackQuery(pattern=b'start_all:(on|off)'))
     async def _(event):

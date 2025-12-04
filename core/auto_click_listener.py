@@ -48,7 +48,14 @@ class AutoClickListener:
 
     async def on_new_message(self, event):
         try:
-            if event.out or event.is_private:
+            chat_id = event.chat_id
+            if event.out:
+                return
+            if event.is_private:
+                if chat_id:
+                    print(f"[监听点击] 账号 {self._account_label} 收到私聊消息({chat_id})，已跳过（仅群组监听）")
+                else:
+                    print(f"[监听点击] 账号 {self._account_label} 收到私聊消息，已跳过（仅群组监听）")
                 return
 
             message = event.message
@@ -56,7 +63,6 @@ class AutoClickListener:
             if not message or not buttons:
                 return
 
-            chat_id = event.chat_id
             if not chat_id:
                 return
 
