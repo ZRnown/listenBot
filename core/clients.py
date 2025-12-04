@@ -239,30 +239,20 @@ class ClientManager:
         """
         为账号注册事件处理器。
 
-        目前仅实现：
-        - 全局监听所有群/频道的新消息
-        - 如果消息包含按钮，则触发全体点击账号的自动点击任务
-
-        不再实现任何“监听 + 转发”功能。
+        当前策略：每个账号自己的 client 都监听群/频道消息，自己根据关键词完成点击。
+        这样可以充分利用 Telethon 的并发能力，实现高并发处理。
         """
         client._monitored_group_ids = None
 
-        # 是否开启监听（目前只对指定账号开启）
+        # 是否开启监听
         if not register_listeners:
             return
-
-        # 初始化去重缓存：避免同一条消息被多个账号重复触发自动点击
-        if not hasattr(self, "_auto_click_seen"):
-            # (chat_id, msg_id) 组成的集合
-            self._auto_click_seen = set()
-
-        from bot.click_tasks import auto_click_on_message  # 延迟导入，避免循环依赖
+        
+        from bot.click_tasks import auto_click_for_single_account  # 延迟导入，避免循环依赖
 
         @client.on(events.NewMessage(incoming=True))
         async def _auto_click_handler(event):
-            """
-            监听所有群/频道消息，如果包含按钮，则触发一次全局自动点击任务。
-            """
+            """监听所有群/频道消息，如果包含按钮，则让本账号自己完成自动点击。"""
             try:
                 # 只处理群/频道消息，忽略私聊
                 if not (event.is_group or event.is_channel):
@@ -275,12 +265,6 @@ class ClientManager:
 
                 chat_id = event.chat_id
                 msg_id = event.id
-                key = (chat_id, msg_id)
-
-                # 去重：任意一个账号触发过这条消息，就不再重复触发
-                if key in self._auto_click_seen:
-                    return
-                self._auto_click_seen.add(key)
 
                 # 如果是专用监听账号（例如 #125），把监听结果输出到终端（而不是在群里发消息）
                 if account_id == 125:
@@ -306,8 +290,10 @@ class ClientManager:
                     except Exception as e:
                         print(f"[自动点击监听] 账号 #{account_id} 输出监听日志失败: {e}")
 
-                # 调用自动点击逻辑（不阻塞当前 handler）
-                asyncio.create_task(auto_click_on_message(self, chat_id, msg_id))
+                # 调用单账号自动点击逻辑（不阻塞当前 handler）
+                asyncio.create_task(
+                    auto_click_for_single_account(self, account_id, chat_id, msg_id)
+                )
             except Exception as e:
                 # 避免异常中断 Telethon 的事件循环，只打印日志
                 print(f"[自动点击监听] 账号 #{account_id} 处理消息时出错: {e}")
@@ -328,11 +314,8 @@ class ClientManager:
         await client.start(phone=lambda: None, password=lambda: None, code_callback=lambda: None)
         print(f"[启动] 账号 #{account_id} 客户端已启动")
 
-        # 只有指定账号（例如 #125）开启监听，其它账号只作为在线资源
-        register_listeners = (account_id == 125)
-        if register_listeners:
-            print(f"[启动] 账号 #{account_id} 启用群消息监听（自动点击 + 日志）")
-        self._register_handlers_for_account(client, account_id, None, register_listeners=register_listeners)
+        # 所有账号都开启监听，每个账号独立处理自己的自动点击
+        self._register_handlers_for_account(client, account_id, None, register_listeners=True)
         self.account_clients[account_id] = client
         print(f"[启动] 账号 #{account_id} 客户端已就绪")
 

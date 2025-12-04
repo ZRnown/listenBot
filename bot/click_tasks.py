@@ -556,3 +556,74 @@ async def auto_click_on_message(manager: ClientManager, target_chat_id, target_m
     await start_click_job(manager, target_chat_id, target_msg_id, accounts, report_chat_id=None)
 
 
+async def auto_click_for_single_account(
+    manager: ClientManager,
+    account_id: int,
+    target_chat_id,
+    target_msg_id,
+):
+    """
+    高并发版本：由每个账号自己的 client 直接监听并点击。
+
+    - 不再集中到一个任务里处理所有账号，而是每个账号独立处理自己的点击
+    - 避免为所有账号重复拉取同一条消息，大幅提升整体并发性能
+    """
+    client = manager.account_clients.get(account_id)
+    if not client:
+        return
+
+    # 确保客户端已连接
+    try:
+        if not client.is_connected():
+            return
+    except Exception:
+        return
+
+    # 读取该账号的点击关键词
+    keywords = settings_service.get_account_keywords(account_id, kind='click') or []
+    if not keywords:
+        return
+
+    acc_row = dao_accounts.get(account_id) or {}
+    acc_name = acc_row.get('username') or acc_row.get('phone') or f"#{account_id}"
+
+    try:
+        msg = await client.get_messages(target_chat_id, ids=target_msg_id)
+        if not msg:
+            return
+
+        buttons = getattr(msg, "buttons", None)
+        if not buttons:
+            return
+
+        # 收集按钮文本并尝试匹配关键词
+        for i, row in enumerate(buttons):
+            for j, btn in enumerate(row):
+                btn_text = getattr(btn, "text", "") or ""
+                if not btn_text:
+                    continue
+                normalized_btn_text = normalize_text_for_matching(btn_text)
+                for k in keywords:
+                    if not k:
+                        continue
+                    normalized_keyword = k.strip()
+                    if normalized_keyword and normalized_keyword in normalized_btn_text:
+                        # 匹配到就点击
+                        try:
+                            await msg.click(i, j)
+                            print(
+                                f"[自动点击][单账号] 账号 {acc_name} 在 Chat ID={target_chat_id}, "
+                                f"Message ID={target_msg_id} 点击按钮 '{btn_text}' 成功 (关键词: {k})"
+                            )
+                        except Exception as e:
+                            print(
+                                f"[自动点击][单账号] 账号 {acc_name} 点击按钮 '{btn_text}' 失败: {e}"
+                            )
+                        # 对于单账号，命中一个按钮就可以结束，避免重复点击
+                        return
+    except Exception as e:
+        print(
+            f"[自动点击][单账号] 账号 {acc_name} 在获取或处理消息时出错: {e}"
+        )
+
+
