@@ -217,7 +217,7 @@ class AutoClickListener:
             await asyncio.sleep(actual_delay)
 
         try:
-            await message.click(row=row_idx, column=col_idx)
+            await message.click(row_idx, col_idx)
             chat_title = getattr(chat, 'title', None) if chat else ''
             chat_label = chat_title or getattr(chat, 'username', None) or str(message.chat_id)
             print(
