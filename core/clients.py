@@ -2,13 +2,12 @@ import asyncio
 import os
 import time
 import app.config as cfg
-from telethon import TelegramClient
+from telethon import TelegramClient, events
 from telethon.sessions import StringSession
 from telethon.errors.rpcerrorlist import FloodWaitError
 from storage import dao_accounts
 from services import sessions as sess_service
 from services import settings_service
-from core.auto_click_listener import register_auto_click_listener
 
 
 class ClientManager:
@@ -176,10 +175,7 @@ class ClientManager:
             conn = cfg.pool.connection()
             cur = conn.cursor()
             try:
-                cur.execute(
-                    "UPDATE accounts SET session_path=%s, status='active' WHERE id=%s",
-                    (session_str, account_id),
-                )
+                cur.execute("UPDATE accounts SET session_path=%s, status='active' WHERE id=%s", (session_str, account_id))
                 conn.commit()
             finally:
                 cur.close()
@@ -187,21 +183,19 @@ class ClientManager:
             if account_id in self.account_clients:
                 await self.account_clients[account_id].disconnect()
             self.account_clients[account_id] = client
-
+            
             # 异步启动客户端（不阻塞返回）
             asyncio.create_task(self._ensure_client_connected(client, account_id))
-
+            
             return {
                 'id': account_id,
                 'phone': phone,
                 'username': f"@{username}" if username else None,
                 'nickname': nickname.strip(),
-                'existing': True,
+                'existing': True
             }
         else:
-            account_id = dao_accounts.create(
-                phone, nickname.strip(), username, session_str, status='active'
-            )
+            account_id = dao_accounts.create(phone, nickname.strip(), username, session_str, status='active')
             # 复制已有账号的关键词到新账号
             self._copy_keywords_to_new_account(account_id)
         
@@ -242,11 +236,8 @@ class ClientManager:
             print(f"[客户端连接] 账号 #{account_id} 连接失败: {e}")
 
     def _register_handlers_for_account(self, client: TelegramClient, account_id: int, group_list: list = None, register_listeners: bool = True):
-        """为账号注册事件处理器（注册群内自动点击监听）"""
-        if getattr(client, '_auto_click_listener_registered', False):
-            return
-        register_auto_click_listener(client, account_id)
-        client._auto_click_listener_registered = True
+        """为账号注册事件处理器（仅保留最小化设置，不注册任何消息监听器）"""
+        client._monitored_group_ids = None
 
     async def start_account_client(self, account_row):
         account_id = account_row['id']
