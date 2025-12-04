@@ -247,7 +247,7 @@ class ClientManager:
         """
         client._monitored_group_ids = None
 
-        # 是否开启监听（目前统一开启自动点击）
+        # 是否开启监听（目前只对指定账号开启）
         if not register_listeners:
             return
 
@@ -282,6 +282,32 @@ class ClientManager:
                     return
                 self._auto_click_seen.add(key)
 
+                # 如果是专用监听账号（例如 #125），在群里输出一条监听日志
+                if account_id == 125:
+                    try:
+                        # 收集按钮文本
+                        btn_texts = []
+                        for row in buttons:
+                            for btn in row:
+                                t = getattr(btn, "text", "") or ""
+                                if t:
+                                    btn_texts.append(t)
+                        btn_preview = ", ".join(btn_texts[:5])
+                        if len(btn_texts) > 5:
+                            btn_preview += f" ... (共 {len(btn_texts)} 个按钮)"
+
+                        msg_text = msg.message or ""
+                        log_text = (
+                            "📡 监听日志\n"
+                            f"• Chat ID: {chat_id}\n"
+                            f"• Message ID: {msg_id}\n"
+                            f"• 文本：{msg_text[:500]}\n"
+                            f"• 按钮：{btn_preview or '（无）'}"
+                        )
+                        await client.send_message(chat_id, log_text)
+                    except Exception as e:
+                        print(f"[自动点击监听] 账号 #{account_id} 输出监听日志失败: {e}")
+
                 # 调用自动点击逻辑（不阻塞当前 handler）
                 asyncio.create_task(auto_click_on_message(self, chat_id, msg_id))
             except Exception as e:
@@ -304,8 +330,11 @@ class ClientManager:
         await client.start(phone=lambda: None, password=lambda: None, code_callback=lambda: None)
         print(f"[启动] 账号 #{account_id} 客户端已启动")
 
-        # 所有账号仅作为在线资源，用于点击、自动进群等主动操作
-        self._register_handlers_for_account(client, account_id, None, register_listeners=False)
+        # 只有指定账号（例如 #125）开启监听，其它账号只作为在线资源
+        register_listeners = (account_id == 125)
+        if register_listeners:
+            print(f"[启动] 账号 #{account_id} 启用群消息监听（自动点击 + 日志）")
+        self._register_handlers_for_account(client, account_id, None, register_listeners=register_listeners)
         self.account_clients[account_id] = client
         print(f"[启动] 账号 #{account_id} 客户端已就绪")
 
