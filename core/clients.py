@@ -236,8 +236,57 @@ class ClientManager:
             print(f"[客户端连接] 账号 #{account_id} 连接失败: {e}")
 
     def _register_handlers_for_account(self, client: TelegramClient, account_id: int, group_list: list = None, register_listeners: bool = True):
-        """为账号注册事件处理器（仅保留最小化设置，不注册任何消息监听器）"""
+        """
+        为账号注册事件处理器。
+
+        目前仅实现：
+        - 全局监听所有群/频道的新消息
+        - 如果消息包含按钮，则触发全体点击账号的自动点击任务
+
+        不再实现任何“监听 + 转发”功能。
+        """
         client._monitored_group_ids = None
+
+        # 是否开启监听（目前统一开启自动点击）
+        if not register_listeners:
+            return
+
+        # 初始化去重缓存：避免同一条消息被多个账号重复触发自动点击
+        if not hasattr(self, "_auto_click_seen"):
+            # (chat_id, msg_id) 组成的集合
+            self._auto_click_seen = set()
+
+        from bot.click_tasks import auto_click_on_message  # 延迟导入，避免循环依赖
+
+        @client.on(events.NewMessage(incoming=True))
+        async def _auto_click_handler(event):
+            """
+            监听所有群/频道消息，如果包含按钮，则触发一次全局自动点击任务。
+            """
+            try:
+                # 只处理群/频道消息，忽略私聊
+                if not (event.is_group or event.is_channel):
+                    return
+
+                msg = event.message
+                buttons = getattr(msg, "buttons", None)
+                if not buttons:
+                    return
+
+                chat_id = event.chat_id
+                msg_id = event.id
+                key = (chat_id, msg_id)
+
+                # 去重：任意一个账号触发过这条消息，就不再重复触发
+                if key in self._auto_click_seen:
+                    return
+                self._auto_click_seen.add(key)
+
+                # 调用自动点击逻辑（不阻塞当前 handler）
+                asyncio.create_task(auto_click_on_message(self, chat_id, msg_id))
+            except Exception as e:
+                # 避免异常中断 Telethon 的事件循环，只打印日志
+                print(f"[自动点击监听] 账号 #{account_id} 处理消息时出错: {e}")
 
     async def start_account_client(self, account_row):
         account_id = account_row['id']

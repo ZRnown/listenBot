@@ -1,6 +1,6 @@
 import asyncio
 import random
-from typing import List
+from typing import List, Optional
 
 from core.clients import ClientManager
 from core.filters import normalize_text_for_matching
@@ -102,7 +102,13 @@ async def parse_and_execute_click(manager: ClientManager, link_text: str, report
         return False, f'处理失败：{e}'
 
 
-async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id, accounts: List[dict], report_chat_id: int):
+async def start_click_job(
+    manager: ClientManager,
+    target_chat_id,
+    target_msg_id,
+    accounts: List[dict],
+    report_chat_id: Optional[int],
+):
     """开始点击任务：获取消息、匹配关键词并并发点击（控制并发数避免封号）。
 
     逻辑整体从原 control_bot.py 迁移过来，保持行为不变。
@@ -219,10 +225,11 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
                 f'• 检查消息链接是否正确\n'
                 f'• 使用"🚪 自动进群"功能让账号加入群组'
             )
-            try:
-                await bot.send_message(report_chat_id, error_msg, parse_mode='markdown')
-            except Exception as send_error:
-                print(f"[点击任务] ❌ 发送消息失败: {send_error}")
+            if report_chat_id is not None:
+                try:
+                    await bot.send_message(report_chat_id, error_msg, parse_mode='markdown')
+                except Exception as send_error:
+                    print(f"[点击任务] ❌ 发送消息失败: {send_error}")
             return
 
         if not buttons or not button_positions:
@@ -305,10 +312,11 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
                 f'• 未设置关键词的账号不会参与点击'
             )
 
-            try:
-                await bot.send_message(report_chat_id, error_msg, parse_mode='markdown')
-            except Exception as send_error:
-                print(f"[点击任务] ❌ 发送消息失败: {send_error}")
+            if report_chat_id is not None:
+                try:
+                    await bot.send_message(report_chat_id, error_msg, parse_mode='markdown')
+                except Exception as send_error:
+                    print(f"[点击任务] ❌ 发送消息失败: {send_error}")
             return
 
         # 不发送开始报告，只在最终报告中显示结果
@@ -458,66 +466,91 @@ async def start_click_job(manager: ClientManager, target_chat_id, target_msg_id,
                 print(f"[点击任务] ⚠️ 任务 {i} 执行异常: {result}")
 
         # 发送完成报告
-        try:
-            # 构建详细的完成报告
-            total_accounts = len(accounts)
-            matched_count = len(matched_accounts)
-            all_btn_texts = [bt[2] for bt in button_positions]
+        if report_chat_id is not None:
+            try:
+                # 构建详细的完成报告
+                total_accounts = len(accounts)
+                matched_count = len(matched_accounts)
+                all_btn_texts = [bt[2] for bt in button_positions]
 
-            # 格式化 Chat ID 显示
-            chat_id_display = actual_chat_id if actual_chat_id is not None else target_chat_id
-            if isinstance(chat_id_display, str):
-                # 如果是用户名，尝试显示为 @username 格式
-                chat_id_display = f"@{chat_id_display}" if not chat_id_display.startswith('@') else chat_id_display
-            else:
-                # 如果是数字，直接显示
-                chat_id_display = str(chat_id_display)
-            
-            report_msg = (
-                f'✅ **点击任务完成**\n'
-                f'━━━━━━━━━━━━━━━━\n'
-                f'📋 **消息信息**\n'
-                f'• Chat ID: `{chat_id_display}`\n'
-                f'• Message ID: `{target_msg_id}`\n'
-                f'• 按钮文本: {", ".join(all_btn_texts[:3])}{"..." if len(all_btn_texts) > 3 else ""}\n\n'
-                f'📊 **执行统计**\n'
-                f'• 总账号数: {total_accounts} 个\n'
-                f'• 匹配账号数: {matched_count} 个\n'
-                f'• ✅ 成功: {success_count} 个\n'
-                f'• ❌ 失败: {fail_count} 个\n'
-            )
+                # 格式化 Chat ID 显示
+                chat_id_display = actual_chat_id if actual_chat_id is not None else target_chat_id
+                if isinstance(chat_id_display, str):
+                    # 如果是用户名，尝试显示为 @username 格式
+                    chat_id_display = f"@{chat_id_display}" if not chat_id_display.startswith('@') else chat_id_display
+                else:
+                    # 如果是数字，直接显示
+                    chat_id_display = str(chat_id_display)
+                
+                report_msg = (
+                    f'✅ **点击任务完成**\n'
+                    f'━━━━━━━━━━━━━━━━\n'
+                    f'📋 **消息信息**\n'
+                    f'• Chat ID: `{chat_id_display}`\n'
+                    f'• Message ID: `{target_msg_id}`\n'
+                    f'• 按钮文本: {", ".join(all_btn_texts[:3])}{"..." if len(all_btn_texts) > 3 else ""}\n\n'
+                    f'📊 **执行统计**\n'
+                    f'• 总账号数: {total_accounts} 个\n'
+                    f'• 匹配账号数: {matched_count} 个\n'
+                    f'• ✅ 成功: {success_count} 个\n'
+                    f'• ❌ 失败: {fail_count} 个\n'
+                )
 
-            # 显示成功的账号
-            if success_accounts:
-                report_msg += f'\n✅ **成功账号** ({len(success_accounts)} 个):\n'
-                for acc in success_accounts:
-                    report_msg += f'• {acc}\n'
+                # 显示成功的账号
+                if success_accounts:
+                    report_msg += f'\n✅ **成功账号** ({len(success_accounts)} 个):\n'
+                    for acc in success_accounts:
+                        report_msg += f'• {acc}\n'
 
-            # 显示失败的账号
-            if fail_accounts:
-                report_msg += f'\n❌ **失败账号** ({len(fail_accounts)} 个):\n'
-                for acc_info in fail_accounts[:10]:  # 最多显示10个
-                    report_msg += f'• {acc_info}\n'
-                if len(fail_accounts) > 10:
-                    report_msg += f'• ... 还有 {len(fail_accounts) - 10} 个失败\n'
+                # 显示失败的账号
+                if fail_accounts:
+                    report_msg += f'\n❌ **失败账号** ({len(fail_accounts)} 个):\n'
+                    for acc_info in fail_accounts[:10]:  # 最多显示10个
+                        report_msg += f'• {acc_info}\n'
+                    if len(fail_accounts) > 10:
+                        report_msg += f'• ... 还有 {len(fail_accounts) - 10} 个失败\n'
 
-            await bot.send_message(report_chat_id, report_msg, parse_mode='markdown')
-        except Exception as send_error:
-            print(f"[点击任务] ⚠️ 发送完成报告失败: {send_error}")
+                await bot.send_message(report_chat_id, report_msg, parse_mode='markdown')
+            except Exception as send_error:
+                print(f"[点击任务] ⚠️ 发送完成报告失败: {send_error}")
     except Exception as e:
         print(f"[点击任务] ❌ 任务出错: {e}")
         import traceback
         traceback.print_exc()
-        try:
-            error_detail = (
-                f'❌ **点击任务执行出错**\n'
-                f'━━━━━━━━━━━━━━━━\n'
-                f'错误类型：`{type(e).__name__}`\n'
-                f'错误信息：`{str(e)}`\n\n'
-                f'请检查日志获取更多信息。'
-            )
-            await bot.send_message(report_chat_id, error_detail, parse_mode='markdown')
-        except Exception as send_error:
-            print(f"[点击任务] ❌ 发送错误消息也失败: {send_error}")
+        if report_chat_id is not None:
+            try:
+                error_detail = (
+                    f'❌ **点击任务执行出错**\n'
+                    f'━━━━━━━━━━━━━━━━\n'
+                    f'错误类型：`{type(e).__name__}`\n'
+                    f'错误信息：`{str(e)}`\n\n'
+                    f'请检查日志获取更多信息。'
+                )
+                await bot.send_message(report_chat_id, error_detail, parse_mode='markdown')
+            except Exception as send_error:
+                print(f"[点击任务] ❌ 发送错误消息也失败: {send_error}")
+
+
+async def auto_click_on_message(manager: ClientManager, target_chat_id, target_msg_id):
+    """
+    在监听到群/频道消息时，自动触发全体点击账号的批量点击。
+
+    - 默认使用所有“点击账号”（list_accounts('click')）
+    - 不向任何用户发送任务报告，只在日志中输出
+    """
+    try:
+        from bot.control_bot import list_accounts  # 运行时导入，避免循环依赖
+        accounts = list_accounts('click')
+    except Exception as e:
+        print(f"[自动点击] 获取点击账号列表失败: {e}")
+        return
+
+    if not accounts:
+        print("[自动点击] ⚠️ 没有可用的点击账号，跳过自动点击")
+        return
+
+    print(f"[自动点击] 触发自动点击任务: Chat ID={target_chat_id}, Message ID={target_msg_id}, 账号数={len(accounts)}")
+    # 不需要报告聊天，传入 report_chat_id=None，start_click_job 内部会自动跳过所有发送消息的逻辑
+    await start_click_job(manager, target_chat_id, target_msg_id, accounts, report_chat_id=None)
 
 
