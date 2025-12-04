@@ -265,6 +265,7 @@ async def start_click_job(
                         break
                 if matched_kw:
                     print(f"[点击任务] ✅ 账号 #{acc_id} 匹配到按钮 '{btn_text}' (关键词: {matched_kw})")
+                    print(f"[自动监听] 账号 #{acc_id} 在 Chat ID={target_chat_id}, Message ID={target_msg_id} 检测到关键词 '{matched_kw}' 并准备参与自动点击")
                     matched_accounts.append((acc, i, j, btn_text))
                     break
 
@@ -409,6 +410,7 @@ async def start_click_job(
                         await acc_msg.click(btn_row, btn_col)
                         success_count += 1
                         success_accounts.append(acc_name)
+                        print(f"[自动点击] 账号 {acc_name} 在 Chat ID={target_chat_id}, Message ID={target_msg_id} 点击按钮 '{btn_text}' 成功")
                     except Exception as e:
                         fail_count += 1
                         fail_accounts.append(f"{acc_name}: {str(e)[:50]}")
