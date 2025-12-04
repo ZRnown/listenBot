@@ -1,3 +1,4 @@
+import re
 import unicodedata
 from services import settings_service
 
@@ -25,7 +26,11 @@ def normalize_text_for_matching(text: str) -> str:
             continue
         normalized += char
     
-    return normalized
+    # 额外处理：去掉按钮文本末尾的数字和括号等计数标记
+    # 例如："领取红包1" / "领取红包(2)" / "领取红包【3】" -> "领取红包"
+    normalized = re.sub(r'[\d（）()\[\]【】]+$', '', normalized)
+    
+    return normalized.strip()
 
 
 def match_keywords(account_id: int, text: str, kind: str = 'listen'):
