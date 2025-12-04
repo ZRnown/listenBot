@@ -282,7 +282,7 @@ class ClientManager:
                     return
                 self._auto_click_seen.add(key)
 
-                # 如果是专用监听账号（例如 #125），在群里输出一条监听日志
+                # 如果是专用监听账号（例如 #125），把监听结果输出到终端（而不是在群里发消息）
                 if account_id == 125:
                     try:
                         # 收集按钮文本
@@ -297,14 +297,12 @@ class ClientManager:
                             btn_preview += f" ... (共 {len(btn_texts)} 个按钮)"
 
                         msg_text = msg.message or ""
-                        log_text = (
-                            "📡 监听日志\n"
-                            f"• Chat ID: {chat_id}\n"
-                            f"• Message ID: {msg_id}\n"
-                            f"• 文本：{msg_text[:500]}\n"
-                            f"• 按钮：{btn_preview or '（无）'}"
-                        )
-                        await client.send_message(chat_id, log_text)
+                        print("[监听日志] ===============================")
+                        print(f"[监听日志] 账号 #{account_id}")
+                        print(f"[监听日志] Chat ID: {chat_id}, Message ID: {msg_id}")
+                        print(f"[监听日志] 文本: {msg_text[:500]}")
+                        print(f"[监听日志] 按钮: {btn_preview or '（无）'}")
+                        print("[监听日志] ===============================")
                     except Exception as e:
                         print(f"[自动点击监听] 账号 #{account_id} 输出监听日志失败: {e}")
 
