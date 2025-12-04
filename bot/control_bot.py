@@ -498,24 +498,21 @@ async def setup_handlers(manager: ClientManager):
             
             # 如果用户在添加账号状态下发送主菜单命令，清除状态并允许命令执行
             if is_main_menu_cmd and mode in ('add_click_account_wait_file',):
-                set_state(chat_id, None)
-                st = None
+            set_state(chat_id, None)
+            st = None
                 # 继续执行，让命令处理器处理（不在这里 return）
             else:
                 # 正常处理状态
                 if mode == 'bulk_keywords_input':
                     kind = st['pending']['kind']
-                t = (text or '').strip()
-                    rows = list_accounts('click')
-                    if not rows:
-                    set_state(chat_id)
-                        await event.respond('⚠️ 当前没有可用账号，请先添加。', buttons=main_keyboard())
-                    return
+                    t = (text or '').strip()
+                    rows = list_accounts('click') if kind == 'click' else []
+
+                    # 完成/返回主菜单
                     if t in ('完成', '返回'):
-                        # 显示当前关键词统计
                         if kind == 'click':
-                            # 点击关键词：显示全局关键词
-                            global_keywords = settings_service.get_global_click_keywords()
+                            # 显示当前全局点击关键词统计
+                            global_keywords = settings_service.get_global_click_keywords() or []
                             total_keywords = len(global_keywords)
                             if global_keywords:
                                 preview = ', '.join(global_keywords[:20])
@@ -524,8 +521,8 @@ async def setup_handlers(manager: ClientManager):
                                 summary_text = f'全局点击关键词：{preview}'
                             else:
                                 summary_text = '全局点击关键词：（未设置）'
-                            
-                set_state(chat_id)
+
+                    set_state(chat_id)
                             await event.respond(
                                 f'✅ **已返回主菜单**\n\n'
                                 f'📊 **当前{keywords_label(kind)}关键词统计：**\n'
@@ -536,57 +533,66 @@ async def setup_handlers(manager: ClientManager):
                                 buttons=main_keyboard(),
                                 parse_mode='markdown'
                             )
-                return
+                        else:
+                    set_state(chat_id)
+                            await event.respond('✅ 已返回主菜单', buttons=main_keyboard())
+                    return
+
+                    # 清空关键词
                     if t.lower() in ('清空', 'clear'):
                         if kind == 'click':
-                            # 清空全局点击关键词
                             settings_service.set_global_click_keywords([])
-                            # 应用到所有点击账号
                             settings_service.apply_global_click_keywords_to_all_accounts()
+                    set_state(chat_id)
+                            await event.respond("🧹 已清空所有点击账号的关键字（全局设置）", buttons=main_keyboard())
+                        else:
                 set_state(chat_id)
-                            await event.respond(f"🧹 已清空所有点击账号的关键字（全局设置）", buttons=main_keyboard())
+                            await event.respond('✅ 已清空', buttons=main_keyboard())
                 return
-                    # 支持单独删除关键词：-关键词 或 -关键词1,关键词2
+
+                    # 删除关键词：-关键词 或 -关键词1,关键词2
                     if t.startswith('-') or t.startswith('－'):
-                        # 删除关键词
                         parts = split_keywords_payload(t[1:].strip())
                         if not parts:
                             await event.respond('⚠️ 请提供要删除的关键字，格式：-关键词1,关键词2')
                 return
-                        
+
                         if kind == 'click':
-                            # 从全局关键词中删除
                             for word in parts:
                                 settings_service.delete_global_click_keyword(word)
-                            # 应用到所有点击账号
                             settings_service.apply_global_click_keywords_to_all_accounts()
-                            global_keywords = settings_service.get_global_click_keywords()
-                    set_state(chat_id)
+                            global_keywords = settings_service.get_global_click_keywords() or []
+                set_state(chat_id)
                             await event.respond(
                                 f"🗑️ 已从全局点击关键词中删除 {len(parts)} 条关键字\n"
                                 f"当前全局点击关键词：{', '.join(global_keywords[:10])}{'...' if len(global_keywords) > 10 else ''}",
                                 buttons=main_keyboard()
                             )
+                        else:
+                    set_state(chat_id)
+                            await event.respond('✅ 已删除', buttons=main_keyboard())
                     return
+
+                    # 添加/追加关键词
                     parts = split_keywords_payload(t)
                     if not parts:
                         await event.respond('⚠️ 请发送关键字内容，或发送"完成"返回主菜单。\n💡 提示：使用 "-关键词" 可以单独删除关键词')
                     return
-                    
-                    # 对于点击关键词，设置为全局关键词并应用到所有点击账号
+
                     if kind == 'click':
-                        # 追加到全局关键词
                         for word in parts:
                             settings_service.add_global_click_keyword(word)
-                        # 应用到所有点击账号
                         settings_service.apply_global_click_keywords_to_all_accounts()
-                        global_keywords = settings_service.get_global_click_keywords()
+                        global_keywords = settings_service.get_global_click_keywords() or []
                 set_state(chat_id)
                 await event.respond(
                             f"✅ 已为所有点击账号追加 {len(parts)} 条关键字（全局设置）\n"
                             f"当前全局点击关键词：{', '.join(global_keywords[:10])}{'...' if len(global_keywords) > 10 else ''}",
                     buttons=main_keyboard()
                 )
+                    else:
+                        set_state(chat_id)
+                        await event.respond('✅ 已更新关键字', buttons=main_keyboard())
                 return
 
                 elif mode in ('choose_account_role', 'change_account_role', 'set_account_target',
@@ -595,7 +601,6 @@ async def setup_handlers(manager: ClientManager):
                     set_state(chat_id)
                     await event.respond('⚠️ 当前版本已移除监听/转发相关配置，本操作已取消。', buttons=main_keyboard())
                 return
-
 
                 elif mode == 'set_target_bot':
                     t = (text or '').strip()
@@ -644,7 +649,7 @@ async def setup_handlers(manager: ClientManager):
                     if not t:
                         await event.respond('⚠️ 请输入消息内容', buttons=None)
                         return
-                    if t in ('取消', '退出', 'cancel'):
+                    if t in ('取消', '退出', 'cancel', 'exit'):
                     set_state(chat_id)
                         await event.respond('✅ 已取消', buttons=main_keyboard())
                     return
@@ -659,7 +664,7 @@ async def setup_handlers(manager: ClientManager):
 
                 elif mode == 'set_global_send_delay':
                     t = (text or '').strip()
-                    if t in ('取消', '退出', 'cancel'):
+                    if t in ('取消', '退出', 'cancel', 'exit'):
                     set_state(chat_id)
                     await event.respond('✅ 已取消', buttons=main_keyboard())
                 return
@@ -740,7 +745,7 @@ async def setup_handlers(manager: ClientManager):
                 kind = st['pending']['kind']
                     t = (text or '').strip()
                     if not t:
-                        await event.respond('⚠️ 请发送指令，或发送"完成"返回主菜单。')
+                        await event.respond('⚠️ 请发送指令，或发送\"完成\"返回主菜单。')
                         return
                     lower = t.lower()
                     if lower in ('完成', '返回'):
@@ -804,7 +809,7 @@ async def setup_handlers(manager: ClientManager):
                         return
                         if not role_allows_click(get_account_role(acc_id)):
                             await event.respond('该账号不是点击账号，请重新输入账号ID')
-                            return
+                        return
                     set_state(chat_id, 'set_click_delay_input', account_id=acc_id)
                     await event.respond('⏱️ 请输入点击延迟（单位秒，可为小数，例如 0.8）')
                 except Exception:
@@ -851,7 +856,7 @@ async def setup_handlers(manager: ClientManager):
                         return
                         if not role_allows_click(get_account_role(acc_id)):
                             await event.respond('该账号不是点击账号，请重新输入账号ID')
-                            return
+                        return
                     set_state(chat_id, 'set_send_delay_input', account_id=acc_id)
                     await event.respond('🐢 请输入发送延迟（单位秒，可为小数）')
                 except Exception:
