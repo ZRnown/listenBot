@@ -164,6 +164,11 @@ async def setup_handlers(manager: ClientManager):
         settings_service.clear_account_settings(acc_id)
         dao_accounts.delete(acc_id)
 
+    # 测试用：生成一个带计数的“领取红包”按钮
+    def make_test_hongbao_button(count: int = 0):
+        label = f"领取红包{count}" if count > 0 else "领取红包"
+        return [[Button.inline(label, data=f"test_hb:{count}".encode("utf-8"))]]
+
     @bot.on(events.NewMessage(pattern='/start'))
     async def _(event):
         # 如果用户正在某个状态中（如设置消息、设置延迟等），不处理 /start 命令
@@ -185,6 +190,29 @@ async def setup_handlers(manager: ClientManager):
             '👇 请选择功能：',
             buttons=main_keyboard()
         )
+
+    @bot.on(events.CallbackQuery(pattern=b'test_hb:'))
+    async def _(event):
+        """测试红包按钮：每点一次计数+1，按钮文本中的数字递增。"""
+        try:
+            data = event.data.decode()
+            # data 形如 "test_hb:0" / "test_hb:1"
+            parts = data.split(':', 1)
+            cur = int(parts[1]) if len(parts) == 2 else 0
+        except Exception:
+            cur = 0
+        new_count = cur + 1
+        new_buttons = make_test_hongbao_button(new_count)
+        try:
+            await event.edit("测试红包按钮（点击次数会累加）：", buttons=new_buttons)
+        except Exception:
+            # 有些情况下消息可能无法编辑，退而求其次发一条新消息
+            await bot.send_message(
+                event.chat_id,
+                "测试红包按钮（点击次数会累加）：",
+                buttons=new_buttons,
+            )
+        await event.answer(f"已点击 {new_count} 次")
 
     @bot.on(events.CallbackQuery(pattern=b'start_all:(on|off)'))
     async def _(event):
@@ -482,7 +510,8 @@ async def setup_handlers(manager: ClientManager):
             '⏱️ 设置点击延迟',
             '▶️ 开始发送',
             '🎯 设置目标机器人', '🚪 自动进群',
-            '🗑️ 移除所有账号'
+            '🗑️ 移除所有账号',
+            '🧪 测试红包按钮',
         }
         
         # 检查是否为主菜单命令
@@ -1018,6 +1047,15 @@ async def setup_handlers(manager: ClientManager):
                 f"点击账号（{len(click_rows)}）：\n{format_rows(click_rows)}"
             )
             await event.respond(summary)
+            return
+
+        # 测试红包按钮：发送一个带“领取红包”计数按钮的测试消息
+        if is_cmd(text, '测试红包按钮'):
+            await bot.send_message(
+                chat_id,
+                "测试红包按钮（点击次数会累加）：",
+                buttons=make_test_hongbao_button(0),
+            )
             return
 
 
