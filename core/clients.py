@@ -68,9 +68,9 @@ class ClientManager:
         # 快速验证 session（不等待完全连接）
         try:
             await client.connect()
-        if not await client.is_user_authorized():
-            await client.disconnect()
-            raise RuntimeError('Session not authorized or requires login')
+            if not await client.is_user_authorized():
+                await client.disconnect()
+                raise RuntimeError('Session not authorized or requires login')
         except Exception as e:
             try:
                 await client.disconnect()
@@ -80,7 +80,7 @@ class ClientManager:
         
         # 获取用户信息（快速操作）
         try:
-        me = await client.get_me()
+            me = await client.get_me()
         except Exception as e:
             await client.disconnect()
             raise RuntimeError(f'Failed to get user info: {str(e)}')
@@ -115,7 +115,7 @@ class ClientManager:
                 'existing': True
             }
         else:
-        account_id = dao_accounts.create(phone, nickname.strip(), username, file_path, status='active')
+            account_id = dao_accounts.create(phone, nickname.strip(), username, file_path, status='active')
             # 复制已有账号的关键词到新账号
             self._copy_keywords_to_new_account(account_id)
         
@@ -176,7 +176,10 @@ class ClientManager:
             conn = cfg.pool.connection()
             cur = conn.cursor()
             try:
-                cur.execute("UPDATE accounts SET session_path=%s, status='active' WHERE id=%s", (session_str, account_id))
+                cur.execute(
+                    "UPDATE accounts SET session_path=%s, status='active' WHERE id=%s",
+                    (session_str, account_id),
+                )
                 conn.commit()
             finally:
                 cur.close()
@@ -184,19 +187,21 @@ class ClientManager:
             if account_id in self.account_clients:
                 await self.account_clients[account_id].disconnect()
             self.account_clients[account_id] = client
-            
+
             # 异步启动客户端（不阻塞返回）
             asyncio.create_task(self._ensure_client_connected(client, account_id))
-            
+
             return {
                 'id': account_id,
                 'phone': phone,
                 'username': f"@{username}" if username else None,
                 'nickname': nickname.strip(),
-                'existing': True
+                'existing': True,
             }
         else:
-        account_id = dao_accounts.create(phone, nickname.strip(), username, session_str, status='active')
+            account_id = dao_accounts.create(
+                phone, nickname.strip(), username, session_str, status='active'
+            )
             # 复制已有账号的关键词到新账号
             self._copy_keywords_to_new_account(account_id)
         
